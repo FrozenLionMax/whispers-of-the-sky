@@ -35,7 +35,7 @@ No blue light. No screen glare. Just you, your headphones, the cold autumn grass
 
 ## Demo
 
-- **Live Repository**: [GitHub: DarkSky Whisperer](https://github.com/your-username/darksky-whisperer)
+- **Live Repository**: [GitHub: Whispers of the Sky](https://github.com/FrozenLionMax/whispers-of-the-sky)
 - **Interactive Web UI**: Features 650nm Monochromatic Astronomical Red Mode, real-time TabPFN seeing sliders, Astropy Alt/Az sky positions, and OLED Blanket Mode.
 
 *(Insert your 60-second video demo or GIF here showing: 1. Launching the tour on a laptop/phone, 2. Tapping "Eyes to Sky" to turn the display pitch black, 3. The soothing audio whispering guided instructions while outside under the trees).*
@@ -46,7 +46,7 @@ No blue light. No screen glare. Just you, your headphones, the cold autumn grass
 
 You can find the complete open-source codebase on GitHub:
 
-{% github your-username/darksky-whisperer %}
+{% github FrozenLionMax/whispers-of-the-sky %}
 
 ### Architecture Overview
 

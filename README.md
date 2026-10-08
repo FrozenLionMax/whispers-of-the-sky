@@ -67,8 +67,8 @@ flowchart TD
 
 ### 1. Clone & Install Dependencies
 ```bash
-git clone https://github.com/your-username/darksky-whisperer.git
-cd darksky-whisperer
+git clone https://github.com/FrozenLionMax/whispers-of-the-sky.git
+cd whispers-of-the-sky
 pip install -r requirements.txt
 ```
 
