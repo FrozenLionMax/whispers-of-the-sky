@@ -1,0 +1,15 @@
+[
+  {
+    "id": "log_demo_01",
+    "timestamp": "2026-10-08T22:30:00Z",
+    "location": "Mount Tamalpais Dark Sky Point (Lat: 37.92, Lon: -122.59)",
+    "bortle_scale": 3,
+    "seeing": "Pristine / Exceptional (FWHM 0.8\")",
+    "targets_observed": [
+      "Cassiopeia",
+      "Andromeda Galaxy (M31)",
+      "Saturn"
+    ],
+    "notes": "100% offline session on grass. Laid on wool blanket with phone face down. Andromeda galaxy was clearly visible as an elongated smudge to the naked eye. Used zero screen light for 45 minutes."
+  }
+]
