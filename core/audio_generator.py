@@ -1,5 +1,5 @@
 """
-Audio Generator Engine for DarkSky Whisperer.
+Audio Generator Engine for Whispers of the Sky (WOTS).
 Integrates with ElevenLabs API to generate high-fidelity, whispered late-night narration,
 with automated offline caching and browser Web Audio fallback.
 """

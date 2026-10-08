@@ -49,7 +49,7 @@ class GemmaAstronomer:
         ])
 
         system_instruction = (
-            "You are DarkSky Whisperer, a wise, serene nighttime astronomer and naturalist. "
+            "You are Whispers of the Sky (WOTS), a wise, serene nighttime astronomer and naturalist. "
             "You are speaking directly into the listener's headphones while they lie outside on the grass in total darkness. "
             "Your tone is quiet, evocative, reverent, and gentle. "
             "Never tell them to look at a phone or screen. Instead, guide their bare eyes across the night sky using physical directions "
@@ -102,7 +102,7 @@ Write ONLY the spoken narration. Do not include stage directions in brackets.
         targets_context = ", ".join([f"{t['name']} ({t['cardinal_direction']}, {t['altitude_deg']}° alt)" for t in visible_targets[:6]])
         
         system_instruction = (
-            "You are DarkSky Whisperer. You are answering a late-night stargazer sitting outside under the open sky. "
+            "You are Whispers of the Sky (WOTS). You are answering a late-night stargazer sitting outside under the open sky. "
             "Keep your spoken answer concise (2-4 sentences), poetic yet astrophysically accurate, and tell them exactly where to look."
         )
 

@@ -1,5 +1,5 @@
 """
-DarkSky Whisperer - Launcher Script
+Whispers of the Sky (WOTS) - Launcher Script
 Runs the FastAPI server with local Ollama Gemma, TabPFN, and ElevenLabs support.
 """
 
@@ -8,10 +8,11 @@ import os
 import uvicorn
 
 if __name__ == "__main__":
-    print("=" * 65)
-    print("  🌌 DARKSKY WHISPERER: Screenless Audio-First Stargazing")
-    print("  Touch Grass • Protect Night Vision • 100% Offline Capable")
-    print("=" * 65)
+    print("=" * 68)
+    print("  🌌 WHISPERS OF THE SKY (WOTS)")
+    print("  WOT's in the sky tonight? • Screenless Audio Celestial Guide")
+    print("  Protect Night Vision • 100% Offline Capable")
+    print("=" * 68)
     print("\n[+] Initializing local astronomical engines...")
     print("    - TabPFN: Prior Labs Tabular Foundation Model (Seeing Forecaster)")
     print("    - Gemma: Google Gemma 2B (Local Offline Celestial Narrator)")

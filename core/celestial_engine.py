@@ -1,5 +1,5 @@
 """
-Celestial Mechanics Engine for DarkSky Whisperer.
+Celestial Mechanics Engine for Whispers of the Sky (WOTS).
 Calculates real-time horizontal coordinates (Altitude/Azimuth), visibility,
 and naked-eye star-hopping routes using Astropy and astronomical catalog data.
 """

@@ -1,5 +1,5 @@
 ---
-title: DarkSky Whisperer: The Screenless, Audio-First Stargazing AI That Protects Your Night Vision
+title: Whispers of the Sky (WOTS): The Screenless, Audio-First Celestial AI That Protects Your Night Vision
 published: true
 tags: devchallenge, hf26challenge, gemma, tabpfn
 ---
@@ -17,17 +17,17 @@ Here is what happens biologically: the human retina relies on **rhodopsin** (a p
 
 Every time a traditional astronomy app sends a notification or shows a 3D sky map, it robs you of the very stars you came outside to see.
 
-### Enter DarkSky Whisperer
-**DarkSky Whisperer** is a screenless, audio-first stargazing companion built with open-source AI at its foundation. 
+### Enter Whispers of the Sky (WOTS)
+**Whispers of the Sky (WOTS)** answers the age-old question: *"WOT's up in the sky tonight?"* 
 
-Its design philosophy adheres strictly to this week's theme: **the screen is the shortest part of the experience (under 30 seconds).**
+It is a screenless, audio-first celestial companion built with open-source AI at its foundation. Its design philosophy adheres strictly to this week's theme: **the screen is the shortest part of the experience (under 30 seconds).**
 
 1. **You step outside and place a blanket on the grass.**
-2. You launch DarkSky Whisperer, review tonight's **TabPFN Seeing Forecast** (transparency & atmospheric turbulence), and tap **"Start Stargazing Tour"**.
+2. You launch WOTS, review tonight's **TabPFN Seeing Forecast** (transparency & atmospheric turbulence), and tap **"Start Screenless Celestial Tour"**.
 3. You tap **"Eyes to Sky" (Blanket Mode)**: your screen goes pitch black (true 0-nit OLED black). You place your phone face down on the grass or slide it into your jacket pocket.
 4. Through your headphones, a calm, whispered voice guides your bare eyes across the autumn night sky using physical, tactile navigation cues:
    > *"Tilt your chin upward forty degrees toward the northeast... Follow the cool breeze until your eyes meet the reclining 'W' of Cassiopeia. Look just below its deepest dip for a faint, oval smudge of light. That pale mist is the Andromeda Galaxy—two point five million light-years away. The photons hitting your pupils left their home stars when early hominids first walked the Earth..."*
-5. If you want to pause, you simply tap anywhere on the dark phone surface. If you have a question (*"Where is Saturn tonight?"*), you speak aloud, and our local **Gemma 2B** model answers in three calm sentences.
+5. If you want to pause, you simply tap anywhere on the dark phone surface. If you have a question (*"WOT is Jupiter right now?"*), you speak aloud, and our local **Gemma 2B** model answers in three calm sentences.
 
 No blue light. No screen glare. Just you, your headphones, the cold autumn grass, and the cosmos.
 
@@ -35,7 +35,7 @@ No blue light. No screen glare. Just you, your headphones, the cold autumn grass
 
 ## Demo
 
-- **Live Repository**: [GitHub: Whispers of the Sky](https://github.com/FrozenLionMax/whispers-of-the-sky)
+- **Live Repository**: [GitHub: Whispers of the Sky (WOTS)](https://github.com/FrozenLionMax/whispers-of-the-sky)
 - **Interactive Web UI**: Features 650nm Monochromatic Astronomical Red Mode, real-time TabPFN seeing sliders, Astropy Alt/Az sky positions, and OLED Blanket Mode.
 
 *(Insert your 60-second video demo or GIF here showing: 1. Launching the tour on a laptop/phone, 2. Tapping "Eyes to Sky" to turn the display pitch black, 3. The soothing audio whispering guided instructions while outside under the trees).*
@@ -75,7 +75,7 @@ flowchart LR
 
 ## How I Built It
 
-DarkSky Whisperer is engineered around three pillars of open-source and partner AI technologies:
+Whispers of the Sky (WOTS) is engineered around three pillars of open-source and partner AI technologies:
 
 ### 1. Tabular Seeing Forecasting with Prior Labs' TabPFN
 Astronomical seeing—the sharpness and steady clarity of celestial bodies—depends on complex micro-meteorological variables: cloud cover percentage, relative humidity, dew point depression, barometric pressure, wind speed, and aerosol optical depth.
@@ -87,7 +87,7 @@ Instead of hand-crafting brittle heuristics, I used **TabPFN** (Prior Labs' tabu
 TabPFN ingests local meteorological tables and generates an hourly timeline (from 8 PM to 4 AM) highlighting the "Golden Hour" of peak atmospheric stillness.
 
 ### 2. Local Celestial Storytelling with Google's Gemma 2B
-To synthesize real-time astronomy data into an evocative, hands-free experience, DarkSky Whisperer runs Google's open-weight **Gemma 2B** model locally via Ollama.
+To synthesize real-time astronomy data into an evocative, hands-free experience, WOTS runs Google's open-weight **Gemma 2B** model locally via Ollama.
 
 Gemma is prompted as a naturalist and contemplative nighttime astronomer. It receives the visible targets calculated by **Astropy** (Altitude, Azimuth, and star-hopping paths) and the TabPFN transparency metrics. Gemma then generates a three-chapter spoken journey:
 1. *Grounding & Rhodopsin Adaptation*: Slowing breathing, feeling the ground, and letting pupil dilation occur naturally.

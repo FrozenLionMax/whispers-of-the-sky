@@ -1,6 +1,6 @@
 """
-DarkSky Whisperer - FastAPI Backend Application.
-The Screenless, Audio-First Stargazing Companion That Protects Your Night Vision.
+Whispers of the Sky (WOTS) - FastAPI Backend Application.
+The Screenless, Audio-First Celestial Companion That Protects Your Night Vision.
 """
 
 from fastapi import FastAPI, HTTPException, Request
@@ -21,8 +21,8 @@ from core.audio_generator import AudioNarrator, AUDIO_CACHE_DIR
 
 # Initialize FastAPI
 app = FastAPI(
-    title="DarkSky Whisperer",
-    description="Screenless, Audio-First Stargazing Companion Powered by TabPFN, Gemma, and ElevenLabs",
+    title="Whispers of the Sky (WOTS)",
+    description="Screenless, Audio-First Celestial Companion Powered by TabPFN, Gemma, and ElevenLabs",
     version="1.0.0"
 )
 
@@ -263,7 +263,7 @@ async def serve_frontend():
     index_file = STATIC_DIR / "index.html"
     if index_file.exists():
         return FileResponse(index_file)
-    return HTMLResponse("<h1>DarkSky Whisperer is starting up...</h1>")
+    return HTMLResponse("<h1>Whispers of the Sky (WOTS) is starting up...</h1>")
 
 
 # Mount static assets
