@@ -18,6 +18,7 @@ from core.tabpfn_predictor import TabPFNSeeingPredictor
 from core.celestial_engine import CelestialEngine
 from core.gemma_astronomer import GemmaAstronomer
 from core.audio_generator import AudioNarrator, AUDIO_CACHE_DIR
+from core.telemetry import fetch_live_weather_telemetry
 
 # Initialize FastAPI
 app = FastAPI(
@@ -128,6 +129,29 @@ async def forecast_seeing(req: SeeingRequest):
     prediction = tabpfn_predictor.predict_seeing(conditions)
     timeline = tabpfn_predictor.forecast_nightly_timeline(conditions)
     return {
+        "prediction": prediction,
+        "hourly_timeline": timeline
+    }
+
+
+@app.post("/api/live-telemetry")
+async def live_telemetry(req: SkyRequest):
+    """Pulls live atmospheric weather telemetry for observer coords and predicts with TabPFN."""
+    telemetry = fetch_live_weather_telemetry(req.latitude, req.longitude)
+    if not telemetry:
+        telemetry = {
+            "cloud_cover_pct": 12.0,
+            "humidity_pct": 52.0,
+            "temp_c": 14.0,
+            "dew_point_diff": 5.5,
+            "wind_speed_kmh": 8.0,
+            "pressure_hpa": 1016.0,
+            "aerosol_index": 0.04
+        }
+    prediction = tabpfn_predictor.predict_seeing(telemetry)
+    timeline = tabpfn_predictor.forecast_nightly_timeline(telemetry)
+    return {
+        "telemetry": telemetry,
         "prediction": prediction,
         "hourly_timeline": timeline
     }

@@ -20,10 +20,12 @@ Every traditional stargazing app asks you to hold a bright 6-inch glowing rectan
 
 **Whispers of the Sky (WOTS)** takes a completely different approach:
 
-1. **Screen Time Under 30 Seconds**: Pick your session and immediately tap **"Eyes to Sky"**.
-2. **True OLED Blanket Mode**: The screen turns pitch black (0-nit black). Put your phone in your pocket or face down on the grass.
-3. **Immersive Audio Star-Hopping**: A calm, whispered voice guides your bare eyes across the constellations using physical, tactile landmarks (*"Tilt your chin up forty degrees... Two fist-widths to your left... Feel the cool night air"*).
-4. **100% Offline in the Wilderness**: National parks, dark-sky reserves, and mountain trails often have zero cell signal. WOTS runs local open-weight AI directly on your device.
+1. **Zero-Screen Architecture (< 30 Seconds)**: Tap **"Eyes to Sky"** or simply **flip your phone face down on the grass**. The accelerometer detects the flip, blanks the screen to 0-nit pitch black, and starts the audio tour automatically.
+2. **Headphone & Earbud Control (`navigator.mediaSession`)**: You never take your phone out of your pocket outside. Use your earbud buttons to pause, play, or skip celestial chapters.
+3. **Immersive Audio Star-Hopping & 3D Spatial Compass**: A calm, whispered voice guides your bare eyes across the constellations using physical, tactile landmarks (*"Tilt your chin up forty degrees... Two fist-widths to your left"*), with subtle stereo panning pointing toward celestial targets.
+4. **Procedural 432Hz Cosmic Soundscape**: Native Web Audio API synthesizer generates a soothing planetary harmonic drone and solar wind beneath the narration—zero MP3 downloads needed.
+5. **Live Weather Telemetry into TabPFN**: Automatically pulls live atmospheric parameters (cloud cover, humidity, dew point, wind) for your GPS coordinates and forecasts seeing quality.
+6. **100% Offline in the Wilderness**: National parks, dark-sky reserves, and mountain trails often have zero cell signal. WOTS runs local open-weight AI directly on your device.
 
 ---
 

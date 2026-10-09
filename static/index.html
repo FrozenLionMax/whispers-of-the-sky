@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Whispers of the Sky (WOTS) | Screenless Audio-First Celestial Guide</title>
+  <title>Whispers of the Sky (WOTS) | Screenless Audio Celestial Guide</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -58,7 +58,7 @@
       background-size: 1000px 400px;
     }
 
-    /* Screenless "Eyes to the Sky" Overlay */
+    /* Screenless "Eyes to the Sky" Overlay (True 0-Nit OLED Black) */
     #screenless-overlay {
       position: fixed;
       top: 0;
@@ -85,20 +85,20 @@
       height: 14px;
       border-radius: 50%;
       background: #ff2222;
-      box-shadow: 0 0 15px #ff2222;
+      box-shadow: 0 0 18px #ff2222;
       animation: pulse 3s infinite ease-in-out;
       margin-bottom: 24px;
-      opacity: 0.6;
+      opacity: 0.5;
     }
 
     @keyframes pulse {
-      0%, 100% { transform: scale(0.9); opacity: 0.3; }
-      50% { transform: scale(1.3); opacity: 0.8; }
+      0%, 100% { transform: scale(0.9); opacity: 0.25; }
+      50% { transform: scale(1.3); opacity: 0.75; }
     }
 
     .screenless-title {
       font-family: 'Cinzel', serif;
-      font-size: 1.1rem;
+      font-size: 1.15rem;
       letter-spacing: 2px;
       color: #771111;
       margin-bottom: 8px;
@@ -107,13 +107,21 @@
     .screenless-sub {
       font-size: 0.85rem;
       color: #551111;
-      max-width: 340px;
-      line-height: 1.4;
+      max-width: 360px;
+      line-height: 1.5;
+    }
+
+    .screenless-hints {
+      margin-top: 24px;
+      font-size: 0.75rem;
+      color: #441111;
+      font-family: 'JetBrains Mono', monospace;
+      line-height: 1.6;
     }
 
     .wake-button {
-      margin-top: 40px;
-      padding: 12px 24px;
+      margin-top: 36px;
+      padding: 12px 28px;
       border: 1px solid #441111;
       background: transparent;
       color: #661111;
@@ -122,11 +130,17 @@
       letter-spacing: 1px;
       cursor: pointer;
       text-transform: uppercase;
+      transition: all 0.2s;
+    }
+
+    .wake-button:hover {
+      border-color: #881111;
+      color: #992222;
     }
 
     /* Header & Navigation */
     header {
-      padding: 20px 24px;
+      padding: 16px 24px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -135,11 +149,11 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      background: rgba(7, 9, 14, 0.8);
+      background: rgba(7, 9, 14, 0.85);
     }
 
     body.red-mode header {
-      background: rgba(8, 0, 0, 0.85);
+      background: rgba(8, 0, 0, 0.88);
     }
 
     .logo-group {
@@ -154,7 +168,7 @@
 
     .app-title {
       font-family: 'Cinzel', serif;
-      font-size: 1.25rem;
+      font-size: 1.2rem;
       font-weight: 700;
       letter-spacing: 1px;
       color: var(--text);
@@ -170,6 +184,7 @@
     .controls-group {
       display: flex;
       gap: 8px;
+      flex-wrap: wrap;
     }
 
     .btn-pill {
@@ -194,11 +209,12 @@
 
     .btn-pill.active {
       background: var(--accent);
-      color: #fff;
+      color: #000;
       border-color: var(--accent);
     }
 
     body.red-mode .btn-pill.active {
+      background: #ff2222;
       color: #000;
     }
 
@@ -213,7 +229,7 @@
 
     @media (min-width: 900px) {
       .container {
-        grid-template-columns: 1.1fr 1fr;
+        grid-template-columns: 1.15fr 1fr;
       }
       .span-full {
         grid-column: 1 / -1;
@@ -224,10 +240,10 @@
     .card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 20px;
+      border-radius: 18px;
+      padding: 22px;
       backdrop-filter: blur(16px);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
       position: relative;
     }
 
@@ -250,7 +266,7 @@
 
     .badge {
       font-size: 0.65rem;
-      padding: 4px 8px;
+      padding: 4px 10px;
       border-radius: 6px;
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--card-border);
@@ -258,25 +274,25 @@
       color: var(--accent);
     }
 
-    /* Big Action Button: Touch Grass / Launch Tour */
+    /* Hero Banner */
     .hero-banner {
-      background: linear-gradient(135deg, rgba(30, 58, 138, 0.4), rgba(15, 23, 42, 0.7));
-      border: 1px solid rgba(96, 165, 250, 0.3);
+      background: linear-gradient(135deg, rgba(20, 38, 80, 0.5), rgba(12, 17, 30, 0.8));
+      border: 1px solid rgba(96, 165, 250, 0.35);
       border-radius: 20px;
-      padding: 28px 24px;
+      padding: 30px 24px;
       text-align: center;
       position: relative;
       overflow: hidden;
     }
 
     body.red-mode .hero-banner {
-      background: linear-gradient(135deg, rgba(80, 10, 10, 0.4), rgba(30, 4, 4, 0.7));
+      background: linear-gradient(135deg, rgba(70, 10, 10, 0.5), rgba(25, 4, 4, 0.8));
       border-color: rgba(255, 30, 30, 0.4);
     }
 
     .hero-h1 {
       font-family: 'Cinzel', serif;
-      font-size: 1.8rem;
+      font-size: 2rem;
       font-weight: 700;
       margin-bottom: 8px;
       letter-spacing: 1px;
@@ -285,9 +301,9 @@
     .hero-p {
       font-size: 0.95rem;
       color: var(--text-muted);
-      max-width: 650px;
+      max-width: 680px;
       margin: 0 auto 20px auto;
-      line-height: 1.5;
+      line-height: 1.6;
     }
 
     .btn-hero {
@@ -295,7 +311,7 @@
       color: #07090e;
       font-weight: 600;
       font-size: 1.05rem;
-      padding: 14px 28px;
+      padding: 14px 32px;
       border-radius: 999px;
       border: none;
       cursor: pointer;
@@ -313,35 +329,116 @@
 
     .btn-hero:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 30px var(--accent-glow);
+      box-shadow: 0 8px 32px var(--accent-glow);
     }
 
-    /* Seeing Forecaster (TabPFN) */
-    .seeing-grid {
+    .sensor-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      margin-top: 14px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* TabPFN Seeing Gauge */
+    .gauge-layout {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
+      grid-template-columns: 140px 1fr;
+      gap: 18px;
+      align-items: center;
       margin-bottom: 18px;
+    }
+
+    @media (max-width: 600px) {
+      .gauge-layout {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+    }
+
+    .circular-gauge {
+      width: 130px;
+      height: 130px;
+      position: relative;
+      margin: 0 auto;
+    }
+
+    .circular-gauge svg {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    .gauge-bg {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.08);
+      stroke-width: 10;
+    }
+
+    .gauge-progress {
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 10;
+      stroke-linecap: round;
+      stroke-dasharray: 314;
+      stroke-dashoffset: 40;
+      transition: stroke-dashoffset 0.8s ease;
+    }
+
+    body.red-mode .gauge-progress {
+      stroke: #ff2222;
+    }
+
+    .gauge-center-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .gauge-val {
+      font-size: 1.4rem;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent);
+    }
+
+    .gauge-sub {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .stats-column {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
     }
 
     .stat-box {
       background: rgba(0, 0, 0, 0.3);
-      padding: 12px;
+      padding: 10px 12px;
       border-radius: 12px;
       border: 1px solid var(--card-border);
       text-align: center;
     }
 
     .stat-label {
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       color: var(--text-muted);
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
 
     .stat-value {
-      font-size: 1.35rem;
+      font-size: 1.2rem;
       font-weight: 700;
       font-family: 'JetBrains Mono', monospace;
       color: var(--accent);
@@ -353,7 +450,7 @@
       padding: 12px 14px;
       border-radius: 0 10px 10px 0;
       font-size: 0.85rem;
-      line-height: 1.4;
+      line-height: 1.45;
       margin-bottom: 16px;
     }
 
@@ -362,23 +459,23 @@
       display: flex;
       gap: 6px;
       overflow-x: auto;
-      padding-bottom: 8px;
+      padding-bottom: 6px;
     }
 
     .timeline-hour {
       flex: 1;
-      min-width: 50px;
+      min-width: 48px;
       text-align: center;
       padding: 8px 4px;
       background: rgba(0, 0, 0, 0.25);
       border-radius: 8px;
       border: 1px solid var(--card-border);
-      font-size: 0.75rem;
+      font-size: 0.72rem;
     }
 
     .timeline-hour.gold {
       border-color: var(--star-gold);
-      background: rgba(251, 191, 36, 0.1);
+      background: rgba(251, 191, 36, 0.12);
     }
 
     /* Sliders */
@@ -386,7 +483,7 @@
       margin-top: 10px;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 3px;
     }
 
     .slider-label {
@@ -433,7 +530,7 @@
     .target-name {
       font-weight: 600;
       font-size: 0.95rem;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
       display: flex;
       align-items: center;
       gap: 6px;
@@ -449,12 +546,12 @@
       font-size: 0.8rem;
       color: var(--text-muted);
       margin-top: 4px;
-      line-height: 1.3;
+      line-height: 1.35;
     }
 
     /* Audio Player Widget */
     .audio-player-card {
-      background: linear-gradient(180deg, rgba(20, 26, 40, 0.8), rgba(10, 14, 22, 0.9));
+      background: linear-gradient(180deg, rgba(20, 26, 42, 0.85), rgba(10, 14, 24, 0.95));
       border: 1px solid var(--card-border);
     }
 
@@ -466,7 +563,7 @@
     }
 
     .chapter-item {
-      padding: 10px 14px;
+      padding: 12px 14px;
       background: rgba(0, 0, 0, 0.3);
       border: 1px solid var(--card-border);
       border-radius: 10px;
@@ -474,15 +571,17 @@
       align-items: center;
       justify-content: space-between;
       cursor: pointer;
+      transition: all 0.2s;
     }
 
     .chapter-item.active {
       border-color: var(--accent);
-      background: rgba(96, 165, 250, 0.1);
+      background: rgba(96, 165, 250, 0.12);
     }
 
     body.red-mode .chapter-item.active {
-      background: rgba(255, 34, 34, 0.15);
+      background: rgba(255, 34, 34, 0.16);
+      border-color: #ff2222;
     }
 
     .chapter-title {
@@ -495,12 +594,12 @@
       align-items: center;
       justify-content: center;
       gap: 16px;
-      margin-top: 18px;
+      margin-top: 20px;
     }
 
     .btn-circle {
-      width: 48px;
-      height: 48px;
+      width: 50px;
+      height: 50px;
       border-radius: 50%;
       background: var(--accent);
       color: #07090e;
@@ -509,8 +608,13 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      font-size: 1.2rem;
+      font-size: 1.25rem;
       box-shadow: 0 4px 16px var(--accent-glow);
+      transition: transform 0.2s;
+    }
+
+    .btn-circle:hover {
+      transform: scale(1.05);
     }
 
     body.red-mode .btn-circle {
@@ -518,7 +622,18 @@
       color: #000;
     }
 
-    /* Voice Ask Widget */
+    /* Soundscape & Voice Widgets */
+    .soundscape-strip {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 12px;
+      border: 1px solid var(--card-border);
+      margin-top: 16px;
+    }
+
     .ask-box {
       display: flex;
       gap: 8px;
@@ -571,10 +686,11 @@
       display: flex;
       gap: 16px;
       justify-content: center;
-      font-size: 0.7rem;
+      font-size: 0.72rem;
       color: var(--text-muted);
       margin-top: 24px;
       font-family: 'JetBrains Mono', monospace;
+      flex-wrap: wrap;
     }
 
     .status-dot {
@@ -589,7 +705,6 @@
     .status-dot.blue { background: #60a5fa; }
     .status-dot.purple { background: #c084fc; }
 
-    /* Offline Alert Banner */
     .offline-pill {
       background: rgba(52, 211, 153, 0.15);
       color: #34d399;
@@ -605,16 +720,17 @@
 </head>
 <body>
 
-  <!-- Screenless "Eyes to the Sky" Mode Overlay (True OLED Black) -->
+  <!-- Screenless "Eyes to the Sky" Mode Overlay (True 0-Nit OLED Black) -->
   <div id="screenless-overlay" onclick="handleScreenlessTap(event)">
     <div class="pulse-disc"></div>
     <div class="screenless-title">EYES TO THE SKY</div>
     <div class="screenless-sub">
-      Your screen is blanked to protect your night vision rod cells.
-      Lie back on the grass, listen to the whisper, and gaze up.
+      Your display is blanked to true OLED black. Rhodopsin is regenerating.
+      Lie back on the grass, listen to the whisper, and gaze bare-eyed at the cosmos.
     </div>
-    <div style="margin-top: 20px; font-size: 0.75rem; color: #551111; font-family: 'JetBrains Mono', monospace;">
-      Tap anywhere: Pause/Play &bull; Listening Active
+    <div class="screenless-hints">
+      Tap anywhere: Pause / Resume &bull; Headphone Buttons: Active<br>
+      Flip phone face-up to wake display
     </div>
     <button class="wake-button" onclick="exitScreenlessMode(event)">Wake Display</button>
   </div>
@@ -625,11 +741,17 @@
       <span class="logo-icon">&#10024;</span>
       <div>
         <div class="app-title">Whispers of the Sky (WOTS)</div>
-        <div class="app-tagline">WOT's up tonight? &bull; Screenless Audio Guide</div>
+        <div class="app-tagline">WOT's up tonight? &bull; Screenless Audio Celestial Guide</div>
       </div>
     </div>
 
     <div class="controls-group">
+      <button class="btn-pill" id="btn-gps" onclick="autoDetectSky()">
+        <span>&#128225;</span> <span id="lbl-gps-text">Auto-Detect My Sky</span>
+      </button>
+      <button class="btn-pill" id="btn-drone-toggle" onclick="toggleCosmicDrone()">
+        <span>&#127756;</span> Cosmic Drone (432Hz)
+      </button>
       <button class="btn-pill" id="btn-red-mode" onclick="toggleRedMode()">
         <span>&#128308;</span> Red Light (650nm)
       </button>
@@ -644,19 +766,31 @@
 
     <!-- Hero Banner -->
     <div class="hero-banner span-full">
-      <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 10px;">
+      <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
         <span class="offline-pill">&#9889; 100% Offline Capable</span>
         <span class="offline-pill" style="border-color: rgba(96, 165, 250, 0.4); color: #60a5fa;">&#129504; Gemma 2B Local</span>
         <span class="offline-pill" style="border-color: rgba(251, 191, 36, 0.4); color: #fbbf24;">&#128202; TabPFN Seeing</span>
+        <span class="offline-pill" id="badge-location" style="border-color: rgba(167, 139, 250, 0.4); color: #c084fc;">&#128205; Default: 37.77&deg;N, 122.42&deg;W</span>
       </div>
+
       <h1 class="hero-h1">WOT's Up in the Sky Tonight?</h1>
       <p class="hero-p">
-        Looking at a smartphone screen ruins your night vision for 30 minutes. 
-        Whispers of the Sky (WOTS) runs open-weight AI locally on your device to whisper star navigation, astrophysics, and cosmic lore directly into your ears while you lay on the grass in total darkness.
+        Every smartphone screen blazes with blue light that bleaches your eyes' rhodopsin for 30 minutes. 
+        <strong>Whispers of the Sky</strong> cuts screen time to zero: it blanks your screen to pitch black and whispers star navigation, astrophysics, and cosmic lore directly into your earbuds while you lie on the grass.
       </p>
-      <button class="btn-hero" onclick="launchGuidedSession()">
-        <span>&#9654;</span> Start Screenless Celestial Tour
-      </button>
+
+      <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+        <button class="btn-hero" onclick="launchGuidedSession()">
+          <span>&#9654;</span> Start Screenless Celestial Tour
+        </button>
+        <button class="btn-pill" onclick="enterScreenlessMode()" style="padding: 12px 24px; font-size: 0.95rem;">
+          <span>&#127761;</span> Blanket Mode (Pitch Black)
+        </button>
+      </div>
+
+      <div class="sensor-pill">
+        <span>&#128241;</span> <strong>Flip-to-Dark Sensor Active:</strong> Place phone face-down on the grass to auto-blank display & start audio.
+      </div>
     </div>
 
     <!-- Column 1: TabPFN Atmospheric Seeing Forecast -->
@@ -665,21 +799,35 @@
         <div class="card-title">
           <span>&#127777;</span> Atmospheric Seeing Forecast
         </div>
-        <span class="badge">Prior Labs TabPFN</span>
+        <span class="badge">Prior Labs TabPFN v2</span>
       </div>
 
-      <div class="seeing-grid">
-        <div class="stat-box">
-          <div class="stat-label">Transparency</div>
-          <div class="stat-value" id="stat-transparency">94%</div>
+      <!-- Live Circular Gauge + Stats -->
+      <div class="gauge-layout">
+        <div class="circular-gauge">
+          <svg viewBox="0 0 120 120">
+            <circle class="gauge-bg" cx="60" cy="60" r="50"></circle>
+            <circle class="gauge-progress" id="svg-gauge-bar" cx="60" cy="60" r="50"></circle>
+          </svg>
+          <div class="gauge-center-text">
+            <div class="gauge-val" id="stat-transparency">94%</div>
+            <div class="gauge-sub">Clarity</div>
+          </div>
         </div>
-        <div class="stat-box">
-          <div class="stat-label">Seeing (FWHM)</div>
-          <div class="stat-value" id="stat-fwhm">0.8"</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-label">Limiting Mag</div>
-          <div class="stat-value" id="stat-mag">6.2</div>
+
+        <div class="stats-column">
+          <div class="stat-box">
+            <div class="stat-label">Seeing (FWHM)</div>
+            <div class="stat-value" id="stat-fwhm">0.8"</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Limiting Mag</div>
+            <div class="stat-value" id="stat-mag">6.2</div>
+          </div>
+          <div class="stat-box" style="grid-column: 1 / -1;">
+            <div class="stat-label">Observation Window</div>
+            <div class="stat-value" style="font-size: 0.95rem;" id="stat-golden-window">11 PM &ndash; 2 AM (Peak)</div>
+          </div>
         </div>
       </div>
 
@@ -687,16 +835,19 @@
         Analyzing meteorological parameters with TabPFN tabular foundation model...
       </div>
 
-      <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase;">
+      <div style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase;">
         Nightly Seeing Window (8 PM &ndash; 4 AM):
       </div>
       <div class="timeline-container" id="hourly-timeline">
         <!-- Rendered by JS -->
       </div>
 
-      <!-- Live Simulator Controls -->
-      <div style="margin-top: 18px; border-top: 1px solid var(--card-border); padding-top: 12px;">
-        <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 6px;">Adjust Local Weather Parameters:</div>
+      <!-- Live Simulator / Telemetry Controls -->
+      <div style="margin-top: 18px; border-top: 1px solid var(--card-border); padding-top: 14px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <span style="font-size: 0.75rem; color: var(--text-muted);">Atmospheric Parameters:</span>
+          <button class="btn-pill" style="font-size: 0.7rem; padding: 4px 10px;" onclick="autoDetectSky()">Sync Live Weather</button>
+        </div>
         <div class="slider-row">
           <div class="slider-label"><span>Cloud Cover</span><span id="lbl-cloud">8%</span></div>
           <input type="range" id="slider-cloud" min="0" max="100" value="8" oninput="updateWeatherPrediction()">
@@ -716,7 +867,7 @@
     <div class="card">
       <div class="card-header">
         <div class="card-title">
-          <span>&#128301;</span> Autumn Celestial Targets
+          <span>&#128301;</span> Visible Sky Landmarks
         </div>
         <span class="badge">Astropy Alt/Az</span>
       </div>
@@ -732,10 +883,13 @@
         <div class="card-title">
           <span>&#127911;</span> Whisperer Audio Guide
         </div>
-        <span class="badge" id="audio-provider-badge">ElevenLabs / Web Audio</span>
+        <div style="display: flex; gap: 6px;">
+          <span class="badge" id="audio-provider-badge">ElevenLabs / Web Audio</span>
+          <span class="badge" style="color: #34d399;">3D Spatial Panning</span>
+        </div>
       </div>
 
-      <p id="tour-status-text" style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;">
+      <p id="tour-status-text" style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">
         Ready to whisper your bespoke tour. Hit play and place your phone face down on the grass.
       </p>
 
@@ -750,14 +904,30 @@
         </button>
       </div>
 
-      <!-- Spontaneous Voice Question Widget -->
+      <!-- Procedural Ambient Soundscape Strip -->
+      <div class="soundscape-strip">
+        <div>
+          <div style="font-size: 0.82rem; font-weight: 500;">Procedural 432Hz Cosmic Soundscape</div>
+          <div style="font-size: 0.7rem; color: var(--text-muted);">Generative harmonic drone & solar wind synthesized in browser.</div>
+        </div>
+        <button class="btn-pill" id="btn-drone-mini" onclick="toggleCosmicDrone()">
+          <span id="lbl-drone-status">Drone: Off</span>
+        </button>
+      </div>
+
+      <!-- Voice Question Widget ("Hey WOTS...") -->
       <div style="margin-top: 20px; border-top: 1px solid var(--card-border); padding-top: 16px;">
-        <div style="font-size: 0.8rem; font-weight: 500;">Ask WOTS (Voice / Text):</div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div style="font-size: 0.8rem; font-weight: 500;">Ask WOTS (Hands-Free Voice / Text):</div>
+          <button class="btn-pill" id="btn-mic" onclick="toggleVoiceRecognition()" style="font-size: 0.72rem; padding: 4px 10px;">
+            <span>&#127908;</span> <span id="lbl-mic-text">Speak Question</span>
+          </button>
+        </div>
         <div class="ask-box">
-          <input type="text" id="ask-input" class="ask-input" placeholder="e.g. 'WOT is Jupiter right now?' or 'Why is Andromeda special?'" onkeydown="if(event.key==='Enter') askQuestion()">
+          <input type="text" id="ask-input" class="ask-input" placeholder="e.g. 'WOT is Jupiter right now?' or 'Why doesn't Saturn twinkle?'" onkeydown="if(event.key==='Enter') askQuestion()">
           <button class="btn-pill" onclick="askQuestion()">Ask</button>
         </div>
-        <div id="ask-response" style="margin-top: 10px; font-size: 0.85rem; color: var(--accent); line-height: 1.4; display: none;"></div>
+        <div id="ask-response" style="margin-top: 10px; font-size: 0.85rem; color: var(--accent); line-height: 1.45; display: none;"></div>
       </div>
     </div>
 
@@ -765,9 +935,9 @@
     <div class="card span-full">
       <div class="card-header">
         <div class="card-title">
-          <span>&#128221;</span> Outdoor Field Test Journal
+          <span>&#128221;</span> Outdoor Observation Journal
         </div>
-        <span class="badge">Observation Logs</span>
+        <span class="badge">Session Logs</span>
       </div>
 
       <div style="display: grid; grid-template-columns: 1fr; gap: 16px;" id="field-log-layout">
@@ -775,7 +945,7 @@
           <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px;">Log an outdoor stargazing session:</div>
           <div style="display: flex; gap: 8px; margin-bottom: 8px;">
             <input type="text" id="log-location" class="ask-input" placeholder="Location (e.g. Backyard, State Park)">
-            <select id="log-bortle" class="ask-input" style="max-width: 140px;">
+            <select id="log-bortle" class="ask-input" style="max-width: 150px;">
               <option value="1">Bortle 1 (Pristine)</option>
               <option value="2">Bortle 2 (Truly Dark)</option>
               <option value="3" selected>Bortle 3 (Rural Sky)</option>
@@ -783,7 +953,7 @@
               <option value="5">Bortle 5 (Suburban)</option>
             </select>
           </div>
-          <textarea id="log-notes" class="ask-input" style="width: 100%; height: 70px; resize: none; margin-bottom: 8px;" placeholder="What did you observe? Did you keep the screen off? How was the night vision?"></textarea>
+          <textarea id="log-notes" class="ask-input" style="width: 100%; height: 70px; resize: none; margin-bottom: 8px;" placeholder="What did you observe? Did you keep the screen off? How was your rhodopsin adaptation?"></textarea>
           <button class="btn-pill" onclick="saveFieldLog()">Save Outdoor Field Log</button>
         </div>
 
@@ -800,21 +970,220 @@
 
   <!-- Status Bar Footer -->
   <div class="status-bar">
-    <span><span class="status-dot green"></span> TabPFN Active</span>
-    <span><span class="status-dot blue"></span> Gemma 2B Ready</span>
-    <span><span class="status-dot purple"></span> ElevenLabs Voice Enabled</span>
+    <span><span class="status-dot green"></span> Prior Labs TabPFN Active</span>
+    <span><span class="status-dot blue"></span> Google Gemma 2B Ready</span>
+    <span><span class="status-dot purple"></span> ElevenLabs Voice Stream</span>
+    <span><span class="status-dot green"></span> Web Audio 432Hz Drone</span>
+    <span><span class="status-dot blue"></span> Spatial Audio Compass</span>
   </div>
 
   <!-- Audio Element -->
   <audio id="audio-player" style="display: none;" onended="onAudioEnded()"></audio>
 
   <script>
+    // State
     let currentTour = null;
     let activeChapterIndex = 0;
     let isPlaying = false;
+    let currentLat = 37.7749;
+    let currentLon = -122.4194;
+    let wakeLock = null;
     const audioEl = document.getElementById('audio-player');
 
-    // Initialize application
+    // Web Audio Procedural 432Hz Cosmic Drone Synthesizer
+    let audioCtx = null;
+    let droneOsc1 = null;
+    let droneOsc2 = null;
+    let droneGain = null;
+    let isDroneActive = false;
+    let stereoPanner = null;
+
+    function initWebAudio() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContext();
+
+        // Master Gain
+        droneGain = audioCtx.createGain();
+        droneGain.gain.setValueAtTime(0.0, audioCtx.currentTime);
+
+        // Lowpass filter for warm space drone
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(320, audioCtx.currentTime);
+
+        // Stereo Panner for 3D Audio navigation
+        if (audioCtx.createStereoPanner) {
+          stereoPanner = audioCtx.createStereoPanner();
+          stereoPanner.pan.setValueAtTime(0, audioCtx.currentTime);
+          droneGain.connect(stereoPanner);
+          stereoPanner.connect(filter);
+        } else {
+          droneGain.connect(filter);
+        }
+        filter.connect(audioCtx.destination);
+
+        // Oscillator 1: 432Hz fundamental drone (calming planetary tuning)
+        droneOsc1 = audioCtx.createOscillator();
+        droneOsc1.type = 'sine';
+        droneOsc1.frequency.setValueAtTime(108, audioCtx.currentTime); // Sub-harmonic A2
+        droneOsc1.connect(droneGain);
+        droneOsc1.start();
+
+        // Oscillator 2: Warm fifth interval with gentle detune
+        droneOsc2 = audioCtx.createOscillator();
+        droneOsc2.type = 'triangle';
+        droneOsc2.frequency.setValueAtTime(162, audioCtx.currentTime); // E3 fifth
+        droneOsc2.connect(droneGain);
+        droneOsc2.start();
+      }
+    }
+
+    function toggleCosmicDrone() {
+      initWebAudio();
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+
+      isDroneActive = !isDroneActive;
+      const targetGain = isDroneActive ? 0.08 : 0.0;
+      droneGain.gain.setTargetAtTime(targetGain, audioCtx.currentTime, 0.4);
+
+      document.getElementById('lbl-drone-status').textContent = isDroneActive ? 'Drone: 432Hz Active' : 'Drone: Off';
+      document.getElementById('btn-drone-mini').classList.toggle('active', isDroneActive);
+      document.getElementById('btn-drone-toggle').classList.toggle('active', isDroneActive);
+    }
+
+    // Set Spatial Pan based on compass direction
+    function setAudioCompassDirection(cardinal) {
+      if (!stereoPanner || !audioCtx) return;
+      let pan = 0;
+      if (cardinal.includes('East')) pan = -0.35; // Pan left
+      else if (cardinal.includes('West')) pan = 0.35; // Pan right
+      else pan = 0.0; // Center (North/South/Overhead)
+      stereoPanner.pan.setTargetAtTime(pan, audioCtx.currentTime, 0.5);
+    }
+
+    // Screen Wake Lock API
+    async function requestWakeLock() {
+      if ('wakeLock' in navigator) {
+        try {
+          wakeLock = await navigator.wakeLock.request('screen');
+        } catch (err) {
+          console.log('WakeLock not granted:', err);
+        }
+      }
+    }
+
+    function releaseWakeLock() {
+      if (wakeLock) {
+        wakeLock.release().then(() => { wakeLock = null; });
+      }
+    }
+
+    // Flip-to-Dark Accelerometer / Gyroscope Sensor
+    if (window.DeviceOrientationEvent) {
+      window.addEventListener('deviceorientation', (e) => {
+        // When phone is laid face-down on the grass: beta is near +/-180 deg
+        if (e.beta !== null && Math.abs(e.beta) > 145) {
+          const overlay = document.getElementById('screenless-overlay');
+          if (!overlay.classList.contains('active')) {
+            enterScreenlessMode();
+          }
+        }
+      });
+    }
+
+    // MediaSession API for native lock-screen & earbud button controls
+    function setupMediaSession(chapterTitle) {
+      if ('mediaSession' in navigator) {
+        navigator.mediaSession.metadata = new MediaMetadata({
+          title: chapterTitle || "Celestial Tour",
+          artist: "Whispers of the Sky (WOTS)",
+          album: "Screenless Stargazing Journey",
+          artwork: [
+            { src: 'https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?w=512', sizes: '512x512', type: 'image/jpeg' }
+          ]
+        });
+
+        navigator.mediaSession.setActionHandler('play', () => toggleAudioPlayback());
+        navigator.mediaSession.setActionHandler('pause', () => toggleAudioPlayback());
+        navigator.mediaSession.setActionHandler('nexttrack', () => {
+          if (currentTour && activeChapterIndex + 1 < currentTour.chapters.length) {
+            playChapter(activeChapterIndex + 1);
+          }
+        });
+        navigator.mediaSession.setActionHandler('previoustrack', () => {
+          if (currentTour && activeChapterIndex > 0) {
+            playChapter(activeChapterIndex - 1);
+          }
+        });
+      }
+    }
+
+    // Live Geolocation Auto-Detection
+    function autoDetectSky() {
+      const btnText = document.getElementById('lbl-gps-text');
+      btnText.textContent = 'Detecting GPS...';
+
+      if (!('geolocation' in navigator)) {
+        alert('Geolocation not supported by this browser.');
+        btnText.textContent = 'Auto-Detect My Sky';
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        async (pos) => {
+          currentLat = roundCoord(pos.coords.latitude);
+          currentLon = roundCoord(pos.coords.longitude);
+
+          document.getElementById('badge-location').textContent = `📍 Lat: ${currentLat}°, Lon: ${currentLon}°`;
+          btnText.textContent = 'Live Sky Synced';
+
+          // Fetch live telemetry from Open-Meteo & predict via TabPFN
+          await fetchLiveTelemetry();
+          await fetchVisibleSky();
+        },
+        (err) => {
+          console.warn('Geolocation denied or failed, using current coords.');
+          btnText.textContent = 'Sync Live Weather';
+          fetchLiveTelemetry();
+        },
+        { timeout: 7000 }
+      );
+    }
+
+    function roundCoord(val) {
+      return Math.round(val * 100) / 100;
+    }
+
+    async function fetchLiveTelemetry() {
+      try {
+        const res = await fetch('/api/live-telemetry', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ latitude: currentLat, longitude: currentLon })
+        });
+        const data = await res.json();
+        const pred = data.prediction;
+        const telem = data.telemetry;
+
+        // Update Sliders to reflect live conditions
+        document.getElementById('slider-cloud').value = Math.round(telem.cloud_cover_pct);
+        document.getElementById('slider-humidity').value = Math.round(telem.humidity_pct);
+        document.getElementById('slider-wind').value = Math.round(telem.wind_speed_kmh);
+        document.getElementById('lbl-cloud').textContent = `${Math.round(telem.cloud_cover_pct)}%`;
+        document.getElementById('lbl-humidity').textContent = `${Math.round(telem.humidity_pct)}%`;
+        document.getElementById('lbl-wind').textContent = `${Math.round(telem.wind_speed_kmh)} km/h`;
+
+        updateSeeingUI(pred, data.hourly_timeline);
+      } catch (err) {
+        console.error('Telemetry error:', err);
+        fetchSeeingPrediction();
+      }
+    }
+
+    // Lifecycle Init
     window.addEventListener('DOMContentLoaded', () => {
       fetchSeeingPrediction();
       fetchVisibleSky();
@@ -832,6 +1201,10 @@
     function enterScreenlessMode() {
       const overlay = document.getElementById('screenless-overlay');
       overlay.classList.add('active');
+      requestWakeLock();
+      if (!isDroneActive) {
+        toggleCosmicDrone(); // Start ambient background drone automatically
+      }
       if (!isPlaying) {
         toggleAudioPlayback();
       }
@@ -840,6 +1213,7 @@
     function exitScreenlessMode(e) {
       if (e) e.stopPropagation();
       document.getElementById('screenless-overlay').classList.remove('active');
+      releaseWakeLock();
     }
 
     function handleScreenlessTap(e) {
@@ -847,7 +1221,7 @@
       toggleAudioPlayback();
     }
 
-    // TabPFN Seeing Forecast
+    // TabPFN Seeing Prediction (Manual Slider Flow)
     async function fetchSeeingPrediction() {
       const cloud = parseFloat(document.getElementById('slider-cloud').value);
       const humidity = parseFloat(document.getElementById('slider-humidity').value);
@@ -864,29 +1238,45 @@
           })
         });
         const data = await res.json();
-        const pred = data.prediction;
-
-        document.getElementById('stat-transparency').textContent = `${pred.transparency_pct}%`;
-        document.getElementById('stat-fwhm').textContent = `${pred.fwhm_seeing_arcsec}"`;
-        document.getElementById('stat-mag').textContent = pred.naked_eye_magnitude_limit;
-        document.getElementById('seeing-recommendation').textContent = pred.recommendation;
-
-        // Render hourly timeline
-        const timelineEl = document.getElementById('hourly-timeline');
-        timelineEl.innerHTML = '';
-        data.hourly_timeline.forEach(h => {
-          const div = document.createElement('div');
-          div.className = `timeline-hour ${h.seeing_score >= 3 ? 'gold' : ''}`;
-          div.innerHTML = `
-            <div style="font-weight:600;">${h.time}</div>
-            <div style="font-size:0.65rem; color:var(--accent);">${h.transparency_pct}%</div>
-            <div style="font-size:0.6rem; color:var(--text-muted);">${h.fwhm}"</div>
-          `;
-          timelineEl.appendChild(div);
-        });
+        updateSeeingUI(data.prediction, data.hourly_timeline);
       } catch (err) {
         console.error('Seeing error:', err);
       }
+    }
+
+    function updateSeeingUI(pred, timeline) {
+      document.getElementById('stat-transparency').textContent = `${pred.transparency_pct}%`;
+      document.getElementById('stat-fwhm').textContent = `${pred.fwhm_seeing_arcsec}"`;
+      document.getElementById('stat-mag').textContent = pred.naked_eye_magnitude_limit;
+      document.getElementById('seeing-recommendation').textContent = pred.recommendation;
+
+      // Animate SVG Gauge
+      const circumference = 314;
+      const offset = circumference - (pred.transparency_pct / 100) * circumference;
+      document.getElementById('svg-gauge-bar').style.strokeDashoffset = offset;
+
+      // Render hourly timeline
+      const timelineEl = document.getElementById('hourly-timeline');
+      timelineEl.innerHTML = '';
+      let bestHour = 'Midnight';
+      let maxScore = -1;
+
+      timeline.forEach(h => {
+        if (h.seeing_score > maxScore) {
+          maxScore = h.seeing_score;
+          bestHour = h.time;
+        }
+        const div = document.createElement('div');
+        div.className = `timeline-hour ${h.seeing_score >= 3 ? 'gold' : ''}`;
+        div.innerHTML = `
+          <div style="font-weight:600;">${h.time}</div>
+          <div style="font-size:0.65rem; color:var(--accent);">${h.transparency_pct}%</div>
+          <div style="font-size:0.6rem; color:var(--text-muted);">${h.fwhm}"</div>
+        `;
+        timelineEl.appendChild(div);
+      });
+
+      document.getElementById('stat-golden-window').textContent = `${bestHour} (Peak Clarity)`;
     }
 
     function updateWeatherPrediction() {
@@ -902,7 +1292,7 @@
         const res = await fetch('/api/visible-sky', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({ latitude: 37.7749, longitude: -122.4194 })
+          body: JSON.stringify({ latitude: currentLat, longitude: currentLon })
         });
         const data = await res.json();
         const listEl = document.getElementById('target-list-container');
@@ -933,14 +1323,14 @@
 
     // Launch Guided Stargazing Tour
     async function launchGuidedSession() {
-      document.getElementById('tour-status-text').textContent = 'Connecting to local Gemma 2B model to compose your screenless tour...';
+      document.getElementById('tour-status-text').textContent = 'Consulting local Gemma 2B model to compose your screenless tour...';
       try {
         const res = await fetch('/api/generate-tour', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({
-            latitude: 37.7749,
-            longitude: -122.4194,
+            latitude: currentLat,
+            longitude: currentLon,
             duration_minutes: 10
           })
         });
@@ -982,13 +1372,14 @@
       });
 
       const chapter = currentTour.chapters[index];
+      setupMediaSession(chapter.title);
+
       if (chapter.audio_url) {
         audioEl.src = chapter.audio_url;
         audioEl.play();
         isPlaying = true;
         updatePlayButtonState();
       } else {
-        // Web Speech API fallback
         speakBrowserTTS(chapter.text);
       }
     }
@@ -1032,7 +1423,7 @@
       if (!('speechSynthesis' in window)) return;
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = 0.88; // Calm, meditative pace
+      utterance.rate = 0.88; // Meditative nighttime cadence
       utterance.pitch = 0.95;
       utterance.onend = () => onAudioEnded();
       window.speechSynthesis.speak(utterance);
@@ -1041,14 +1432,15 @@
     }
 
     function speakTarget(name, dir, elev, hop) {
+      setAudioCompassDirection(dir);
       const text = `${name}. Look towards ${dir}. It is ${elev}. To find it: ${hop}`;
       speakBrowserTTS(text);
     }
 
     // Voice / Text Question
-    async function askQuestion() {
+    async function askQuestion(explicitQuery) {
       const qInput = document.getElementById('ask-input');
-      const question = qInput.value.trim();
+      const question = explicitQuery || qInput.value.trim();
       if (!question) return;
 
       const respEl = document.getElementById('ask-response');
@@ -1059,7 +1451,7 @@
         const res = await fetch('/api/ask-astronomer', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({ question: question, latitude: 37.7749, longitude: -122.4194 })
+          body: JSON.stringify({ question: question, latitude: currentLat, longitude: currentLon })
         });
         const data = await res.json();
         respEl.textContent = `"${data.answer}"`;
@@ -1075,6 +1467,46 @@
       } catch (err) {
         respEl.textContent = 'Could not retrieve answer. Check local model connection.';
       }
+    }
+
+    // Speech Recognition ("Hey WOTS" Microphone)
+    let recognition = null;
+    function toggleVoiceRecognition() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        alert('Voice speech recognition is not supported in this browser. You can type questions directly.');
+        return;
+      }
+
+      if (!recognition) {
+        recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.lang = 'en-US';
+
+        recognition.onstart = () => {
+          document.getElementById('lbl-mic-text').textContent = 'Listening in dark...';
+          document.getElementById('btn-mic').classList.add('active');
+        };
+
+        recognition.onresult = (event) => {
+          const transcript = event.results[0][0].transcript;
+          document.getElementById('ask-input').value = transcript;
+          askQuestion(transcript);
+        };
+
+        recognition.onerror = () => {
+          document.getElementById('lbl-mic-text').textContent = 'Speak Question';
+          document.getElementById('btn-mic').classList.remove('active');
+        };
+
+        recognition.onend = () => {
+          document.getElementById('lbl-mic-text').textContent = 'Speak Question';
+          document.getElementById('btn-mic').classList.remove('active');
+        };
+      }
+
+      recognition.start();
     }
 
     // Field Test Logs

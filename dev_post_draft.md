@@ -23,11 +23,12 @@ Every time a traditional astronomy app sends a notification or shows a 3D sky ma
 It is a screenless, audio-first celestial companion built with open-source AI at its foundation. Its design philosophy adheres strictly to this week's theme: **the screen is the shortest part of the experience (under 30 seconds).**
 
 1. **You step outside and place a blanket on the grass.**
-2. You launch WOTS, review tonight's **TabPFN Seeing Forecast** (transparency & atmospheric turbulence), and tap **"Start Screenless Celestial Tour"**.
-3. You tap **"Eyes to Sky" (Blanket Mode)**: your screen goes pitch black (true 0-nit OLED black). You place your phone face down on the grass or slide it into your jacket pocket.
-4. Through your headphones, a calm, whispered voice guides your bare eyes across the autumn night sky using physical, tactile navigation cues:
-   > *"Tilt your chin upward forty degrees toward the northeast... Follow the cool breeze until your eyes meet the reclining 'W' of Cassiopeia. Look just below its deepest dip for a faint, oval smudge of light. That pale mist is the Andromeda Galaxy—two point five million light-years away. The photons hitting your pupils left their home stars when early hominids first walked the Earth..."*
-5. If you want to pause, you simply tap anywhere on the dark phone surface. If you have a question (*"WOT is Jupiter right now?"*), you speak aloud, and our local **Gemma 2B** model answers in three calm sentences.
+2. WOTS auto-detects your GPS coordinates and pulls live atmospheric telemetry directly into **Prior Labs' TabPFN** to calculate tonight's exact sky clarity and seeing window.
+3. You tap **"Eyes to Sky"** or **simply flip your phone face-down on the grass**. The accelerometer triggers **Blanket Mode**: the screen goes true 0-nit pitch black, and the audio tour begins automatically.
+4. A soothing, procedural **432Hz cosmic drone and solar wind** synthesized natively in your browser plays softly under the narration.
+5. Through your headphones, a calm, whispered voice guides your bare eyes across the autumn constellations using spatial acoustic cues and physical landmarks:
+   > *"Tilt your chin upward forty degrees toward the northeast... Follow the cool breeze until your eyes meet the reclining 'W' of Cassiopeia. Look just below its deepest dip for a faint, oval smudge of light. That pale mist is the Andromeda Galaxy—two point five million light-years away..."*
+6. **Zero screen interaction outside**: You control playback using your earbud hardware buttons (`navigator.mediaSession`). If you have a question (*"WOT is Jupiter right now?"*), speak aloud in the dark, and local **Gemma 2B** whispers the answer back.
 
 No blue light. No screen glare. Just you, your headphones, the cold autumn grass, and the cosmos.
 
