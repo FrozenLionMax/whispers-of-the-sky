@@ -225,41 +225,83 @@
     .brand {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
+      min-width: 0;
+      flex: 1;
     }
 
-    .brand-astrolabe {
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      border: 1.5px dashed var(--accent);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      animation: spinRings 20s infinite linear;
-      position: relative;
-    }
-
-    .brand-astrolabe::before {
-      content: '';
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: var(--accent);
-      box-shadow: 0 0 10px var(--accent-glow);
-    }
-
-    @keyframes spinRings {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    .brand-title {
+    .brand-text {
       font-family: 'Cinzel', serif;
-      font-size: 1.1rem;
-      font-weight: 700;
-      letter-spacing: 1px;
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: var(--text);
       text-shadow: 0 0 16px var(--accent-glow);
+      flex-shrink: 0;
+      line-height: 1;
+    }
+
+    .brand-divider {
+      color: var(--accent);
+      opacity: 0.35;
+      font-size: 0.85rem;
+      font-family: 'JetBrains Mono', monospace;
+      flex-shrink: 0;
+    }
+
+    .typewriter-wrap {
+      display: inline-flex;
+      align-items: center;
+      min-width: 0;
+      max-width: 220px;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 480px) {
+      .typewriter-wrap {
+        max-width: 135px;
+      }
+      .brand-text {
+        font-size: 1.1rem;
+        letter-spacing: 1.5px;
+      }
+    }
+
+    .typewriter-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.76rem;
+      font-weight: 500;
+      color: var(--accent);
+      letter-spacing: 0.3px;
+      text-transform: lowercase;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    body.red-mode .typewriter-text {
+      color: #ef4444;
+    }
+
+    .typewriter-cursor {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-left: 2px;
+      animation: cursorBlink 0.9s infinite;
+      flex-shrink: 0;
+    }
+
+    body.red-mode .typewriter-cursor {
+      color: #ef4444;
+    }
+
+    @keyframes cursorBlink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
     }
 
     .header-actions {
@@ -1067,9 +1109,11 @@
   <!-- VisionOS Glass App Header -->
   <header class="app-header">
     <div class="brand">
-      <div class="brand-astrolabe"></div>
-      <div>
-        <div class="brand-title">WOTS</div>
+      <span class="brand-text">WOTS</span>
+      <span class="brand-divider">/</span>
+      <div class="typewriter-wrap">
+        <span id="typewriter-text" class="typewriter-text"></span>
+        <span class="typewriter-cursor">|</span>
       </div>
     </div>
 
@@ -1977,8 +2021,53 @@
       } catch(e) {}
     }
 
+    // Typewriter Animation for WOTS Theme Phrases
+    const typewriterPhrases = [
+      "whispers of the sky",
+      "what's in the sky?",
+      "touch grass",
+      "screenless audio",
+      "eyes to the stars",
+      "gemma 2b astronomer",
+      "night vision safe",
+      "0-nit darkness"
+    ];
+
+    let phraseIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+
+    function initTypewriter() {
+      const el = document.getElementById('typewriter-text');
+      if (!el) return;
+
+      const currentPhrase = typewriterPhrases[phraseIndex];
+
+      if (isDeleting) {
+        el.textContent = currentPhrase.substring(0, charIndex - 1);
+        charIndex--;
+      } else {
+        el.textContent = currentPhrase.substring(0, charIndex + 1);
+        charIndex++;
+      }
+
+      let speed = isDeleting ? 38 : 75;
+
+      if (!isDeleting && charIndex === currentPhrase.length) {
+        speed = 2200; // Pause when full phrase is typed
+        isDeleting = true;
+      } else if (isDeleting && charIndex === 0) {
+        isDeleting = false;
+        phraseIndex = (phraseIndex + 1) % typewriterPhrases.length;
+        speed = 400; // Pause before typing next phrase
+      }
+
+      setTimeout(initTypewriter, speed);
+    }
+
     // Init
     window.addEventListener('DOMContentLoaded', () => {
+      initTypewriter();
       fetchSeeingPrediction();
       fetchVisibleSky();
       fetchFieldLogs();
