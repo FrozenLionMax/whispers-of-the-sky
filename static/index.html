@@ -595,9 +595,11 @@
 
     .orb-icon {
       font-size: 1.8rem;
-      margin-bottom: 2px;
       color: #fff;
-      text-shadow: 0 0 12px rgba(255, 255, 255, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.75));
     }
 
     .orb-label {
@@ -607,14 +609,59 @@
       text-transform: uppercase;
       color: #fff;
       text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+      margin-top: 3px;
+    }
+
+    .hero-telemetry-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 5px 14px;
+      background: rgba(56, 189, 248, 0.08);
+      border: 1px solid rgba(56, 189, 248, 0.28);
+      border-radius: 999px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.64rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 12px rgba(56, 189, 248, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: all 0.3s ease;
+    }
+
+    body.red-mode .hero-telemetry-pill {
+      background: rgba(239, 68, 68, 0.08);
+      border-color: rgba(239, 68, 68, 0.32);
+      color: #ef4444;
+      box-shadow: 0 2px 12px rgba(239, 68, 68, 0.15);
+    }
+
+    .telemetry-pill-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+      animation: beaconBreathe 2s infinite ease-in-out;
+      flex-shrink: 0;
+    }
+
+    body.red-mode .telemetry-pill-dot {
+      background: #ef4444;
+      box-shadow: 0 0 8px #ef4444;
     }
 
     .hero-heading {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.85rem;
+      font-size: 1.95rem;
       font-weight: 800;
       letter-spacing: -0.5px;
-      margin-bottom: 6px;
+      line-height: 1.2;
+      margin-bottom: 8px;
       background: linear-gradient(180deg, #ffffff 30%, #bae6fd 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -629,16 +676,17 @@
     }
 
     .hero-sub {
-      font-size: 0.85rem;
+      font-size: 0.86rem;
       color: var(--text-muted);
       max-width: 440px;
-      line-height: 1.5;
+      line-height: 1.55;
       margin-bottom: 22px;
+      font-weight: 400;
     }
 
     .cta-row {
       display: flex;
-      gap: 10px;
+      gap: 12px;
       width: 100%;
       max-width: 420px;
       margin-bottom: 20px;
@@ -646,25 +694,31 @@
 
     .btn-main {
       flex: 1.35;
-      padding: 14px 20px;
+      padding: 13px 20px;
       border-radius: 999px;
       background: linear-gradient(135deg, #38bdf8, #0284c7);
       color: #04060a;
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.25);
       font-weight: 700;
-      font-size: 0.92rem;
+      font-size: 0.88rem;
+      letter-spacing: 0.3px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
       cursor: pointer;
-      box-shadow: 0 4px 20px var(--accent-glow);
-      transition: all 0.25s;
+      box-shadow: 0 4px 20px var(--accent-glow), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      -webkit-tap-highlight-color: transparent;
     }
 
     .btn-main:hover {
       transform: translateY(-2px);
       box-shadow: 0 6px 28px var(--accent-glow);
+    }
+
+    .btn-main:active {
+      transform: scale(0.96);
     }
 
     body.red-mode .btn-main {
@@ -673,20 +727,35 @@
     }
 
     .btn-dark-blank {
-      flex: 1;
-      padding: 14px 18px;
+      flex: 1.05;
+      padding: 13px 18px;
       border-radius: 999px;
-      background: rgba(0, 0, 0, 0.6);
-      color: #ef4444;
-      border: 1px solid rgba(239, 68, 68, 0.4);
+      background: rgba(10, 16, 28, 0.65);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.35);
       font-weight: 600;
-      font-size: 0.85rem;
+      font-size: 0.84rem;
+      letter-spacing: 0.3px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 7px;
       cursor: pointer;
-      transition: all 0.2s;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.08);
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn-dark-blank:hover {
+      background: rgba(239, 68, 68, 0.12);
+      border-color: #ef4444;
+      color: #ffffff;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 22px rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-dark-blank:active {
+      transform: scale(0.96);
     }
 
     /* VisionOS Frosted Cards */
@@ -794,6 +863,34 @@
       font-size: 0.72rem;
       color: var(--text-muted);
       margin-top: 2px;
+    }
+
+    .ch-play-glyph {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--accent);
+      flex-shrink: 0;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .chapter-row:hover .ch-play-glyph {
+      background: var(--accent);
+      color: #04060a;
+      transform: scale(1.15);
+    }
+
+    body.red-mode .ch-play-glyph {
+      color: #ef4444;
+    }
+
+    body.red-mode .chapter-row:hover .ch-play-glyph {
+      background: #ef4444;
+      color: #000;
     }
 
     /* Controls Strip */
@@ -1504,33 +1601,50 @@
           <div class="ring-outer"></div>
           <div class="ring-inner"></div>
           <div class="celestial-orb" id="hero-orb" onclick="toggleAudioPlayback()">
-            <span class="orb-icon" id="orb-state-icon">▶</span>
+            <span class="orb-icon" id="orb-state-icon">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg>
+            </span>
             <span class="orb-label" id="orb-state-label">Stargaze</span>
           </div>
         </div>
 
-        <h1 class="hero-heading">Whispers of the Sky</h1>
+        <div class="hero-telemetry-pill">
+          <span class="telemetry-pill-dot"></span>
+          <span>AUTONOMOUS AUDIO OBSERVATORY</span>
+        </div>
+
+        <h1 class="hero-heading">Listen to the Heavens</h1>
         <p class="hero-sub">
-          Cut screen time to zero. Put your headphones on, place your phone on the grass, and let open AI whisper celestial navigation.
+          Engineered for scotopic dark adaptation. Connect your earbuds, rest your phone face-down on the grass, and let local Gemma AI whisper real-time celestial coordinates into the night.
         </p>
 
         <div class="cta-row">
           <button class="btn-main" onclick="launchGuidedSession()">
-            <span>▶</span> Start Stargazing Tour
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg>
+            <span>Start Audio Tour</span>
           </button>
           <button class="btn-dark-blank" onclick="enterScreenlessMode()">
-            <span>🌙</span> Blanket Mode
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            <span>0-Nit Screenless</span>
           </button>
         </div>
 
         <!-- Biological Rhodopsin Tracker -->
         <div class="glass-card" style="width: 100%; margin-top: 8px;">
           <div class="rhodopsin-top">
-            <span><strong>Dark Adaptation:</strong> <span id="lbl-rhodopsin-phase">Cone Decay (15%)</span></span>
+            <span style="display:flex; align-items:center; gap:6px;">
+              <span class="rhodopsin-icon" style="color:var(--accent);">👁</span>
+              <strong>Scotopic Adaptation:</strong> 
+              <span id="lbl-rhodopsin-phase" style="color:var(--accent); font-family:'JetBrains Mono',monospace;">Cone Decay (15%)</span>
+            </span>
             <span class="rhodopsin-time" id="lbl-rhodopsin-timer">00:00</span>
           </div>
           <div class="bar-bg">
             <div class="bar-fill" id="rhodopsin-bar"></div>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px; font-size:0.64rem; color:var(--text-muted); font-family:'JetBrains Mono',monospace;">
+            <span>ZERO SCREEN INTERACTION</span>
+            <span>PEAK ROD SENSITIVITY: ~20 MIN</span>
           </div>
         </div>
       </div>
@@ -1538,31 +1652,31 @@
       <!-- Audio Chapters Card -->
       <div class="glass-card">
         <div class="card-title">
-          <span>Tour Chapters (Gemma 2B)</span>
-          <span style="font-size:0.7rem; color:var(--accent); font-family:'JetBrains Mono',monospace;">Spatial 3D Audio</span>
+          <span style="font-family:'Space Grotesk',sans-serif; font-weight:700;">Autonomous Tour Chapters (Gemma 2B)</span>
+          <span style="font-size:0.66rem; color:var(--accent); font-family:'JetBrains Mono',monospace; letter-spacing:0.5px;">SPATIAL 3D AUDIO</span>
         </div>
 
         <div id="chapter-list">
           <div class="chapter-row active" onclick="playChapter(0)">
             <div>
               <div class="ch-title">Chapter 1: Eyes to the Darkness</div>
-              <div class="ch-desc">Night vision grounding & breath</div>
+              <div class="ch-desc">Night vision grounding & somatic breathwork</div>
             </div>
-            <span>▶</span>
+            <span class="ch-play-glyph"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></span>
           </div>
           <div class="chapter-row" onclick="playChapter(1)">
             <div>
               <div class="ch-title">Chapter 2: Star-Hop to Andromeda Galaxy</div>
-              <div class="ch-desc">Looking North-East toward Cassiopeia</div>
+              <div class="ch-desc">Navigating North-East past the Cassiopeia W-asterism</div>
             </div>
-            <span>▶</span>
+            <span class="ch-play-glyph"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></span>
           </div>
           <div class="chapter-row" onclick="playChapter(2)">
             <div>
               <div class="ch-title">Chapter 3: The Deep Quiet of Space</div>
-              <div class="ch-desc">Cosmic reflection & light travel time</div>
+              <div class="ch-desc">Cosmic acoustic reflection & 2.5M light-year voyage</div>
             </div>
-            <span>▶</span>
+            <span class="ch-play-glyph"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></span>
           </div>
         </div>
 
@@ -1584,12 +1698,19 @@
       <!-- Spontaneous Voice Query -->
       <div class="glass-card">
         <div class="card-title">
-          <span>Ask WOTS (Hands-Free Voice / Text)</span>
-          <button class="icon-btn" style="width:32px; height:32px; font-size:0.78rem;" onclick="toggleVoiceRecognition()">🎤</button>
+          <span style="font-family:'Space Grotesk',sans-serif; font-weight:700;">Ask Celestial AI (Voice & Telemetry)</span>
+          <button class="icon-btn" style="width:34px; height:34px;" onclick="toggleVoiceRecognition()" title="Voice Query" id="btn-mic">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+              <line x1="12" y1="19" x2="12" y2="23"></line>
+              <line x1="8" y1="23" x2="16" y2="23"></line>
+            </svg>
+          </button>
         </div>
         <div style="display:flex; gap:8px;">
-          <input type="text" id="ask-input" class="input-field" style="margin-bottom:0;" placeholder="e.g. 'Where is Jupiter right now?'" onkeydown="if(event.key==='Enter') askQuestion()">
-          <button class="btn-main" style="flex:0; padding:10px 18px; border-radius:12px;" onclick="askQuestion()">Ask</button>
+          <input type="text" id="ask-input" class="input-field" style="margin-bottom:0;" placeholder="e.g. 'Where is Jupiter right now?' or 'Find Andromeda'" onkeydown="if(event.key==='Enter') askQuestion()">
+          <button class="btn-main" style="flex:0; padding:10px 20px; border-radius:12px; font-size:0.84rem;" onclick="askQuestion()">Ask</button>
         </div>
         <div id="ask-response" style="margin-top:10px; font-size:0.82rem; color:var(--accent); line-height:1.45; display:none;"></div>
       </div>
@@ -2253,7 +2374,7 @@
             <div class="ch-title">${ch.title}</div>
             <div class="ch-desc">${ch.target}</div>
           </div>
-          <span>▶</span>
+          <span class="ch-play-glyph"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></span>
         `;
         container.appendChild(div);
       });
@@ -2329,12 +2450,12 @@
       const lbl = document.getElementById('orb-state-label');
       if (isPlaying) {
         orb.classList.add('playing');
-        icon.textContent = '❚❚';
-        lbl.textContent = 'Playing';
+        icon.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+        lbl.textContent = 'Streaming';
       } else {
         orb.classList.remove('playing');
-        icon.textContent = '▶';
-        lbl.textContent = 'Paused';
+        icon.innerHTML = '<svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg>';
+        lbl.textContent = currentTour ? 'Paused' : 'Stargaze';
       }
     }
 
