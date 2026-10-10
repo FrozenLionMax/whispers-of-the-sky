@@ -898,6 +898,118 @@
       color: var(--accent);
     }
 
+    /* Voice Personality & Anatomical Alignment HUD */
+    .voice-picker-card {
+      width: 100%;
+      margin-top: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 12px 14px;
+      backdrop-filter: blur(14px);
+    }
+    .voice-card-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 10px 12px;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.25s ease;
+      color: var(--text);
+    }
+    .voice-card-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+    .voice-card-btn.active {
+      background: rgba(56, 189, 248, 0.14);
+      border-color: var(--accent);
+      box-shadow: 0 0 16px rgba(56, 189, 248, 0.22);
+    }
+    body.red-mode .voice-card-btn.active {
+      background: rgba(239, 68, 68, 0.16);
+      border-color: #ef4444;
+      box-shadow: 0 0 16px rgba(239, 68, 68, 0.25);
+    }
+    .voice-icon {
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+    .voice-details {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .voice-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .voice-actor {
+      font-size: 0.63rem;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .anatomical-hud {
+      margin-top: 10px;
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 10px 12px;
+    }
+    .anatomical-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .anatomical-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 10px;
+      padding: 7px 9px;
+    }
+    .anatomical-item-zenith {
+      grid-column: span 2;
+      background: rgba(56, 189, 248, 0.08);
+      border-color: rgba(56, 189, 248, 0.25);
+    }
+    body.red-mode .anatomical-item-zenith {
+      background: rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.3);
+    }
+    .anat-label {
+      font-size: 0.61rem;
+      text-transform: uppercase;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    body.red-mode .anat-label {
+      color: #ef4444;
+    }
+    .anat-target {
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .anat-meta {
+      font-size: 0.62rem;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+
     /* VisionOS Frosted Cards */
     .glass-card {
       background: rgba(8, 14, 26, 0.74);
@@ -1773,6 +1885,35 @@
           </button>
         </div>
 
+        <!-- Voice Personality Selector -->
+        <div class="voice-picker-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px;">
+            <div style="display:flex; align-items:center; gap: 8px;">
+              <span style="font-size: 1rem;">🎙️</span>
+              <span style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:0.85rem; color:var(--text);">Narrator Voice Options</span>
+            </div>
+            <span id="active-voice-pill" style="font-size:0.62rem; color:var(--accent); font-family:'JetBrains Mono',monospace; background:rgba(56,189,248,0.12); padding:3px 9px; border-radius:12px; border:1px solid rgba(56,189,248,0.3); font-weight:600;">
+              Boy's Voice (George)
+            </span>
+          </div>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <button type="button" class="voice-card-btn active" id="btn-voice-male" onclick="selectNarratorVoice('male')">
+              <span class="voice-icon">🌌</span>
+              <div class="voice-details">
+                <span class="voice-title">Boy's Voice</span>
+                <span class="voice-actor">George • Deep & Warm</span>
+              </div>
+            </button>
+            <button type="button" class="voice-card-btn" id="btn-voice-female" onclick="selectNarratorVoice('female')">
+              <span class="voice-icon">✨</span>
+              <div class="voice-details">
+                <span class="voice-title">Lady's Voice</span>
+                <span class="voice-actor">Sarah • Soft & Gentle</span>
+              </div>
+            </button>
+          </div>
+        </div>
+
         <!-- Real-Time Chest Gyroscope Posture Sensing Card -->
         <div class="glass-card chest-sensor-card" id="chest-sensor-card">
           <div class="chest-sensor-header">
@@ -1799,6 +1940,46 @@
               <span class="readout-val" id="readout-facedown" style="color:#ef4444;">NO</span>
             </div>
           </div>
+
+          <!-- Real-Time Observer Anatomical Sky Alignment -->
+          <div class="anatomical-hud" id="anatomical-hud">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:0.68rem; font-family:'Space Grotesk',sans-serif; font-weight:700; color:var(--text); display:flex; align-items:center; gap:5px;">
+                <span>🧭</span> ANATOMICAL SKY PERSPECTIVE
+              </span>
+              <span id="anat-heading-badge" style="font-size:0.6rem; color:var(--accent); font-family:'JetBrains Mono',monospace;">
+                Head: North (0°)
+              </span>
+            </div>
+            <div class="anatomical-grid">
+              <div class="anatomical-item anatomical-item-zenith">
+                <div class="anat-label"><span>🌌</span> OVERHEAD ZENITH (CHEST & EYES)</div>
+                <div class="anat-target" id="anat-zenith-target">Jupiter (King of Planets)</div>
+                <div class="anat-meta" id="anat-zenith-meta">73° Alt • Straight up into deep space</div>
+              </div>
+              <div class="anatomical-item">
+                <div class="anat-label"><span>👑</span> PAST HEAD / CROWN</div>
+                <div class="anat-target" id="anat-head-target">Polaris (North Star)</div>
+                <div class="anat-meta" id="anat-head-meta">North • 38° Alt</div>
+              </div>
+              <div class="anatomical-item">
+                <div class="anat-label"><span>🦶</span> DOWN PAST FEET</div>
+                <div class="anat-target" id="anat-feet-target">Taurus & Aldebaran</div>
+                <div class="anat-meta" id="anat-feet-meta">South • 56° Alt</div>
+              </div>
+              <div class="anatomical-item">
+                <div class="anat-label"><span>🫲</span> LEFT SHOULDER</div>
+                <div class="anat-target" id="anat-left-target">Ursa Major (Big Dipper)</div>
+                <div class="anat-meta" id="anat-left-meta">East • 32° Alt</div>
+              </div>
+              <div class="anatomical-item">
+                <div class="anat-label"><span>🫱</span> RIGHT SHOULDER</div>
+                <div class="anat-target" id="anat-right-target">Pegasus (Great Square)</div>
+                <div class="anat-meta" id="anat-right-meta">West • 28° Alt</div>
+              </div>
+            </div>
+          </div>
+
           <div class="chest-sensor-actions">
             <button class="btn-sensor-test" onclick="simulateChestPlacementToggle()" id="btn-simulate-chest">
               <span id="btn-sensor-test-icon">🫁</span>
@@ -1835,24 +2016,24 @@
         </div>
 
         <div id="chapter-list">
-          <div class="chapter-row active" onclick="playChapter(0)">
+          <div class="chapter-row active" onclick="playChapterSegment(0)">
             <div>
               <div class="ch-title">Chapter 1: Eyes to the Darkness</div>
-              <div class="ch-desc">Night vision grounding & somatic breathwork</div>
+              <div class="ch-desc" id="ch-desc-0">Night vision grounding & somatic breathwork • George</div>
             </div>
             <span class="ch-play-glyph"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></span>
           </div>
-          <div class="chapter-row" onclick="playChapter(1)">
+          <div class="chapter-row" onclick="playChapterSegment(1)">
             <div>
-              <div class="ch-title">Chapter 2: Star-Hop to Andromeda Galaxy</div>
-              <div class="ch-desc">Navigating North-East past the Cassiopeia W-asterism</div>
+              <div class="ch-title">Chapter 2: Celestial Star-Hop to Andromeda</div>
+              <div class="ch-desc" id="ch-desc-1">Zenith, Polaris, Cassiopeia & M31 • George</div>
             </div>
             <span class="ch-play-glyph"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></span>
           </div>
-          <div class="chapter-row" onclick="playChapter(2)">
+          <div class="chapter-row" onclick="playChapterSegment(2)">
             <div>
               <div class="ch-title">Chapter 3: The Deep Quiet of Space</div>
-              <div class="ch-desc">Cosmic acoustic reflection & 2.5M light-year voyage</div>
+              <div class="ch-desc" id="ch-desc-2">Cosmic reflection & 2.5M light-year voyage • George</div>
             </div>
             <span class="ch-play-glyph"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></span>
           </div>
@@ -2428,10 +2609,25 @@
       }
     }
 
+    let liveCompassHeading = 0;
+    let lastAnatomicalFetchHeading = -999;
+    let cachedBodyAlignedTour = null;
+
     function handleDeviceOrientation(e) {
       if (e.beta !== null && e.beta !== undefined) liveBetaTilt = Math.round(e.beta);
       if (e.gamma !== null && e.gamma !== undefined) liveGammaRoll = Math.round(e.gamma);
+
+      if (e.webkitCompassHeading !== undefined && e.webkitCompassHeading !== null) {
+        liveCompassHeading = Math.round(e.webkitCompassHeading);
+      } else if (e.alpha !== null && e.alpha !== undefined) {
+        liveCompassHeading = Math.round((360 - e.alpha) % 360);
+      }
+
       evaluateChestPosture();
+
+      if (isChestPlacementDetected && Math.abs(liveCompassHeading - lastAnatomicalFetchHeading) > 25) {
+        fetchBodyAlignedSky(liveCompassHeading);
+      }
     }
 
     function handleDeviceMotion(e) {
@@ -2475,9 +2671,10 @@
     function onChestPlacementEngaged() {
       enterScreenlessMode();
       if ('vibrate' in navigator) {
-        try { navigator.vibrate([45, 60, 45]); } catch(err) {}
+        try { navigator.vibrate([60, 50, 60]); } catch(err) {}
       }
       showToast("🫁 Chest Placement Locked: Screen Blanked to 0 Nits");
+      fetchBodyAlignedSky(liveCompassHeading);
       // If user hasn't started yet, begin the full master celestial journey!
       if (!isExperienceStarted) {
         startCompleteStargazeExperience();
@@ -2486,6 +2683,76 @@
 
     function onChestPlacementDisengaged() {
       showToast("📱 Phone Lifted: Eyes Returning to Horizon");
+    }
+
+    async function fetchBodyAlignedSky(heading) {
+      lastAnatomicalFetchHeading = heading || 0;
+      try {
+        const res = await fetch('/api/body-aligned-sky', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            latitude: currentLat,
+            longitude: currentLon,
+            head_heading_deg: heading || 0
+          })
+        });
+        const data = await res.json();
+        if (data && data.body_targets) {
+          cachedBodyAlignedTour = data;
+          updateAnatomicalHUD(data);
+        }
+      } catch (err) {
+        console.warn("Body-aligned sky fetch note:", err);
+      }
+    }
+
+    function updateAnatomicalHUD(data) {
+      const orient = data.orientation || {};
+      const targets = data.body_targets || {};
+
+      const badge = document.getElementById('anat-heading-badge');
+      if (badge) badge.textContent = `Head: ${orient.head_cardinal} (${orient.head_heading_deg}°)`;
+
+      if (targets.zenith) {
+        const z = targets.zenith.target;
+        const zEl = document.getElementById('anat-zenith-target');
+        const zmEl = document.getElementById('anat-zenith-meta');
+        if (zEl) zEl.textContent = z.name;
+        if (zmEl) zmEl.textContent = `${z.altitude_deg}° Alt • ${z.elevation_description || 'Directly overhead'}`;
+      }
+
+      if (targets.head) {
+        const h = targets.head.target;
+        const hEl = document.getElementById('anat-head-target');
+        const hmEl = document.getElementById('anat-head-meta');
+        if (hEl) hEl.textContent = h.name;
+        if (hmEl) hmEl.textContent = `${orient.head_cardinal} • ${h.altitude_deg}° Alt`;
+      }
+
+      if (targets.feet) {
+        const f = targets.feet.target;
+        const fEl = document.getElementById('anat-feet-target');
+        const fmEl = document.getElementById('anat-feet-meta');
+        if (fEl) fEl.textContent = f.name;
+        if (fmEl) fmEl.textContent = `${orient.feet_cardinal} • ${f.altitude_deg}° Alt`;
+      }
+
+      if (targets.left_shoulder) {
+        const l = targets.left_shoulder.target;
+        const lEl = document.getElementById('anat-left-target');
+        const lmEl = document.getElementById('anat-left-meta');
+        if (lEl) lEl.textContent = l.name;
+        if (lmEl) lmEl.textContent = `${orient.left_cardinal} • ${l.altitude_deg}° Alt`;
+      }
+
+      if (targets.right_shoulder) {
+        const r = targets.right_shoulder.target;
+        const rEl = document.getElementById('anat-right-target');
+        const rmEl = document.getElementById('anat-right-meta');
+        if (rEl) rEl.textContent = r.name;
+        if (rmEl) rmEl.textContent = `${orient.right_cardinal} • ${r.altitude_deg}° Alt`;
+      }
     }
 
     function updateChestSensorUI() {
@@ -2505,7 +2772,6 @@
           fdEl.style.color = "#4ade80";
         } else {
           fdEl.textContent = "NO";
-          fdEl.style.color = "#ef4444";
         }
       }
 
@@ -2532,6 +2798,7 @@
       } else {
         liveGravityZ = -9.8;
         liveBetaTilt = 170;
+        liveCompassHeading = 0;
         isChestPlacementDetected = true;
         onChestPlacementEngaged();
         updateChestSensorUI();
@@ -2999,63 +3266,138 @@
     }
 
     // =========================================================================
-    // ELEVENLABS STUDIO AUDIO TRACKS (Zero Glitch, Human Voice Engine)
+    // ELEVENLABS STUDIO AUDIO ENGINE (Continuous Unified Tracks, Zero Stutter)
     // =========================================================================
     const studioAudio = new Audio();
     studioAudio.preload = 'auto';
-    let currentChapterIndex = 0;
 
-    const chapterTracks = [
-      { url: '/audio/chapter_1.mp3', title: 'Chapter 1: Eyes to the Darkness' },
-      { url: '/audio/chapter_2.mp3', title: 'Chapter 2: Celestial Star-Hop' },
-      { url: '/audio/chapter_3.mp3', title: 'Chapter 3: The Deep Quiet of Space' }
-    ];
+    let currentNarratorVoice = 'male'; // 'male' (George) | 'female' (Sarah)
+    activeChapterIndex = 0;
 
-    function playStudioChapter(idx) {
-      if (idx < 0 || idx >= chapterTracks.length) {
-        onAudioEnded();
-        return;
-      }
-      currentChapterIndex = idx;
-      const track = chapterTracks[idx];
-
-      document.querySelectorAll('.chapter-row').forEach((el, i) => el.classList.toggle('active', i === idx));
-
-      // Stop speech synthesis if it was speaking
-      try { window.speechSynthesis.cancel(); } catch(e) {}
-
-      studioAudio.src = track.url;
-      studioAudio.playbackRate = speechRate || 1.0;
-      studioAudio.play()
-        .then(() => {
-          isPlaying = true;
-          updatePlayState();
-          requestWakeLock();
-          setupMediaSession(track.title, "ElevenLabs Studio Voice (George) • 0 Nits");
-        })
-        .catch(err => {
-          console.warn("Studio audio play error, falling back to Web Speech:", err);
-          const tour = buildCompleteStargazeTour();
-          speakCelestialNarration(tour, () => {
-            showToast("🌟 Stargazing Tour Complete");
-          });
-        });
-    }
-
-    studioAudio.onended = () => {
-      if (currentChapterIndex < chapterTracks.length - 1) {
-        setTimeout(() => {
-          if (isPlaying) playStudioChapter(currentChapterIndex + 1);
-        }, 1200);
-      } else {
-        onAudioEnded();
+    const voiceProfiles = {
+      male: {
+        id: 'male',
+        name: "Boy's Voice (George)",
+        actor: "George (ElevenLabs)",
+        url: '/audio/stargaze_tour_male.mp3',
+        chapters: [
+          { start: 0.0, title: 'Chapter 1: Eyes to the Darkness', desc: 'Night vision grounding & somatic breathwork • George' },
+          { start: 23.0, title: 'Chapter 2: Celestial Star-Hop to Andromeda', desc: 'Zenith, Polaris, Cassiopeia & M31 • George' },
+          { start: 67.4, title: 'Chapter 3: The Deep Quiet of Space', desc: 'Cosmic reflection & 2.5M light-year voyage • George' }
+        ]
+      },
+      female: {
+        id: 'female',
+        name: "Lady's Voice (Sarah)",
+        actor: "Sarah (ElevenLabs)",
+        url: '/audio/stargaze_tour_female.mp3',
+        chapters: [
+          { start: 0.0, title: 'Chapter 1: Eyes to the Darkness', desc: 'Night vision grounding & somatic breathwork • Sarah' },
+          { start: 24.2, title: 'Chapter 2: Celestial Star-Hop to Andromeda', desc: 'Zenith, Polaris, Cassiopeia & M31 • Sarah' },
+          { start: 70.7, title: 'Chapter 3: The Deep Quiet of Space', desc: 'Cosmic reflection & 2.5M light-year voyage • Sarah' }
+        ]
       }
     };
 
-    studioAudio.onerror = (e) => {
-      console.warn("Studio audio error, falling back to Web Speech:", e);
-      const tour = buildCompleteStargazeTour();
-      speakCelestialNarration(tour);
+    function selectNarratorVoice(voiceId) {
+      if (voiceId !== 'male' && voiceId !== 'female') return;
+      currentNarratorVoice = voiceId;
+
+      const btnMale = document.getElementById('btn-voice-male');
+      const btnFemale = document.getElementById('btn-voice-female');
+      const pill = document.getElementById('active-voice-pill');
+
+      if (btnMale) btnMale.classList.toggle('active', voiceId === 'male');
+      if (btnFemale) btnFemale.classList.toggle('active', voiceId === 'female');
+      if (pill) pill.textContent = voiceProfiles[voiceId].name;
+
+      updateChapterDescriptions();
+
+      showToast(`🎙️ Voice Selected: ${voiceProfiles[voiceId].name}`);
+
+      // If already playing, switch track seamlessly without interruption
+      if (isPlaying) {
+        const curTime = studioAudio.currentTime || 0;
+        studioAudio.src = voiceProfiles[voiceId].url;
+        studioAudio.playbackRate = speechRate || 1.0;
+        studioAudio.currentTime = Math.min(curTime, 80);
+        studioAudio.play().catch(e => console.warn("Track switch play note:", e));
+        setupMediaSession(voiceProfiles[voiceId].chapters[activeChapterIndex].title, `${voiceProfiles[voiceId].name} • 0 Nits`);
+      }
+    }
+
+    function updateChapterDescriptions() {
+      const prof = voiceProfiles[currentNarratorVoice];
+      prof.chapters.forEach((ch, idx) => {
+        const el = document.getElementById(`ch-desc-${idx}`);
+        if (el) el.textContent = ch.desc;
+      });
+    }
+
+    function playChapterSegment(idx) {
+      const profile = voiceProfiles[currentNarratorVoice];
+      const targetChapter = profile.chapters[idx] || profile.chapters[0];
+      activeChapterIndex = idx;
+
+      // Permanently cancel any stray SpeechSynthesis utterances so voices never collide
+      if ('speechSynthesis' in window) {
+        try { window.speechSynthesis.cancel(); } catch(e) {}
+      }
+
+      highlightChapterRow(idx);
+
+      const targetUrl = profile.url;
+      const currentSrc = studioAudio.src || '';
+      if (!currentSrc.includes(targetUrl)) {
+        studioAudio.src = targetUrl;
+      }
+
+      studioAudio.playbackRate = speechRate || 1.0;
+      studioAudio.currentTime = targetChapter.start;
+
+      studioAudio.play()
+        .then(() => {
+          isPlaying = true;
+          isExperienceStarted = true;
+          updatePlayState();
+          requestWakeLock();
+          setupMediaSession(targetChapter.title, `${profile.name} • 0 Nits`);
+        })
+        .catch(err => {
+          console.warn("Studio audio play notice:", err);
+          showToast("Tap to listen to the heavens");
+        });
+    }
+
+    window.playChapter = playChapterSegment;
+
+    function highlightChapterRow(idx) {
+      document.querySelectorAll('#chapter-list .chapter-row').forEach((el, i) => {
+        el.classList.toggle('active', i === idx);
+      });
+    }
+
+    studioAudio.ontimeupdate = () => {
+      if (!isPlaying) return;
+      const t = studioAudio.currentTime;
+      const profile = voiceProfiles[currentNarratorVoice];
+      let idx = 0;
+      if (t >= profile.chapters[2].start) idx = 2;
+      else if (t >= profile.chapters[1].start) idx = 1;
+      else idx = 0;
+
+      if (idx !== activeChapterIndex) {
+        activeChapterIndex = idx;
+        highlightChapterRow(idx);
+        setupMediaSession(profile.chapters[idx].title, `${profile.name} • 0 Nits`);
+      }
+    };
+
+    studioAudio.onended = () => {
+      isPlaying = false;
+      updatePlayState();
+      releaseWakeLock();
+      showToast("🌟 Celestial Audio Tour Complete");
     };
 
     // Master Experience Launch: One Tap to Universe
@@ -3066,7 +3408,8 @@
       }
 
       isExperienceStarted = true;
-      showToast("🎙️ Starting Studio Narrator (ElevenLabs Voice)...");
+      const profile = voiceProfiles[currentNarratorVoice];
+      showToast(`🎙️ Starting ${profile.name}...`);
 
       primeAudioAndSpeech();
       requestWakeLock();
@@ -3074,44 +3417,17 @@
 
       if (!isDroneActive) toggleCosmicDrone();
 
-      playStudioChapter(0);
+      playChapterSegment(0);
       autoDetectSky();
+      fetchBodyAlignedSky(liveCompassHeading);
     }
 
     function beginRealTimeSkyNarration() {
-      playStudioChapter(1);
+      playChapterSegment(1);
     }
 
     function renderDynamicChapters(zenithName) {
-      const container = document.getElementById('chapter-list');
-      if (!container) return;
-      container.innerHTML = `
-        <div class="chapter-row active" onclick="playChapterSegment(0)">
-          <div>
-            <div class="ch-title">Chapter 1: Eyes to the Darkness</div>
-            <div class="ch-desc">Grounding breath & chest placement • George (ElevenLabs)</div>
-          </div>
-          <span class="ch-play-glyph"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></span>
-        </div>
-        <div class="chapter-row" onclick="playChapterSegment(1)">
-          <div>
-            <div class="ch-title">Chapter 2: Star-Hop to ${zenithName.split(' ')[0]} & Andromeda</div>
-            <div class="ch-desc">Real-time Alt/Az navigation overhead • George (ElevenLabs)</div>
-          </div>
-          <span class="ch-play-glyph"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></span>
-        </div>
-        <div class="chapter-row" onclick="playChapterSegment(2)">
-          <div>
-            <div class="ch-title">Chapter 3: The Deep Quiet of Space</div>
-            <div class="ch-desc">Atmospheric seeing & 2.5M light-year contemplation • George</div>
-          </div>
-          <span class="ch-play-glyph"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></span>
-        </div>
-      `;
-    }
-
-    function playChapterSegment(idx) {
-      playStudioChapter(idx);
+      updateChapterDescriptions();
     }
 
     function launchGuidedSession() {
@@ -3128,10 +3444,10 @@
         navigator.mediaSession.setActionHandler('play', () => toggleAudioPlayback());
         navigator.mediaSession.setActionHandler('pause', () => toggleAudioPlayback());
         navigator.mediaSession.setActionHandler('nexttrack', () => {
-          if (currentChapterIndex < chapterTracks.length - 1) playStudioChapter(currentChapterIndex + 1);
+          if (activeChapterIndex < 2) playChapterSegment(activeChapterIndex + 1);
         });
         navigator.mediaSession.setActionHandler('previoustrack', () => {
-          if (currentChapterIndex > 0) playStudioChapter(currentChapterIndex - 1);
+          if (activeChapterIndex > 0) playChapterSegment(activeChapterIndex - 1);
         });
       }
     }
@@ -3147,13 +3463,19 @@
         isPlaying = false;
         showToast("Audio Paused");
       } else {
-        if (studioAudio.src && !studioAudio.ended) {
-          studioAudio.play().catch(() => playStudioChapter(currentChapterIndex));
-        } else {
-          playStudioChapter(currentChapterIndex);
+        const profile = voiceProfiles[currentNarratorVoice];
+        if (!studioAudio.src || !studioAudio.src.includes(profile.url)) {
+          studioAudio.src = profile.url;
         }
-        isPlaying = true;
-        showToast("Audio Resumed");
+        studioAudio.playbackRate = speechRate || 1.0;
+        studioAudio.play()
+          .then(() => {
+            isPlaying = true;
+            showToast("Audio Resumed");
+          })
+          .catch(() => {
+            playChapterSegment(activeChapterIndex || 0);
+          });
       }
       updatePlayState();
     }

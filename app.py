@@ -90,6 +90,12 @@ class SynthesizeRequest(BaseModel):
     text: str
     voice_id: Optional[str] = None
 
+class BodyAlignedSkyRequest(BaseModel):
+    latitude: float = Field(default=37.7749)
+    longitude: float = Field(default=-122.4194)
+    head_heading_deg: float = Field(default=0.0)
+    voice: Optional[str] = "male"
+
 class FieldLogEntry(BaseModel):
     location: str
     bortle_scale: int
@@ -203,6 +209,14 @@ async def generate_tour(req: TourRequest):
         "seeing": seeing_data,
         "primary_targets": visible_targets[:4]
     }
+
+
+@app.post("/api/body-aligned-sky")
+async def body_aligned_sky_endpoint(req: BodyAlignedSkyRequest):
+    """Computes real-time sky targets mapped to observer's anatomy (Head, Feet, Shoulders, Zenith)."""
+    engine = CelestialEngine(lat=req.latitude, lon=req.longitude)
+    tour = engine.compute_body_aligned_tour(head_heading_deg=req.head_heading_deg)
+    return tour
 
 
 @app.post("/api/synthesize-audio")
