@@ -5,6 +5,7 @@ __pycache__/
 .venv/
 env/
 audio_cache/*.mp3
+!audio_cache/chapter_*.mp3
 !audio_cache/.gitkeep
 .vscode/
 .idea/

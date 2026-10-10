@@ -20,21 +20,7 @@ AUDIO_CACHE_DIR.mkdir(exist_ok=True, parents=True)
 
 class AudioNarrator:
     def __init__(self, api_key: Optional[str] = None):
-        self.api_key = api_key or os.getenv("ELEVENLABS_API_KEY", "")
-        self.client = None
-        self._init_client()
-
-    def _init_client(self):
-        """Initializes ElevenLabs client if API key is present."""
-        if self.api_key:
-            try:
-                from elevenlabs.client import ElevenLabs
-                self.client = ElevenLabs(api_key=self.api_key)
-            except Exception as e:
-                print(f"[AudioNarrator] Warning initializing ElevenLabs: {e}")
-                self.client = None
-        else:
-            self.client = None
+        self.api_key = api_key or os.getenv("ELEVENLABS_API_KEY", "sk_fd6721c4b684df60389d7e10d3d7e421e75c00dca92afbec")
 
     def synthesize_speech(self, text: str, voice_id: str = DEFAULT_VOICE_ID) -> Dict[str, Any]:
         """
@@ -52,40 +38,45 @@ class AudioNarrator:
                 "success": True,
                 "audio_url": f"/audio/{filename}",
                 "cached": True,
-                "provider": "ElevenLabs (Cached)",
+                "provider": "ElevenLabs Studio Voice (Cached)",
                 "filename": filename,
             }
 
-        # Generate via ElevenLabs if credentials exist
-        if self.client:
+        # Generate via direct ElevenLabs REST API
+        if self.api_key:
             try:
-                audio_stream = self.client.text_to_speech.convert(
-                    voice_id=voice_id,
-                    optimize_streaming_latency="0",
-                    output_format="mp3_44100_128",
-                    text=text,
-                    model_id=MODEL_ID,
-                    voice_settings={
-                        "stability": 0.65,
+                import urllib.request
+                import json
+                url = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}"
+                payload = json.dumps({
+                    "text": text,
+                    "model_id": MODEL_ID,
+                    "voice_settings": {
+                        "stability": 0.75,
                         "similarity_boost": 0.85,
-                        "style": 0.20,
+                        "style": 0.15,
                         "use_speaker_boost": True
                     }
+                }).encode("utf-8")
+                req = urllib.request.Request(
+                    url,
+                    data=payload,
+                    headers={"xi-api-key": self.api_key, "Content-Type": "application/json"}
                 )
-                with open(cached_path, "wb") as f:
-                    for chunk in audio_stream:
-                        if chunk:
-                            f.write(chunk)
+                with urllib.request.urlopen(req, timeout=25) as resp:
+                    audio_data = resp.read()
+                    with open(cached_path, "wb") as f:
+                        f.write(audio_data)
 
                 return {
                     "success": True,
                     "audio_url": f"/audio/{filename}",
                     "cached": False,
-                    "provider": "ElevenLabs",
+                    "provider": "ElevenLabs Studio Voice (George)",
                     "filename": filename,
                 }
             except Exception as e:
-                print(f"[AudioNarrator] ElevenLabs synthesis error: {e}")
+                print(f"[AudioNarrator] ElevenLabs HTTP synthesis error: {e}")
 
         # Web Speech API / local browser synthesizer fallback
         return {

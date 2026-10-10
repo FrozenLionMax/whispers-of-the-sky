@@ -2999,6 +2999,66 @@
       return list;
     }
 
+    // =========================================================================
+    // ELEVENLABS STUDIO AUDIO TRACKS (Zero Glitch, Human Voice Engine)
+    // =========================================================================
+    const studioAudio = new Audio();
+    studioAudio.preload = 'auto';
+    let currentChapterIndex = 0;
+
+    const chapterTracks = [
+      { url: '/audio/chapter_1.mp3', title: 'Chapter 1: Eyes to the Darkness' },
+      { url: '/audio/chapter_2.mp3', title: 'Chapter 2: Celestial Star-Hop' },
+      { url: '/audio/chapter_3.mp3', title: 'Chapter 3: The Deep Quiet of Space' }
+    ];
+
+    function playStudioChapter(idx) {
+      if (idx < 0 || idx >= chapterTracks.length) {
+        onAudioEnded();
+        return;
+      }
+      currentChapterIndex = idx;
+      const track = chapterTracks[idx];
+
+      document.querySelectorAll('.chapter-row').forEach((el, i) => el.classList.toggle('active', i === idx));
+
+      // Stop speech synthesis if it was speaking
+      try { window.speechSynthesis.cancel(); } catch(e) {}
+
+      studioAudio.src = track.url;
+      studioAudio.playbackRate = speechRate || 1.0;
+      studioAudio.play()
+        .then(() => {
+          isPlaying = true;
+          updatePlayState();
+          requestWakeLock();
+          setupMediaSession(track.title, "ElevenLabs Studio Voice (George) • 0 Nits");
+        })
+        .catch(err => {
+          console.warn("Studio audio play error, falling back to Web Speech:", err);
+          const tour = buildCompleteStargazeTour();
+          speakCelestialNarration(tour, () => {
+            showToast("🌟 Stargazing Tour Complete");
+          });
+        });
+    }
+
+    studioAudio.onended = () => {
+      if (currentChapterIndex < chapterTracks.length - 1) {
+        setTimeout(() => {
+          if (isPlaying) playStudioChapter(currentChapterIndex + 1);
+        }, 1200);
+      } else {
+        onAudioEnded();
+      }
+    };
+
+    studioAudio.onerror = (e) => {
+      console.warn("Studio audio error, falling back to Web Speech:", e);
+      const tour = buildCompleteStargazeTour();
+      speakCelestialNarration(tour);
+    };
+
     // Master Experience Launch: One Tap to Universe
     async function startCompleteStargazeExperience() {
       if (isPlaying) {
@@ -3007,7 +3067,7 @@
       }
 
       isExperienceStarted = true;
-      showToast("🌌 Initializing Audio & Chest Gyroscope...");
+      showToast("🎙️ Starting Studio Narrator (ElevenLabs Voice)...");
 
       primeAudioAndSpeech();
       requestWakeLock();
@@ -3015,21 +3075,12 @@
 
       if (!isDroneActive) toggleCosmicDrone();
 
-      setupMediaSession("Celestial Stargaze Journey", "Resting on Chest • 0 Nits");
-
-      const zenithTarget = cachedTargets.find(t => t.altitude_deg >= 50) || cachedTargets[0];
-      renderDynamicChapters(zenithTarget ? zenithTarget.name : "Overhead Stars");
-
-      const tour = buildCompleteStargazeTour();
-      speakCelestialNarration(tour, () => {
-        showToast("🌟 Stargazing Tour Complete");
-      });
-
+      playStudioChapter(0);
       autoDetectSky();
     }
 
     function beginRealTimeSkyNarration() {
-      startCompleteStargazeExperience();
+      playStudioChapter(1);
     }
 
     function renderDynamicChapters(zenithName) {
@@ -3039,21 +3090,21 @@
         <div class="chapter-row active" onclick="playChapterSegment(0)">
           <div>
             <div class="ch-title">Chapter 1: Eyes to the Darkness</div>
-            <div class="ch-desc">Grounding breath & chest placement</div>
+            <div class="ch-desc">Grounding breath & chest placement • George (ElevenLabs)</div>
           </div>
           <span class="ch-play-glyph"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></span>
         </div>
         <div class="chapter-row" onclick="playChapterSegment(1)">
           <div>
             <div class="ch-title">Chapter 2: Star-Hop to ${zenithName.split(' ')[0]} & Andromeda</div>
-            <div class="ch-desc">Real-time Alt/Az navigation overhead</div>
+            <div class="ch-desc">Real-time Alt/Az navigation overhead • George (ElevenLabs)</div>
           </div>
           <span class="ch-play-glyph"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></span>
         </div>
         <div class="chapter-row" onclick="playChapterSegment(2)">
           <div>
             <div class="ch-title">Chapter 3: The Deep Quiet of Space</div>
-            <div class="ch-desc">Atmospheric seeing & 2.5M light-year contemplation</div>
+            <div class="ch-desc">Atmospheric seeing & 2.5M light-year contemplation • George</div>
           </div>
           <span class="ch-play-glyph"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></span>
         </div>
@@ -3061,18 +3112,7 @@
     }
 
     function playChapterSegment(idx) {
-      document.querySelectorAll('.chapter-row').forEach((el, i) => el.classList.toggle('active', i === idx));
-      if (idx === 0) {
-        speakCelestialNarration([
-          "Lie back comfortably against the earth. Rest your phone upon your chest. Breathe slowly into the cool night air."
-        ]);
-      } else if (idx === 1) {
-        beginRealTimeSkyNarration();
-      } else {
-        speakCelestialNarration([
-          "Rest here in the quiet stillness. Two and a half million light-years away, galaxies rotate in silence. You are home under the stars."
-        ]);
-      }
+      playStudioChapter(idx);
     }
 
     function launchGuidedSession() {
@@ -3089,10 +3129,10 @@
         navigator.mediaSession.setActionHandler('play', () => toggleAudioPlayback());
         navigator.mediaSession.setActionHandler('pause', () => toggleAudioPlayback());
         navigator.mediaSession.setActionHandler('nexttrack', () => {
-          beginRealTimeSkyNarration();
+          if (currentChapterIndex < chapterTracks.length - 1) playStudioChapter(currentChapterIndex + 1);
         });
         navigator.mediaSession.setActionHandler('previoustrack', () => {
-          playChapterSegment(0);
+          if (currentChapterIndex > 0) playStudioChapter(currentChapterIndex - 1);
         });
       }
     }
@@ -3103,15 +3143,15 @@
         return;
       }
       if (isPlaying) {
+        studioAudio.pause();
         if (window.speechSynthesis) window.speechSynthesis.pause();
-        if (audioEl) audioEl.pause();
         isPlaying = false;
         showToast("Audio Paused");
       } else {
-        if (window.speechSynthesis && window.speechSynthesis.paused) {
-          window.speechSynthesis.resume();
+        if (studioAudio.src && !studioAudio.ended) {
+          studioAudio.play().catch(() => playStudioChapter(currentChapterIndex));
         } else {
-          beginRealTimeSkyNarration();
+          playStudioChapter(currentChapterIndex);
         }
         isPlaying = true;
         showToast("Audio Resumed");
