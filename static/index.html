@@ -2478,9 +2478,9 @@
         try { navigator.vibrate([45, 60, 45]); } catch(err) {}
       }
       showToast("🫁 Chest Placement Locked: Screen Blanked to 0 Nits");
-      if (!isChestNarrationDelivered) {
-        isChestNarrationDelivered = true;
-        beginRealTimeSkyNarration();
+      // If user hasn't started yet, begin the full master celestial journey!
+      if (!isExperienceStarted) {
+        startCompleteStargazeExperience();
       }
     }
 
@@ -2821,41 +2821,59 @@
       }
     }
 
+    let currentSpeechSessionId = 0;
+    let chunkWatchdogTimer = null;
+
     function speakCelestialNarration(paragraphs, onFinish) {
       if (!('speechSynthesis' in window)) {
         if (onFinish) onFinish();
         return;
       }
 
-      // Pre-chunk into short, soothing phrases under 130 characters.
-      // This eliminates mobile browser audio truncation permanently!
-      const chunks = [];
+      // Increment session ID to cancel out any prior queue callbacks atomically
+      const sessionId = ++currentSpeechSessionId;
+
+      if (chunkWatchdogTimer) {
+        clearTimeout(chunkWatchdogTimer);
+        chunkWatchdogTimer = null;
+      }
+
+      try {
+        window.speechSynthesis.cancel();
+        if (window.speechSynthesis.paused) window.speechSynthesis.resume();
+      } catch(e) {}
+
+      // Clean chunks safely without regex lookbehind or crashing characters
+      const safeChunks = [];
       paragraphs.forEach(p => {
-        const parts = p.split(/(?<=[.?!])\s+/);
+        // Strip problematic quotes and brackets
+        const clean = p.replace(/[\(\)\[\]"']/g, "").replace(/\s+/g, " ").trim();
+        // Safe splitting on sentence punctuation without lookbehind
+        const parts = clean.replace(/([.?!])\s+/g, "$1|SPLIT|").split("|SPLIT|");
         parts.forEach(pt => {
-          const trimmed = pt.trim();
-          if (trimmed.length > 0) chunks.push(trimmed);
+          const t = pt.trim();
+          if (t.length > 0) safeChunks.push(t);
         });
       });
 
-      speechQueue = [...chunks];
-      isSpeakingQueue = true;
+      speechQueue = [...safeChunks];
       isPlaying = true;
       updatePlayState();
       requestWakeLock();
 
-      try { window.speechSynthesis.cancel(); } catch(e) {}
-      playNextSpeechChunk(onFinish);
+      playNextSpeechChunk(sessionId, onFinish);
     }
 
-    function playNextSpeechChunk(onFinish) {
-      if (currentUtteranceTimer) {
-        clearTimeout(currentUtteranceTimer);
-        currentUtteranceTimer = null;
+    function playNextSpeechChunk(sessionId, onFinish) {
+      // Guard against superseded queues
+      if (sessionId !== currentSpeechSessionId) return;
+
+      if (chunkWatchdogTimer) {
+        clearTimeout(chunkWatchdogTimer);
+        chunkWatchdogTimer = null;
       }
 
       if (!isPlaying || speechQueue.length === 0) {
-        isSpeakingQueue = false;
         isPlaying = false;
         updatePlayState();
         if (onFinish) onFinish();
@@ -2865,53 +2883,120 @@
       const text = speechQueue.shift();
       const u = new SpeechSynthesisUtterance(text);
 
-      // Calibrated whisper-like nighttime acoustics:
-      u.rate = speechRate; // ~0.82x calm, unhurried
-      u.pitch = 0.88;      // Warm, deeper tone
-      u.volume = 0.88;     // Soft, soothing volume
+      // Soothing, calm bedtime acoustics
+      u.rate = speechRate || 0.82;
+      u.pitch = 0.88;
+      u.volume = 0.88;
 
       const voice = getBestSoothingVoice();
       if (voice) u.voice = voice;
 
-      // CRITICAL: Retain strong global reference to prevent V8 Garbage Collection aborting speech!
+      // Keep strong global reference to defeat V8 Garbage Collector
       window._activeSpeechUtterance = u;
       keptSpeechUtterances.push(u);
-      if (keptSpeechUtterances.length > 30) keptSpeechUtterances.shift();
+      if (keptSpeechUtterances.length > 40) keptSpeechUtterances.shift();
 
-      let isAdvanced = false;
-      const advance = () => {
-        if (isAdvanced) return;
-        isAdvanced = true;
-        if (currentUtteranceTimer) {
-          clearTimeout(currentUtteranceTimer);
-          currentUtteranceTimer = null;
+      let hasHandledChunk = false;
+      const advanceToNext = () => {
+        if (hasHandledChunk) return;
+        hasHandledChunk = true;
+        if (sessionId !== currentSpeechSessionId) return;
+
+        if (chunkWatchdogTimer) {
+          clearTimeout(chunkWatchdogTimer);
+          chunkWatchdogTimer = null;
         }
-        // Peaceful breath pause between phrases (800ms)
+
+        // Soft breath pause between thoughts (750ms)
         setTimeout(() => {
-          if (isPlaying) playNextSpeechChunk(onFinish);
-        }, 800);
+          if (sessionId === currentSpeechSessionId && isPlaying) {
+            playNextSpeechChunk(sessionId, onFinish);
+          }
+        }, 750);
       };
 
-      u.onend = advance;
+      u.onend = advanceToNext;
       u.onerror = (err) => {
-        console.warn('Utterance auto-recovered:', err);
-        advance();
+        if (err && (err.error === 'canceled' || err.error === 'interrupted')) {
+          return;
+        }
+        console.warn('Utterance auto-recovered:', err ? err.error : 'unknown');
+        advanceToNext();
       };
 
-      // Watchdog: If an utterance doesn't finish within expected time, auto-advance!
-      const timeoutMs = Math.max(3500, (text.length * 95) + 3500);
-      currentUtteranceTimer = setTimeout(() => {
-        console.warn('Watchdog advancing past stalled speech:', text.slice(0, 25));
-        try { window.speechSynthesis.cancel(); } catch(err) {}
-        advance();
-      }, timeoutMs);
+      // Watchdog: Generous safety timer (14-35 seconds) so legitimate speech is never cut off
+      const safeTimeout = Math.max(14000, (text.length * 200) + 9000);
+      chunkWatchdogTimer = setTimeout(() => {
+        if (hasHandledChunk || sessionId !== currentSpeechSessionId) return;
+        console.warn('Watchdog advancing past stalled speech engine:', text.slice(0, 25));
+        try {
+          if (window.speechSynthesis.paused) window.speechSynthesis.resume();
+        } catch(e) {}
+        advanceToNext();
+      }, safeTimeout);
 
       try {
+        if (window.speechSynthesis.paused) {
+          window.speechSynthesis.resume();
+        }
         window.speechSynthesis.speak(u);
-      } catch(err) {
-        console.warn('Speech speak exception:', err);
-        advance();
+      } catch (err) {
+        console.warn('SpeechSynthesis speak exception:', err);
+        advanceToNext();
       }
+    }
+
+    function buildCompleteStargazeTour() {
+      const list = [];
+
+      // Phase 1: Somatic grounding & darkness adaptation
+      list.push("Welcome to Whispers of the Sky.");
+      list.push("Lie back comfortably against the cool earth.");
+      list.push("Rest your phone face-down upon your chest.");
+      list.push("Let your breathing slow into the quiet stillness of the night.");
+      list.push("Allow the darkness to settle gently across your eyes.");
+      list.push("Your phone is resting in total darkness to protect your biological rhodopsin.");
+      list.push("For the next twenty minutes, your eyes will grow thousands of times more sensitive to the faint light of the cosmos.");
+
+      // Phase 2: Zenith target above the chest
+      const zenithTarget = cachedTargets.find(t => t.altitude_deg >= 50) || cachedTargets[0];
+      if (zenithTarget) {
+        const cleanName = zenithTarget.name.replace(/\([^\)]*\)/g, "").replace(/["']/g, "").trim();
+        const cleanHop = zenithTarget.star_hop.replace(/\([^\)]*\)/g, "").replace(/["']/g, "").trim();
+        list.push("Look directly overhead, toward the zenith above your chest.");
+        list.push(`You are gazing toward ${cleanName}.`);
+        list.push(cleanHop);
+      }
+
+      // Phase 3: Polaris (True North)
+      list.push("Now turn your gaze toward true north, past your head.");
+      list.push("Polaris, the North Star, holds the heavens steady while all constellations slowly pivot around it as the Earth rotates beneath your spine.");
+
+      // Phase 4: Cassiopeia
+      list.push("Just beside the pole star, trace the five bright sparks of Cassiopeia, forming a wide reclining W across the heavens.");
+
+      // Phase 5: Jupiter
+      list.push("Glance toward the south-east for Jupiter.");
+      list.push("It shines as an unmistakable, brilliant white beacon in the autumn sky, outshining every star.");
+
+      // Phase 6: Andromeda Galaxy (M31)
+      list.push("Now let Cassiopeia guide your eyes downward toward the east.");
+      list.push("Look for an elongated, faint misty smudge of light.");
+      list.push("That is the Andromeda Galaxy.");
+      list.push("Its ancient photons travelled across two and a half million light-years of space, solely to meet your pupils on this grass tonight.");
+
+      // Phase 7: Atmospheric Seeing & Golden Hour
+      if (cachedSeeing && cachedSeeing.transparency_pct) {
+        list.push(`Tonight, TabPFN forecasts atmospheric transparency at ${cachedSeeing.transparency_pct} percent.`);
+        list.push("The air is calm, and the heavens are open.");
+      }
+
+      // Phase 8: Deep meditative quiet
+      list.push("Rest here in the deep quiet.");
+      list.push("There is nothing to look at on any screen.");
+      list.push("Just breathe, feel the earth beneath you, and listen to the sky.");
+
+      return list;
     }
 
     // Master Experience Launch: One Tap to Universe
@@ -2930,86 +3015,21 @@
 
       if (!isDroneActive) toggleCosmicDrone();
 
-      isPlaying = true;
-      updatePlayState();
-
       setupMediaSession("Celestial Stargaze Journey", "Resting on Chest • 0 Nits");
 
-      const welcomeIntro = [
-        "Welcome to Whispers of the Sky.",
-        "Lie back comfortably against the earth.",
-        "Rest your phone face-down upon your chest.",
-        "Let your breathing slow into the quiet of the night, and let the darkness settle gently across your eyes."
-      ];
+      const zenithTarget = cachedTargets.find(t => t.altitude_deg >= 50) || cachedTargets[0];
+      renderDynamicChapters(zenithTarget ? zenithTarget.name : "Overhead Stars");
 
-      speakCelestialNarration(welcomeIntro, () => {
-        if (!isChestNarrationDelivered) {
-          beginRealTimeSkyNarration();
-        }
+      const tour = buildCompleteStargazeTour();
+      speakCelestialNarration(tour, () => {
+        showToast("🌟 Stargazing Tour Complete");
       });
 
       autoDetectSky();
     }
 
     function beginRealTimeSkyNarration() {
-      const parts = [];
-
-      parts.push(
-        "Your phone is resting face-down in complete darkness to protect your biological night vision."
-      );
-      parts.push(
-        "For the next twenty minutes, your eyes will grow thousands of times more sensitive to the stars."
-      );
-
-      const zenithTarget = cachedTargets.find(t => t.altitude_deg >= 55) || cachedTargets[0];
-      if (zenithTarget) {
-        parts.push(
-          `Look directly overhead, toward the zenith above your chest. You are gazing toward ${zenithTarget.name}. ${zenithTarget.star_hop}`
-        );
-      }
-
-      const polaris = cachedTargets.find(t => t.id === 'polaris');
-      const cassiopeia = cachedTargets.find(t => t.id === 'cassiopeia');
-      if (polaris) {
-        parts.push(
-          `Now turn your gaze toward true north, past your head. Polaris, the North Star, holds the night sky steady as the Earth turns beneath you.`
-        );
-      }
-      if (cassiopeia) {
-        parts.push(
-          `Just beside the pole star, trace the five bright sparks of Cassiopeia forming a reclining W across the heavens.`
-        );
-      }
-
-      const jupiter = cachedTargets.find(t => t.id === 'jupiter');
-      if (jupiter) {
-        parts.push(
-          `Glance toward the south-east for Jupiter. It shines as an unmistakable, steady white beacon in the autumn sky.`
-        );
-      }
-
-      const andromeda = cachedTargets.find(t => t.id === 'andromeda_galaxy');
-      if (andromeda) {
-        parts.push(
-          `Now let Cassiopeia guide your eyes down toward the east. Look for an elongated, misty smudge of light. That is the Andromeda Galaxy, two and a half million light years away. Its ancient photons travelled across the cosmic void solely to meet your pupils on this grass tonight.`
-        );
-      }
-
-      if (cachedSeeing && cachedSeeing.transparency_pct) {
-        parts.push(
-          `Tonight, TabPFN forecasts atmospheric transparency at ${cachedSeeing.transparency_pct} percent. The night is calm, and the sky is open.`
-        );
-      }
-
-      parts.push(
-        "Rest here in the quiet. There is nothing to look at on any screen. Just breathe, feel the earth beneath your spine, and listen to the sky."
-      );
-
-      renderDynamicChapters(zenithTarget ? zenithTarget.name : "Overhead Stars");
-
-      speakCelestialNarration(parts, () => {
-        showToast("🌟 Stargazing Tour Complete");
-      });
+      startCompleteStargazeExperience();
     }
 
     function renderDynamicChapters(zenithName) {
@@ -3122,17 +3142,7 @@
     }
 
     function speakBrowserTTS(text) {
-      if (!('speechSynthesis' in window)) return;
-      window.speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(text);
-      u.rate = speechRate;
-      u.pitch = 0.95;
-      u.onend = onAudioEnded;
-      u.onerror = () => { isPlaying = false; updatePlayState(); };
-      window.speechSynthesis.speak(u);
-      isPlaying = true;
-      updatePlayState();
-      requestWakeLock();
+      speakCelestialNarration([text]);
     }
 
     function speakTarget(name, dir, elev, hop) {
