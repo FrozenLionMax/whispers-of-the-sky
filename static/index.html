@@ -246,19 +246,27 @@
 
     .brand {
       display: flex;
-      align-items: center;
-      gap: 8px;
+      flex-direction: column;
+      justify-content: center;
+      gap: 3px;
       min-width: 0;
       flex: 1;
+      padding-left: 2px;
+    }
+
+    .brand-top-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     /* Pulsating Beacon Dot */
     .brand-beacon {
-      width: 7px;
-      height: 7px;
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
       background: var(--accent);
-      box-shadow: 0 0 12px var(--accent);
+      box-shadow: 0 0 10px var(--accent);
       flex-shrink: 0;
       animation: beaconBreathe 2.4s infinite ease-in-out;
     }
@@ -270,19 +278,19 @@
 
     body.red-mode .brand-beacon {
       background: #ef4444;
-      box-shadow: 0 0 12px #ef4444;
+      box-shadow: 0 0 10px #ef4444;
     }
 
     .brand-text {
       font-family: 'Cinzel', serif;
-      font-size: 1.22rem;
+      font-size: 1.15rem;
       font-weight: 800;
       letter-spacing: 2px;
       color: #ffffff;
       background: linear-gradient(135deg, #ffffff 40%, #93c5fd 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 20px var(--accent-glow);
+      text-shadow: 0 0 18px var(--accent-glow);
       flex-shrink: 0;
       line-height: 1;
     }
@@ -291,50 +299,60 @@
       background: linear-gradient(135deg, #fca5a5 40%, #ef4444 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 20px rgba(239, 68, 68, 0.6);
+      text-shadow: 0 0 18px rgba(239, 68, 68, 0.6);
     }
 
-    .brand-divider {
-      color: var(--accent);
-      opacity: 0.35;
-      font-size: 0.85rem;
+    .brand-badge-theme {
       font-family: 'JetBrains Mono', monospace;
+      font-size: 0.54rem;
       font-weight: 700;
+      color: var(--accent);
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.28);
+      padding: 1px 5px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+      line-height: 1.1;
+      text-transform: uppercase;
       flex-shrink: 0;
+    }
+
+    body.red-mode .brand-badge-theme {
+      color: #ef4444;
+      background: rgba(239, 68, 68, 0.12);
+      border-color: rgba(239, 68, 68, 0.28);
     }
 
     .typewriter-wrap {
       display: inline-flex;
       align-items: center;
+      gap: 3px;
       min-width: 0;
-      max-width: 200px;
+      max-width: 100%;
+      height: 14px;
+      line-height: 14px;
       overflow: hidden;
       white-space: nowrap;
     }
 
-    @media (max-width: 480px) {
-      .typewriter-wrap {
-        max-width: 120px;
-      }
-      .brand-text {
-        font-size: 1.05rem;
-        letter-spacing: 1.5px;
-      }
-      .app-header {
-        padding: 6px 10px;
-      }
-      .icon-btn {
-        width: 34px !important;
-        height: 34px !important;
-      }
+    .typewriter-prefix {
+      font-size: 0.58rem;
+      color: var(--accent);
+      opacity: 0.75;
+      font-family: 'JetBrains Mono', monospace;
+      flex-shrink: 0;
+    }
+
+    body.red-mode .typewriter-prefix {
+      color: #ef4444;
     }
 
     .typewriter-text {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.74rem;
-      font-weight: 600;
-      color: var(--accent);
-      letter-spacing: 0.3px;
+      font-size: 0.67rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.2px;
       text-transform: lowercase;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -342,18 +360,19 @@
     }
 
     body.red-mode .typewriter-text {
-      color: #ef4444;
+      color: #b91c1c;
     }
 
     .typewriter-cursor {
       display: inline-block;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.8rem;
+      font-size: 0.7rem;
       font-weight: 700;
       color: var(--accent);
-      margin-left: 2px;
+      margin-left: 1px;
       animation: cursorBlink 0.9s infinite;
       flex-shrink: 0;
+      line-height: 1;
     }
 
     body.red-mode .typewriter-cursor {
@@ -363,6 +382,20 @@
     @keyframes cursorBlink {
       0%, 49% { opacity: 1; }
       50%, 100% { opacity: 0; }
+    }
+
+    @media (max-width: 480px) {
+      .brand-text {
+        font-size: 1.05rem;
+        letter-spacing: 1.5px;
+      }
+      .app-header {
+        padding: 6px 12px;
+      }
+      .icon-btn {
+        width: 34px !important;
+        height: 34px !important;
+      }
     }
 
     .header-actions {
@@ -1336,10 +1369,13 @@
   <div class="app-header-wrap">
     <header class="app-header">
       <div class="brand">
-        <span class="brand-beacon"></span>
-        <span class="brand-text">WOTS</span>
-        <span class="brand-divider">/</span>
+        <div class="brand-top-row">
+          <span class="brand-beacon"></span>
+          <span class="brand-text">WOTS</span>
+          <span class="brand-badge-theme">AUDIO</span>
+        </div>
         <div class="typewriter-wrap">
+          <span class="typewriter-prefix">▸</span>
           <span id="typewriter-text" class="typewriter-text"></span>
           <span class="typewriter-cursor">|</span>
         </div>
@@ -2307,11 +2343,10 @@
     const typewriterPhrases = [
       "whispers of the sky",
       "what's in the sky?",
-      "touch grass",
-      "screenless audio",
-      "eyes to the stars",
+      "touch grass • look up",
+      "screenless guide",
+      "rhodopsin protected",
       "gemma 2b astronomer",
-      "night vision safe",
       "0-nit darkness"
     ];
 
@@ -2333,7 +2368,7 @@
         charIndex++;
       }
 
-      let speed = isDeleting ? 38 : 75;
+      let speed = isDeleting ? 32 : 68;
 
       if (!isDeleting && charIndex === currentPhrase.length) {
         speed = 2200; // Pause when full phrase is typed
@@ -2341,7 +2376,7 @@
       } else if (isDeleting && charIndex === 0) {
         isDeleting = false;
         phraseIndex = (phraseIndex + 1) % typewriterPhrases.length;
-        speed = 400; // Pause before typing next phrase
+        speed = 380; // Brief pause before typing next phrase
       }
 
       setTimeout(initTypewriter, speed);
