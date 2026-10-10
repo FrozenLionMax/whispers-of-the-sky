@@ -1527,8 +1527,12 @@
     <div style="display:flex; flex-direction:column; align-items:center;">
       <div class="blank-orb"></div>
       <div class="blank-title">EYES TO THE SKY</div>
-      <div class="blank-sub">
-        Display blanked to 0-nit true OLED black. Put phone face-down on grass.
+      <div class="blank-sub" id="blank-sub-text">
+        Display blanked to 0-nit true OLED black. Resting on chest.
+      </div>
+      <div id="chest-sensor-badge" style="display:inline-flex; align-items:center; gap:6px; margin-top:10px; padding:3px 12px; background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.3); border-radius:999px; font-family:'JetBrains Mono',monospace; font-size:0.62rem; color:#ef4444; letter-spacing:0.8px;">
+        <span class="pulse-dot" style="background:#ef4444; width:5px; height:5px; border-radius:50%; box-shadow:0 0 6px #ef4444;"></span>
+        <span id="lbl-chest-status">CHEST PLACEMENT: SENSING</span>
       </div>
     </div>
 
@@ -1537,8 +1541,8 @@
     </div>
 
     <div style="display:flex; flex-direction:column; align-items:center; gap: 14px;">
-      <div style="font-size:0.72rem; color:#441111; font-family:'JetBrains Mono',monospace;">
-        Tap screen: Pause / Play • Earbud clicks: Active
+      <div style="font-size:0.72rem; color:#661111; font-family:'JetBrains Mono',monospace;">
+        Tap anywhere: Pause / Play • Earbud clicks: Active
       </div>
       <button class="btn-wake" onclick="exitScreenlessMode(event)">Wake Screen</button>
     </div>
@@ -1600,7 +1604,7 @@
         <div class="astrolabe-system">
           <div class="ring-outer"></div>
           <div class="ring-inner"></div>
-          <div class="celestial-orb" id="hero-orb" onclick="toggleAudioPlayback()">
+          <div class="celestial-orb" id="hero-orb" onclick="startCompleteStargazeExperience()">
             <span class="orb-icon" id="orb-state-icon">
               <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg>
             </span>
@@ -1619,7 +1623,7 @@
         </p>
 
         <div class="cta-row">
-          <button class="btn-main" onclick="launchGuidedSession()">
+          <button class="btn-main" onclick="startCompleteStargazeExperience()">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg>
             <span>Start Audio Tour</span>
           </button>
@@ -1744,41 +1748,43 @@
             <text x="12" y="103" class="dome-label" text-anchor="middle">W</text>
             <text x="100" y="96" class="dome-label" text-anchor="middle" style="fill:rgba(255,255,255,0.3); font-size:6px;">ZENITH</text>
 
-            <!-- Celestial Object Nodes (Plotted Alt/Az) -->
-            <!-- Polaris (North, 37 deg alt) -->
-            <g class="dome-node" onclick="triggerTargetAudio('Polaris (The North Star)')">
-              <circle cx="100" cy="62" r="4.5" fill="#38bdf8"></circle>
-              <text x="100" y="54" class="dome-label" text-anchor="middle">Polaris</text>
-            </g>
+            <!-- Dynamic Real-Time Celestial Object Nodes (Plotted Alt/Az from GPS) -->
+            <g id="dome-dynamic-nodes">
+              <!-- Polaris (North, 37 deg alt) -->
+              <g class="dome-node" onclick="triggerTargetAudio('Polaris (The North Star)')">
+                <circle cx="100" cy="62" r="4.5" fill="#38bdf8"></circle>
+                <text x="100" y="54" class="dome-label" text-anchor="middle">Polaris</text>
+              </g>
 
-            <!-- Cassiopeia (NE, 60 deg alt) -->
-            <g class="dome-node" onclick="triggerTargetAudio('Cassiopeia (The Celestial Queen)')">
-              <circle cx="128" cy="72" r="4" fill="#fbbf24"></circle>
-              <text x="128" y="64" class="dome-label" text-anchor="middle">Cassiopeia</text>
-            </g>
+              <!-- Cassiopeia (NE, 60 deg alt) -->
+              <g class="dome-node" onclick="triggerTargetAudio('Cassiopeia (The Celestial Queen)')">
+                <circle cx="128" cy="72" r="4" fill="#fbbf24"></circle>
+                <text x="128" y="64" class="dome-label" text-anchor="middle">Cassiopeia</text>
+              </g>
 
-            <!-- Andromeda M31 (East, 41 deg alt) -->
-            <g class="dome-node" onclick="triggerTargetAudio('Andromeda Galaxy (M31)')">
-              <circle cx="152" cy="100" r="4" fill="#c084fc"></circle>
-              <text x="152" y="92" class="dome-label" text-anchor="middle">M31 Galaxy</text>
-            </g>
+              <!-- Andromeda M31 (East, 41 deg alt) -->
+              <g class="dome-node" onclick="triggerTargetAudio('Andromeda Galaxy (M31)')">
+                <circle cx="152" cy="100" r="4" fill="#c084fc"></circle>
+                <text x="152" y="92" class="dome-label" text-anchor="middle">M31 Galaxy</text>
+              </g>
 
-            <!-- Jupiter (East, 21 deg alt) -->
-            <g class="dome-node" onclick="triggerTargetAudio('Jupiter (The King of Planets)')">
-              <circle cx="174" cy="100" r="5" fill="#f8fafc"></circle>
-              <text x="174" y="92" class="dome-label" text-anchor="middle">Jupiter</text>
-            </g>
+              <!-- Jupiter (East, 21 deg alt) -->
+              <g class="dome-node" onclick="triggerTargetAudio('Jupiter (The King of Planets)')">
+                <circle cx="174" cy="100" r="5" fill="#f8fafc"></circle>
+                <text x="174" y="92" class="dome-label" text-anchor="middle">Jupiter</text>
+              </g>
 
-            <!-- Saturn (South, 35 deg alt) -->
-            <g class="dome-node" onclick="triggerTargetAudio('Saturn (The Ringed Giant)')">
-              <circle cx="100" cy="138" r="4.5" fill="#f59e0b"></circle>
-              <text x="100" y="150" class="dome-label" text-anchor="middle">Saturn</text>
-            </g>
+              <!-- Saturn (South, 35 deg alt) -->
+              <g class="dome-node" onclick="triggerTargetAudio('Saturn (The Ringed Giant)')">
+                <circle cx="100" cy="138" r="4.5" fill="#f59e0b"></circle>
+                <text x="100" y="150" class="dome-label" text-anchor="middle">Saturn</text>
+              </g>
 
-            <!-- Cygnus (Overhead Zenith, 82 deg alt) -->
-            <g class="dome-node" onclick="triggerTargetAudio('Cygnus (The Northern Cross)')">
-              <circle cx="104" cy="92" r="4.5" fill="#38bdf8"></circle>
-              <text x="104" y="84" class="dome-label" text-anchor="middle">Cygnus</text>
+              <!-- Cygnus (Overhead Zenith, 82 deg alt) -->
+              <g class="dome-node" onclick="triggerTargetAudio('Cygnus (The Northern Cross)')">
+                <circle cx="104" cy="92" r="4.5" fill="#38bdf8"></circle>
+                <text x="104" y="84" class="dome-label" text-anchor="middle">Cygnus</text>
+              </g>
             </g>
           </svg>
         </div>
@@ -2161,14 +2167,62 @@
       if (wakeLock) { wakeLock.release().then(() => { wakeLock = null; }); }
     }
 
-    // Flip-to-Dark
-    if (window.DeviceOrientationEvent) {
-      window.addEventListener('deviceorientation', (e) => {
-        if (e.beta !== null && Math.abs(e.beta) > 145) {
-          const overlay = document.getElementById('screenless-overlay');
-          if (!overlay.classList.contains('active')) enterScreenlessMode();
+    // Orientation & Chest Placement Sensing ("Brain of the Phone")
+    let isChestPlacementDetected = false;
+    let orientationListenerActive = false;
+    let isExperienceStarted = false;
+    let isChestNarrationDelivered = false;
+    let cachedTargets = [];
+    let cachedSeeing = { transparency_pct: 94, seeing_label: "Exceptional", naked_eye_magnitude_limit: 6.2 };
+
+    function requestOrientationPermission() {
+      if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+        DeviceOrientationEvent.requestPermission()
+          .then(permissionState => {
+            if (permissionState === 'granted') initOrientationSensors();
+          })
+          .catch(() => initOrientationSensors());
+      } else {
+        initOrientationSensors();
+      }
+    }
+
+    function initOrientationSensors() {
+      if (orientationListenerActive || !window.DeviceOrientationEvent) return;
+      orientationListenerActive = true;
+      window.addEventListener('deviceorientation', handleDeviceOrientation, { passive: true });
+    }
+
+    function handleDeviceOrientation(e) {
+      if (e.beta === null || e.beta === undefined) return;
+      const beta = e.beta;
+      const gamma = e.gamma || 0;
+
+      // Chest placement: Lying down with phone on chest upside-down / face-down
+      const isUpsideDownOnChest = Math.abs(beta) > 130 || Math.abs(gamma) > 130;
+      // Chest placement: Lying flat on chest face-up
+      const isFlatOnChest = Math.abs(beta) < 32 && Math.abs(gamma) < 32;
+
+      const overlay = document.getElementById('screenless-overlay');
+      const badge = document.getElementById('lbl-chest-status');
+
+      if (isUpsideDownOnChest) {
+        if (!overlay.classList.contains('active')) {
+          enterScreenlessMode();
+          if ('vibrate' in navigator) {
+            try { navigator.vibrate([35, 50, 35]); } catch(err) {}
+          }
         }
-      });
+        if (badge) badge.textContent = "CHEST PLACEMENT: DETECTED (0 NITS)";
+        if (isExperienceStarted && !isChestPlacementDetected) {
+          isChestPlacementDetected = true;
+          onChestPlacementConfirmed();
+        }
+      } else if (isFlatOnChest) {
+        if (badge) badge.textContent = "CHEST PLACEMENT: HORIZONTAL";
+      } else {
+        if (badge) badge.textContent = "CHEST PLACEMENT: SENSING";
+      }
     }
 
     // Screenless Overlay
@@ -2176,8 +2230,7 @@
       document.getElementById('screenless-overlay').classList.add('active');
       requestWakeLock();
       if (!isDroneActive) toggleCosmicDrone();
-      if (!isPlaying) toggleAudioPlayback();
-      showToast("🌙 Blanket Mode Active — Display 100% Dark");
+      showToast("🌙 0-Nit Screenless Active — Display 100% Dark");
     }
 
     function exitScreenlessMode(e) {
@@ -2202,7 +2255,11 @@
     // GPS & Live Telemetry
     function autoDetectSky() {
       showToast("Detecting GPS coordinates...");
-      if (!('geolocation' in navigator)) return;
+      if (!('geolocation' in navigator)) {
+        fetchLiveTelemetry();
+        fetchVisibleSky();
+        return;
+      }
       navigator.geolocation.getCurrentPosition(
         async (pos) => {
           currentLat = Math.round(pos.coords.latitude * 100) / 100;
@@ -2212,7 +2269,10 @@
           await fetchLiveTelemetry();
           await fetchVisibleSky();
         },
-        () => fetchLiveTelemetry(),
+        async () => {
+          await fetchLiveTelemetry();
+          await fetchVisibleSky();
+        },
         { timeout: 6000 }
       );
     }
@@ -2227,6 +2287,8 @@
         const data = await res.json();
         const pred = data.prediction;
         const telem = data.telemetry;
+
+        if (pred) cachedSeeing = pred;
 
         document.getElementById('slider-cloud').value = Math.round(telem.cloud_cover_pct);
         document.getElementById('slider-humidity').value = Math.round(telem.humidity_pct);
@@ -2254,6 +2316,7 @@
           body: JSON.stringify({ cloud_cover_pct: cloud, humidity_pct: humidity, wind_speed_kmh: wind })
         });
         const data = await res.json();
+        if (data && data.prediction) cachedSeeing = data.prediction;
         updateSeeingUI(data.prediction, data.hourly_timeline);
       } catch (err) {}
     }
@@ -2306,6 +2369,47 @@
       'polaris': `<svg class="target-glyph-svg" viewBox="0 0 40 40"><circle cx="20" cy="20" r="3.5" fill="currentColor"></circle><line x1="20" y1="8" x2="20" y2="32"></line><line x1="8" y1="20" x2="32" y2="20"></line></svg>`
     };
 
+    function renderDomeNodes(targets) {
+      const g = document.getElementById('dome-dynamic-nodes');
+      if (!g || !targets) return;
+      g.innerHTML = '';
+      targets.forEach(t => {
+        if (t.altitude_deg < 0) return;
+        const r = Math.max(0, Math.min(88, ((90 - t.altitude_deg) / 90) * 88));
+        const angleRad = (t.azimuth_deg - 90) * (Math.PI / 180);
+        const x = Math.round((100 + r * Math.cos(angleRad)) * 10) / 10;
+        const y = Math.round((100 + r * Math.sin(angleRad)) * 10) / 10;
+
+        let fill = '#38bdf8';
+        if (t.id === 'jupiter') fill = '#f8fafc';
+        else if (t.id === 'saturn') fill = '#fbbf24';
+        else if (t.id === 'andromeda_galaxy') fill = '#c084fc';
+        else if (t.id === 'cassiopeia') fill = '#fbbf24';
+        else if (t.id === 'pleiades') fill = '#67e8f9';
+
+        const nodeG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        nodeG.setAttribute('class', 'dome-node');
+        nodeG.onclick = () => triggerTargetAudio(t.name);
+
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', x);
+        circle.setAttribute('cy', y);
+        circle.setAttribute('r', t.id === 'jupiter' ? '5.2' : '4.2');
+        circle.setAttribute('fill', fill);
+
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', x);
+        text.setAttribute('y', y > 100 ? y + 11 : y - 7);
+        text.setAttribute('class', 'dome-label');
+        text.setAttribute('text-anchor', 'middle');
+        text.textContent = t.name.split(' ')[0];
+
+        nodeG.appendChild(circle);
+        nodeG.appendChild(text);
+        g.appendChild(nodeG);
+      });
+    }
+
     async function fetchVisibleSky() {
       try {
         const res = await fetch('/api/visible-sky', {
@@ -2314,27 +2418,33 @@
           body: JSON.stringify({ latitude: currentLat, longitude: currentLon })
         });
         const data = await res.json();
-        const container = document.getElementById('target-list-container');
-        container.innerHTML = '';
+        cachedTargets = data.targets || [];
+        renderDomeNodes(cachedTargets);
 
-        data.targets.forEach(t => {
-          const glyph = targetGlyphs[t.id] || targetGlyphs['polaris'];
-          const div = document.createElement('div');
-          div.className = 'target-card';
-          div.innerHTML = `
-            <div class="target-glyph-wrap">${glyph}</div>
-            <div class="target-info">
-              <div class="target-name">${t.name}</div>
-              <div class="target-meta">${t.cardinal_direction} • ${t.altitude_deg}° Alt (${t.elevation_description})</div>
-              <div class="target-desc">${t.star_hop}</div>
-            </div>
-            <button class="btn-listen-icon" onclick="speakTarget('${t.name}', '${t.cardinal_direction}', '${t.elevation_description}', '${t.star_hop.replace(/'/g, "\\'")}')">
-              🔊
-            </button>
-          `;
-          container.appendChild(div);
-        });
-      } catch (err) {}
+        const container = document.getElementById('target-list-container');
+        if (container) {
+          container.innerHTML = '';
+          cachedTargets.forEach(t => {
+            const glyph = targetGlyphs[t.id] || targetGlyphs['polaris'];
+            const div = document.createElement('div');
+            div.className = 'target-card';
+            div.innerHTML = `
+              <div class="target-glyph-wrap">${glyph}</div>
+              <div class="target-info">
+                <div class="target-name">${t.name}</div>
+                <div class="target-meta">${t.cardinal_direction} • ${t.altitude_deg}° Alt (${t.elevation_description})</div>
+                <div class="target-desc">${t.star_hop}</div>
+              </div>
+              <button class="btn-listen-icon" onclick="speakTarget('${t.name}', '${t.cardinal_direction}', '${t.elevation_description}', '${t.star_hop.replace(/'/g, "\\'")}')">
+                🔊
+              </button>
+            `;
+            container.appendChild(div);
+          });
+        }
+      } catch (err) {
+        console.warn('Visible sky fetch note:', err);
+      }
     }
 
     function triggerTargetAudio(name) {
@@ -2343,64 +2453,229 @@
       if (btn) btn.click();
     }
 
-    // Audio Narration
-    async function launchGuidedSession() {
-      showToast("🌌 Gemma 2B Composing Stargazing Tour...");
-      try {
-        const res = await fetch('/api/generate-tour', {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({ latitude: currentLat, longitude: currentLon, duration_minutes: 10 })
-        });
-        const data = await res.json();
-        currentTour = data.tour;
-        renderTourChapters(currentTour.chapters);
-        playChapter(0);
-        showToast("🎧 Tour Ready: Streaming to Earbuds");
-      } catch (err) {
-        showToast("Using offline celestial guide");
+    // Audio & Speech Narration Engine
+    let speechQueue = [];
+    let isSpeakingQueue = false;
+    let speechWatchdogInterval = null;
+
+    function primeAudioAndSpeech() {
+      initWebAudio();
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const primeU = new SpeechSynthesisUtterance(' ');
+        window.speechSynthesis.speak(primeU);
       }
     }
 
-    function renderTourChapters(chapters) {
-      const container = document.getElementById('chapter-list');
-      container.innerHTML = '';
-      chapters.forEach((ch, idx) => {
-        const div = document.createElement('div');
-        div.className = `chapter-row ${idx === 0 ? 'active' : ''}`;
-        div.onclick = () => playChapter(idx);
-        div.innerHTML = `
-          <div>
-            <div class="ch-title">${ch.title}</div>
-            <div class="ch-desc">${ch.target}</div>
-          </div>
-          <span class="ch-play-glyph"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></span>
-        `;
-        container.appendChild(div);
+    function speakCelestialNarration(paragraphs, onFinish) {
+      if (!('speechSynthesis' in window)) {
+        if (onFinish) onFinish();
+        return;
+      }
+      window.speechSynthesis.cancel();
+      speechQueue = [...paragraphs];
+      isSpeakingQueue = true;
+      isPlaying = true;
+      updatePlayState();
+      requestWakeLock();
+
+      if (speechWatchdogInterval) clearInterval(speechWatchdogInterval);
+      speechWatchdogInterval = setInterval(() => {
+        if (window.speechSynthesis.speaking) {
+          window.speechSynthesis.pause();
+          window.speechSynthesis.resume();
+        } else {
+          clearInterval(speechWatchdogInterval);
+          speechWatchdogInterval = null;
+        }
+      }, 7000);
+
+      playNextSpeechSegment(onFinish);
+    }
+
+    function playNextSpeechSegment(onFinish) {
+      if (!isPlaying || speechQueue.length === 0) {
+        isSpeakingQueue = false;
+        isPlaying = false;
+        updatePlayState();
+        if (speechWatchdogInterval) clearInterval(speechWatchdogInterval);
+        if (onFinish) onFinish();
+        return;
+      }
+
+      const text = speechQueue.shift();
+      const u = new SpeechSynthesisUtterance(text);
+      u.rate = speechRate;
+      u.pitch = 0.95;
+
+      const voices = window.speechSynthesis.getVoices();
+      const preferred = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Samantha') || v.name.includes('Daniel'))) || voices.find(v => v.lang.startsWith('en'));
+      if (preferred) u.voice = preferred;
+
+      u.onend = () => {
+        setTimeout(() => {
+          if (isPlaying) playNextSpeechSegment(onFinish);
+        }, 1100);
+      };
+
+      u.onerror = (e) => {
+        console.warn('Speech segment error/skip:', e);
+        setTimeout(() => {
+          if (isPlaying) playNextSpeechSegment(onFinish);
+        }, 600);
+      };
+
+      window.speechSynthesis.speak(u);
+    }
+
+    // Master Experience Launch: One Tap to Universe
+    async function startCompleteStargazeExperience() {
+      if (isPlaying) {
+        toggleAudioPlayback();
+        return;
+      }
+
+      isExperienceStarted = true;
+      showToast("🌌 Welcome to the Sky: Initializing Sensors & Audio...");
+
+      primeAudioAndSpeech();
+      requestWakeLock();
+      requestOrientationPermission();
+
+      if (!isDroneActive) toggleCosmicDrone();
+
+      isPlaying = true;
+      updatePlayState();
+
+      setupMediaSession("Celestial Stargaze Journey", "Resting on Chest • 0 Nits");
+
+      const welcomeIntro = [
+        "Welcome to Whispers of the Sky.",
+        "Lie back comfortably against the earth. Rest your phone face-down upon your chest.",
+        "Let your breathing slow into the quiet of the night, and let the darkness settle gently across your eyes."
+      ];
+
+      speakCelestialNarration(welcomeIntro, () => {
+        beginRealTimeSkyNarration();
+      });
+
+      autoDetectSky();
+    }
+
+    function onChestPlacementConfirmed() {
+      showToast("🫁 Chest Placement Locked: Screen Blanked to 0 Nits");
+      if (!isChestNarrationDelivered && cachedTargets.length > 0) {
+        isChestNarrationDelivered = true;
+        beginRealTimeSkyNarration();
+      }
+    }
+
+    function beginRealTimeSkyNarration() {
+      const parts = [];
+
+      parts.push(
+        "Your phone is resting on your chest in complete darkness to protect your biological rhodopsin. For the next twenty minutes, your eyes will grow thousands of times more sensitive to the stars."
+      );
+
+      const zenithTarget = cachedTargets.find(t => t.altitude_deg >= 55) || cachedTargets[0];
+      if (zenithTarget) {
+        parts.push(
+          `Look directly overhead, toward the zenith above your chest. You are gazing toward ${zenithTarget.name}. ${zenithTarget.star_hop}`
+        );
+      }
+
+      const polaris = cachedTargets.find(t => t.id === 'polaris');
+      const cassiopeia = cachedTargets.find(t => t.id === 'cassiopeia');
+      if (polaris) {
+        parts.push(
+          `Now turn your gaze toward true north, past your head. Polaris, the North Star, rests at ${Math.round(polaris.altitude_deg)} degrees above your horizon, holding the night sky steady as the Earth turns beneath you.`
+        );
+      }
+      if (cassiopeia) {
+        parts.push(
+          `Just beside the pole star, trace the five bright sparks of Cassiopeia forming a reclining W across the heavens.`
+        );
+      }
+
+      const jupiter = cachedTargets.find(t => t.id === 'jupiter');
+      if (jupiter) {
+        parts.push(
+          `Glance toward the ${jupiter.cardinal_direction.toLowerCase()} for Jupiter. It shines as an unmistakable, steady white beacon in the autumn sky, outshining every star.`
+        );
+      }
+
+      const andromeda = cachedTargets.find(t => t.id === 'andromeda_galaxy');
+      if (andromeda) {
+        parts.push(
+          `Now let Cassiopeia guide your eyes down toward the east. Look for an elongated, misty smudge of light. That is the Andromeda Galaxy, two and a half million light years away. Its ancient photons travelled across the cosmic void solely to meet your pupils on this grass tonight.`
+        );
+      }
+
+      if (cachedSeeing && cachedSeeing.transparency_pct) {
+        parts.push(
+          `Tonight, TabPFN forecasts atmospheric transparency at ${cachedSeeing.transparency_pct} percent, with a limiting magnitude of ${cachedSeeing.naked_eye_magnitude_limit}. The night is calm, and the sky is open.`
+        );
+      }
+
+      parts.push(
+        "Rest here in the quiet. There is nothing to look at on any screen. Just breathe, feel the earth beneath your spine, and listen to the sky."
+      );
+
+      renderDynamicChapters(zenithTarget ? zenithTarget.name : "Overhead Stars");
+
+      speakCelestialNarration(parts, () => {
+        showToast("🌟 Stargazing Tour Complete");
       });
     }
 
-    function playChapter(idx) {
-      if (!currentTour || !currentTour.chapters[idx]) return;
-      activeChapterIndex = idx;
+    function renderDynamicChapters(zenithName) {
+      const container = document.getElementById('chapter-list');
+      if (!container) return;
+      container.innerHTML = `
+        <div class="chapter-row active" onclick="playChapterSegment(0)">
+          <div>
+            <div class="ch-title">Chapter 1: Eyes to the Darkness</div>
+            <div class="ch-desc">Grounding breath & chest placement</div>
+          </div>
+          <span class="ch-play-glyph"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></span>
+        </div>
+        <div class="chapter-row" onclick="playChapterSegment(1)">
+          <div>
+            <div class="ch-title">Chapter 2: Star-Hop to ${zenithName.split(' ')[0]} & Andromeda</div>
+            <div class="ch-desc">Real-time Alt/Az navigation overhead</div>
+          </div>
+          <span class="ch-play-glyph"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></span>
+        </div>
+        <div class="chapter-row" onclick="playChapterSegment(2)">
+          <div>
+            <div class="ch-title">Chapter 3: The Deep Quiet of Space</div>
+            <div class="ch-desc">Atmospheric seeing & 2.5M light-year contemplation</div>
+          </div>
+          <span class="ch-play-glyph"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></span>
+        </div>
+      `;
+    }
+
+    function playChapterSegment(idx) {
       document.querySelectorAll('.chapter-row').forEach((el, i) => el.classList.toggle('active', i === idx));
-      const ch = currentTour.chapters[idx];
-
-      if (ch.audio_url) {
-        audioEl.src = ch.audio_url;
-        audioEl.playbackRate = speechRate;
-        audioEl.play().catch(e => {
-          console.warn('Audio stream error, falling back to Web Speech:', e);
-          speakBrowserTTS(ch.text);
-        });
-        isPlaying = true;
-        updatePlayState();
+      if (idx === 0) {
+        speakCelestialNarration([
+          "Lie back comfortably against the earth. Rest your phone upon your chest. Breathe slowly into the cool night air."
+        ]);
+      } else if (idx === 1) {
+        beginRealTimeSkyNarration();
       } else {
-        speakBrowserTTS(ch.text);
+        speakCelestialNarration([
+          "Rest here in the quiet stillness. Two and a half million light-years away, galaxies rotate in silence. You are home under the stars."
+        ]);
       }
+    }
 
-      setupMediaSession(ch.title, ch.target);
-      requestWakeLock();
+    function launchGuidedSession() {
+      startCompleteStargazeExperience();
     }
 
     function setupMediaSession(title, subtitle) {
@@ -2413,31 +2688,30 @@
         navigator.mediaSession.setActionHandler('play', () => toggleAudioPlayback());
         navigator.mediaSession.setActionHandler('pause', () => toggleAudioPlayback());
         navigator.mediaSession.setActionHandler('nexttrack', () => {
-          if (currentTour && activeChapterIndex + 1 < currentTour.chapters.length) {
-            playChapter(activeChapterIndex + 1);
-          }
+          beginRealTimeSkyNarration();
         });
         navigator.mediaSession.setActionHandler('previoustrack', () => {
-          if (currentTour && activeChapterIndex > 0) {
-            playChapter(activeChapterIndex - 1);
-          }
+          playChapterSegment(0);
         });
       }
     }
 
     function toggleAudioPlayback() {
-      if (!currentTour) {
-        launchGuidedSession();
+      if (!isExperienceStarted) {
+        startCompleteStargazeExperience();
         return;
       }
       if (isPlaying) {
-        audioEl.pause();
         if (window.speechSynthesis) window.speechSynthesis.pause();
+        if (audioEl) audioEl.pause();
         isPlaying = false;
         showToast("Audio Paused");
       } else {
-        if (audioEl.src) audioEl.play().catch(() => playChapter(activeChapterIndex));
-        else playChapter(activeChapterIndex);
+        if (window.speechSynthesis && window.speechSynthesis.paused) {
+          window.speechSynthesis.resume();
+        } else {
+          beginRealTimeSkyNarration();
+        }
         isPlaying = true;
         showToast("Audio Resumed");
       }
@@ -2455,19 +2729,15 @@
       } else {
         orb.classList.remove('playing');
         icon.innerHTML = '<svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg>';
-        lbl.textContent = currentTour ? 'Paused' : 'Stargaze';
+        lbl.textContent = isExperienceStarted ? 'Paused' : 'Stargaze';
       }
     }
 
     function onAudioEnded() {
-      if (currentTour && activeChapterIndex + 1 < currentTour.chapters.length) {
-        playChapter(activeChapterIndex + 1);
-      } else {
-        isPlaying = false;
-        updatePlayState();
-        releaseWakeLock();
-        showToast("🌟 Stargazing Tour Complete");
-      }
+      isPlaying = false;
+      updatePlayState();
+      releaseWakeLock();
+      showToast("🌟 Stargazing Tour Complete");
     }
 
     function speakBrowserTTS(text) {
@@ -2620,6 +2890,7 @@
     // Init
     window.addEventListener('DOMContentLoaded', () => {
       initTypewriter();
+      initOrientationSensors();
       fetchSeeingPrediction();
       fetchVisibleSky();
       fetchFieldLogs();
