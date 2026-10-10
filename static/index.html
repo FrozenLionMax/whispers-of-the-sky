@@ -9,31 +9,35 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Cinzel:wght@600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #04060a;
-      --card-bg: rgba(16, 22, 36, 0.65);
-      --card-border: rgba(255, 255, 255, 0.07);
-      --card-hover: rgba(255, 255, 255, 0.12);
-      --text: #f1f5f9;
+      --bg: #030509;
+      --card-bg: rgba(13, 18, 30, 0.65);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-hover: rgba(255, 255, 255, 0.14);
+      --text: #f8fafc;
       --text-muted: #94a3b8;
       --accent: #38bdf8;
-      --accent-glow: rgba(56, 189, 248, 0.35);
-      --star-gold: #f59e0b;
-      --success: #10b981;
-      --danger: #ef4444;
+      --accent-glow: rgba(56, 189, 248, 0.4);
+      --star-gold: #fbbf24;
+      --nebula-1: rgba(56, 189, 248, 0.12);
+      --nebula-2: rgba(147, 51, 234, 0.14);
+      --nebula-3: rgba(14, 165, 233, 0.08);
       --safe-bottom: env(safe-area-inset-bottom, 16px);
     }
 
+    /* 650nm Monochromatic Astronomical Red Mode */
     body.red-mode {
-      --bg: #070000;
-      --card-bg: rgba(30, 4, 4, 0.85);
-      --card-border: rgba(255, 30, 30, 0.2);
-      --card-hover: rgba(255, 40, 40, 0.3);
+      --bg: #060000;
+      --card-bg: rgba(26, 4, 4, 0.85);
+      --card-border: rgba(239, 68, 68, 0.22);
+      --card-hover: rgba(239, 68, 68, 0.35);
       --text: #fca5a5;
       --text-muted: #b91c1c;
       --accent: #ef4444;
-      --accent-glow: rgba(239, 68, 68, 0.4);
+      --accent-glow: rgba(239, 68, 68, 0.45);
       --star-gold: #ff5555;
-      --success: #ff4444;
+      --nebula-1: rgba(239, 68, 68, 0.15);
+      --nebula-2: rgba(185, 28, 28, 0.12);
+      --nebula-3: rgba(127, 29, 29, 0.08);
     }
 
     * {
@@ -56,10 +60,12 @@
       overflow-x: hidden;
       display: flex;
       flex-direction: column;
-      transition: background 0.4s ease;
+      transition: background 0.5s ease;
+      position: relative;
     }
 
-    #star-canvas {
+    /* Cosmic Nebula Clouds Animation */
+    .nebula-backdrop {
       position: fixed;
       top: 0;
       left: 0;
@@ -67,9 +73,57 @@
       height: 100vh;
       z-index: 0;
       pointer-events: none;
+      overflow: hidden;
     }
 
-    /* Screenless "Eyes to Sky" Blanket Mode (Pure OLED 0-nit black) */
+    .nebula-cloud-1 {
+      position: absolute;
+      top: -20%;
+      left: 10%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, var(--nebula-1) 0%, transparent 70%);
+      filter: blur(80px);
+      animation: drift1 28s infinite alternate ease-in-out;
+    }
+
+    .nebula-cloud-2 {
+      position: absolute;
+      bottom: -15%;
+      right: -10%;
+      width: 700px;
+      height: 700px;
+      background: radial-gradient(circle, var(--nebula-2) 0%, transparent 70%);
+      filter: blur(90px);
+      animation: drift2 34s infinite alternate ease-in-out;
+    }
+
+    .nebula-cloud-3 {
+      position: absolute;
+      top: 40%;
+      left: -20%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, var(--nebula-3) 0%, transparent 70%);
+      filter: blur(70px);
+      animation: drift3 22s infinite alternate ease-in-out;
+    }
+
+    @keyframes drift1 { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(60px, 80px) scale(1.15); } }
+    @keyframes drift2 { 0% { transform: translate(0, 0) scale(1.1); } 100% { transform: translate(-80px, -60px) scale(0.95); } }
+    @keyframes drift3 { 0% { transform: translate(0, 0); } 100% { transform: translate(40px, -50px); } }
+
+    #star-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Screenless "Eyes to Sky" Blanket Mode (0-Nit True OLED Black) */
     #screenless-overlay {
       position: fixed;
       top: 0;
@@ -83,7 +137,7 @@
       justify-content: space-between;
       align-items: center;
       text-align: center;
-      padding: 40px 24px;
+      padding: 48px 24px;
     }
 
     #screenless-overlay.active {
@@ -91,25 +145,25 @@
     }
 
     .blank-orb {
-      width: 16px;
-      height: 16px;
+      width: 14px;
+      height: 14px;
       border-radius: 50%;
       background: #ef4444;
-      box-shadow: 0 0 25px #ef4444;
+      box-shadow: 0 0 30px #ef4444;
       animation: blankBreathe 4s infinite ease-in-out;
-      opacity: 0.6;
+      opacity: 0.65;
     }
 
     @keyframes blankBreathe {
-      0%, 100% { transform: scale(0.9); opacity: 0.3; }
-      50% { transform: scale(1.4); opacity: 0.85; }
+      0%, 100% { transform: scale(0.85); opacity: 0.25; }
+      50% { transform: scale(1.4); opacity: 0.9; }
     }
 
     .blank-title {
       font-family: 'Cinzel', serif;
-      font-size: 1.1rem;
+      font-size: 1.15rem;
       letter-spacing: 3px;
-      color: #661111;
+      color: #771111;
       margin-top: 14px;
     }
 
@@ -125,15 +179,10 @@
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.8rem;
       color: #881111;
-      padding: 8px 16px;
+      padding: 8px 18px;
       border: 1px solid #331111;
       border-radius: 999px;
-    }
-
-    .blank-hint {
-      font-size: 0.72rem;
-      color: #331111;
-      font-family: 'JetBrains Mono', monospace;
+      background: rgba(20, 0, 0, 0.4);
     }
 
     .btn-wake {
@@ -146,15 +195,22 @@
       letter-spacing: 1.5px;
       cursor: pointer;
       text-transform: uppercase;
+      transition: all 0.2s;
     }
 
-    /* App Shell Header */
+    .btn-wake:hover {
+      border-color: #771111;
+      color: #881111;
+    }
+
+    /* VisionOS Glass Header */
     .app-header {
       position: sticky;
       top: 0;
       z-index: 100;
       background: rgba(4, 6, 10, 0.75);
-      backdrop-filter: blur(20px);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
       border-bottom: 1px solid var(--card-border);
       padding: 14px 20px;
       display: flex;
@@ -163,7 +219,7 @@
     }
 
     body.red-mode .app-header {
-      background: rgba(7, 0, 0, 0.85);
+      background: rgba(6, 0, 0, 0.88);
     }
 
     .brand {
@@ -172,24 +228,38 @@
       gap: 10px;
     }
 
-    .brand-disc {
-      width: 22px;
-      height: 22px;
+    .brand-astrolabe {
+      width: 26px;
+      height: 26px;
       border-radius: 50%;
-      background: radial-gradient(circle at 30% 30%, #38bdf8, #0369a1);
-      box-shadow: 0 0 10px var(--accent-glow);
-      transition: all 0.3s;
+      border: 1.5px dashed var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: spinRings 20s infinite linear;
+      position: relative;
     }
 
-    body.red-mode .brand-disc {
-      background: radial-gradient(circle at 30% 30%, #f87171, #991b1b);
+    .brand-astrolabe::before {
+      content: '';
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 10px var(--accent-glow);
+    }
+
+    @keyframes spinRings {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
     }
 
     .brand-title {
       font-family: 'Cinzel', serif;
-      font-size: 1.05rem;
+      font-size: 1.1rem;
       font-weight: 700;
-      letter-spacing: 0.5px;
+      letter-spacing: 1px;
+      text-shadow: 0 0 16px var(--accent-glow);
     }
 
     .header-actions {
@@ -210,18 +280,21 @@
       justify-content: center;
       cursor: pointer;
       font-size: 0.95rem;
-      transition: all 0.2s;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      backdrop-filter: blur(12px);
     }
 
     .icon-btn:hover {
       border-color: var(--accent);
       background: rgba(255, 255, 255, 0.08);
+      transform: scale(1.05);
     }
 
     .icon-btn.active {
       background: var(--accent);
       color: #000;
       border-color: var(--accent);
+      box-shadow: 0 0 16px var(--accent-glow);
     }
 
     body.red-mode .icon-btn.active {
@@ -229,10 +302,10 @@
       color: #000;
     }
 
-    /* Main Content Layout */
+    /* Main Scrollable View */
     .app-main {
       flex: 1;
-      max-width: 720px;
+      max-width: 680px;
       width: 100%;
       margin: 0 auto;
       padding: 16px 16px calc(80px + var(--safe-bottom)) 16px;
@@ -242,78 +315,125 @@
 
     .tab-content {
       display: none;
-      animation: fadeIn 0.3s ease;
+      animation: tabFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .tab-content.active {
       display: block;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
+    @keyframes tabFadeIn {
+      from { opacity: 0; transform: translateY(8px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* TAB 1: STARGAZE HERO */
+    /* ==================== TAB 1: HERO CELESTIAL ORB ==================== */
     .hero-orb-wrap {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 32px 16px 20px 16px;
+      padding: 28px 16px 20px 16px;
       text-align: center;
+      position: relative;
     }
 
-    .celestial-orb {
-      width: 170px;
-      height: 170px;
+    .astrolabe-system {
+      width: 210px;
+      height: 210px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    /* Concentric Coordinate Rings */
+    .ring-outer {
+      position: absolute;
+      width: 100%;
+      height: 100%;
       border-radius: 50%;
-      background: radial-gradient(circle at 35% 35%, rgba(56, 189, 248, 0.35), rgba(14, 165, 233, 0.08) 60%, transparent 80%);
-      border: 1px solid rgba(56, 189, 248, 0.3);
-      box-shadow: 0 0 50px rgba(56, 189, 248, 0.15), inset 0 0 30px rgba(56, 189, 248, 0.2);
+      border: 1px dashed rgba(56, 189, 248, 0.25);
+      animation: spinRings 60s infinite linear;
+    }
+
+    body.red-mode .ring-outer {
+      border-color: rgba(239, 68, 68, 0.3);
+    }
+
+    .ring-inner {
+      position: absolute;
+      width: 82%;
+      height: 82%;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      animation: spinRings 40s infinite linear reverse;
+    }
+
+    /* Central Luminous Celestial Orb */
+    .celestial-orb {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, rgba(56, 189, 248, 0.5), rgba(14, 165, 233, 0.15) 55%, rgba(2, 6, 23, 0.8) 85%);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      box-shadow: 
+        0 0 50px rgba(56, 189, 248, 0.3),
+        inset 0 1px 2px rgba(255, 255, 255, 0.4),
+        inset 0 -8px 20px rgba(0, 0, 0, 0.7);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      position: relative;
       cursor: pointer;
-      transition: all 0.4s ease;
-      margin-bottom: 24px;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      z-index: 2;
     }
 
     body.red-mode .celestial-orb {
-      background: radial-gradient(circle at 35% 35%, rgba(239, 68, 68, 0.4), rgba(220, 38, 38, 0.1) 60%, transparent 80%);
-      border-color: rgba(239, 68, 68, 0.4);
-      box-shadow: 0 0 50px rgba(239, 68, 68, 0.2), inset 0 0 30px rgba(239, 68, 68, 0.2);
+      background: radial-gradient(circle at 35% 30%, rgba(239, 68, 68, 0.55), rgba(185, 28, 28, 0.2) 55%, rgba(20, 0, 0, 0.85) 85%);
+      box-shadow: 0 0 50px rgba(239, 68, 68, 0.35), inset 0 1px 2px rgba(255, 120, 120, 0.4);
+      border-color: rgba(255, 80, 80, 0.3);
+    }
+
+    .celestial-orb:hover {
+      transform: scale(1.04);
+      box-shadow: 0 0 70px rgba(56, 189, 248, 0.5);
     }
 
     .celestial-orb.playing {
-      animation: orbPulse 2.5s infinite ease-in-out;
+      animation: orbBreathe 3s infinite ease-in-out;
     }
 
-    @keyframes orbPulse {
-      0%, 100% { transform: scale(1); box-shadow: 0 0 50px rgba(56, 189, 248, 0.2); }
-      50% { transform: scale(1.06); box-shadow: 0 0 80px rgba(56, 189, 248, 0.4); }
+    @keyframes orbBreathe {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 45px rgba(56, 189, 248, 0.3); }
+      50% { transform: scale(1.06); box-shadow: 0 0 85px rgba(56, 189, 248, 0.6); }
     }
 
     .orb-icon {
-      font-size: 2.2rem;
-      margin-bottom: 4px;
+      font-size: 1.8rem;
+      margin-bottom: 2px;
+      color: #fff;
+      text-shadow: 0 0 12px rgba(255, 255, 255, 0.8);
     }
 
     .orb-label {
-      font-size: 0.72rem;
-      font-weight: 600;
+      font-size: 0.68rem;
+      font-weight: 700;
       letter-spacing: 1.5px;
       text-transform: uppercase;
-      color: var(--accent);
+      color: #fff;
+      text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
     }
 
     .hero-heading {
       font-family: 'Cinzel', serif;
-      font-size: 1.6rem;
+      font-size: 1.7rem;
       font-weight: 700;
       margin-bottom: 6px;
+      text-shadow: 0 0 25px var(--accent-glow);
     }
 
     .hero-sub {
@@ -321,7 +441,7 @@
       color: var(--text-muted);
       max-width: 440px;
       line-height: 1.5;
-      margin-bottom: 24px;
+      margin-bottom: 22px;
     }
 
     .cta-row {
@@ -333,30 +453,30 @@
     }
 
     .btn-main {
-      flex: 1.4;
+      flex: 1.35;
       padding: 14px 20px;
       border-radius: 999px;
-      background: var(--accent);
+      background: linear-gradient(135deg, #38bdf8, #0284c7);
       color: #04060a;
-      border: none;
-      font-weight: 600;
-      font-size: 0.95rem;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      font-weight: 700;
+      font-size: 0.92rem;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
       cursor: pointer;
       box-shadow: 0 4px 20px var(--accent-glow);
-      transition: all 0.2s;
+      transition: all 0.25s;
     }
 
     .btn-main:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 25px var(--accent-glow);
+      box-shadow: 0 6px 28px var(--accent-glow);
     }
 
     body.red-mode .btn-main {
-      background: #ef4444;
+      background: linear-gradient(135deg, #ef4444, #b91c1c);
       color: #000;
     }
 
@@ -368,7 +488,7 @@
       color: #ef4444;
       border: 1px solid rgba(239, 68, 68, 0.4);
       font-weight: 600;
-      font-size: 0.88rem;
+      font-size: 0.85rem;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -377,17 +497,21 @@
       transition: all 0.2s;
     }
 
-    /* Rhodopsin Tracker Card */
-    .rhodopsin-box {
-      width: 100%;
+    /* VisionOS Frosted Cards */
+    .glass-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 14px 16px;
-      margin-top: 8px;
-      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 18px 20px;
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      box-shadow: 
+        0 12px 36px rgba(0, 0, 0, 0.45),
+        inset 0 1px 1px rgba(255, 255, 255, 0.1);
+      margin-top: 14px;
     }
 
+    /* Rhodopsin Tracker */
     .rhodopsin-top {
       display: flex;
       justify-content: space-between;
@@ -399,7 +523,7 @@
     .rhodopsin-time {
       font-family: 'JetBrains Mono', monospace;
       color: var(--accent);
-      font-size: 0.8rem;
+      font-weight: 600;
     }
 
     .bar-bg {
@@ -415,22 +539,15 @@
       background: linear-gradient(90deg, #38bdf8, #818cf8);
       border-radius: 999px;
       transition: width 1s linear;
+      box-shadow: 0 0 10px var(--accent);
     }
 
     body.red-mode .bar-fill {
       background: #ef4444;
+      box-shadow: 0 0 10px #ef4444;
     }
 
-    /* Chapter List Card */
-    .player-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 18px;
-      padding: 18px;
-      margin-top: 16px;
-      backdrop-filter: blur(14px);
-    }
-
+    /* Audio Chapters */
     .card-title {
       font-size: 0.95rem;
       font-weight: 600;
@@ -453,23 +570,27 @@
       transition: all 0.2s;
     }
 
+    .chapter-row:hover {
+      border-color: var(--card-hover);
+    }
+
     .chapter-row.active {
       border-color: var(--accent);
-      background: rgba(56, 189, 248, 0.08);
+      background: rgba(56, 189, 248, 0.1);
     }
 
     body.red-mode .chapter-row.active {
-      background: rgba(239, 68, 68, 0.12);
+      background: rgba(239, 68, 68, 0.15);
       border-color: #ef4444;
     }
 
     .ch-title {
       font-size: 0.85rem;
-      font-weight: 500;
+      font-weight: 600;
     }
 
     .ch-desc {
-      font-size: 0.7rem;
+      font-size: 0.72rem;
       color: var(--text-muted);
       margin-top: 2px;
     }
@@ -499,7 +620,60 @@
       height: 4px;
     }
 
-    /* TAB 2: SKY MAP TARGETS */
+    /* ==================== TAB 2: SKY MAP & CONSTELLATION ART ==================== */
+    /* Hemispheric Sky Radar Dome */
+    .dome-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 20px;
+      text-align: center;
+      backdrop-filter: blur(24px);
+      margin-bottom: 14px;
+      box-shadow: 0 12px 36px rgba(0,0,0,0.45);
+    }
+
+    .dome-svg-wrap {
+      width: 220px;
+      height: 220px;
+      margin: 0 auto 12px auto;
+      position: relative;
+    }
+
+    .dome-svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .dome-ring {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.08);
+      stroke-width: 1;
+      stroke-dasharray: 3 3;
+    }
+
+    .dome-crosshair {
+      stroke: rgba(255, 255, 255, 0.06);
+      stroke-width: 1;
+    }
+
+    .dome-node {
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .dome-node:hover circle {
+      r: 6;
+      fill: var(--accent);
+    }
+
+    .dome-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      fill: var(--accent);
+    }
+
+    /* Constellation Cards with Glowing SVG Line Art */
     .target-grid {
       display: flex;
       flex-direction: column;
@@ -509,24 +683,48 @@
     .target-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 16px;
+      border-radius: 18px;
       padding: 16px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      gap: 12px;
-      backdrop-filter: blur(12px);
-      transition: all 0.2s;
+      gap: 14px;
+      backdrop-filter: blur(20px);
+      transition: all 0.25s;
     }
 
     .target-card:hover {
       border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .target-glyph-wrap {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .target-glyph-svg {
+      width: 34px;
+      height: 34px;
+      stroke: var(--accent);
+      stroke-width: 1.5;
+      fill: none;
+    }
+
+    .target-info {
+      flex: 1;
     }
 
     .target-name {
       font-size: 0.95rem;
       font-weight: 600;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
       display: flex;
       align-items: center;
       gap: 6px;
@@ -541,13 +739,13 @@
     .target-desc {
       font-size: 0.78rem;
       color: var(--text-muted);
-      margin-top: 6px;
-      line-height: 1.4;
+      margin-top: 4px;
+      line-height: 1.35;
     }
 
     .btn-listen-icon {
-      width: 40px;
-      height: 40px;
+      width: 38px;
+      height: 38px;
       border-radius: 50%;
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--card-border);
@@ -556,17 +754,23 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      font-size: 1rem;
+      font-size: 0.95rem;
       flex-shrink: 0;
+      transition: all 0.2s;
     }
 
-    /* TAB 3: SEEING GAUGE (TabPFN) */
+    .btn-listen-icon:hover {
+      background: var(--accent);
+      color: #000;
+    }
+
+    /* ==================== TAB 3: SEEING (TabPFN) ==================== */
     .gauge-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 18px;
+      border-radius: 20px;
       padding: 24px 20px;
-      backdrop-filter: blur(14px);
+      backdrop-filter: blur(24px);
       text-align: center;
     }
 
@@ -597,10 +801,12 @@
       stroke-dasharray: 314;
       stroke-dashoffset: 35;
       transition: stroke-dashoffset 0.8s ease;
+      filter: drop-shadow(0 0 8px var(--accent));
     }
 
     body.red-mode .g-bar {
       stroke: #ef4444;
+      filter: drop-shadow(0 0 8px #ef4444);
     }
 
     .g-text {
@@ -615,12 +821,14 @@
       font-weight: 700;
       font-family: 'JetBrains Mono', monospace;
       color: var(--accent);
+      text-shadow: 0 0 16px var(--accent-glow);
     }
 
     .g-label {
       font-size: 0.68rem;
       color: var(--text-muted);
       text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
     .seeing-stats-grid {
@@ -645,7 +853,7 @@
     }
 
     .s-val {
-      font-size: 1.1rem;
+      font-size: 1.15rem;
       font-weight: 700;
       font-family: 'JetBrains Mono', monospace;
       color: var(--accent);
@@ -686,34 +894,20 @@
 
     .h-cell.gold {
       border-color: var(--star-gold);
-      background: rgba(245, 158, 11, 0.12);
+      background: rgba(245, 158, 11, 0.14);
     }
 
-    /* TAB 4: OBSERVATION LOGS */
-    .journal-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 18px;
-      padding: 18px;
-      backdrop-filter: blur(14px);
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-
+    /* ==================== TAB 4: OBSERVATION LOGS ==================== */
     .input-field {
       width: 100%;
       background: rgba(0, 0, 0, 0.35);
       border: 1px solid var(--card-border);
-      border-radius: 10px;
-      padding: 10px 12px;
+      border-radius: 12px;
+      padding: 12px 14px;
       color: var(--text);
       font-size: 0.85rem;
       outline: none;
+      margin-bottom: 10px;
     }
 
     .input-field:focus {
@@ -738,16 +932,17 @@
       margin-bottom: 4px;
     }
 
-    /* Bottom Mobile Navigation Bar */
+    /* VisionOS Floating Bottom Navigation Bar */
     .bottom-nav {
       position: fixed;
       bottom: 0;
       left: 0;
       width: 100vw;
-      background: rgba(4, 6, 10, 0.85);
-      backdrop-filter: blur(20px);
+      background: rgba(3, 5, 9, 0.82);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
       border-top: 1px solid var(--card-border);
-      padding: 8px 12px calc(8px + var(--safe-bottom)) 12px;
+      padding: 10px 14px calc(10px + var(--safe-bottom)) 14px;
       z-index: 1000;
       display: flex;
       justify-content: space-around;
@@ -755,7 +950,7 @@
     }
 
     body.red-mode .bottom-nav {
-      background: rgba(7, 0, 0, 0.9);
+      background: rgba(6, 0, 0, 0.92);
     }
 
     .nav-btn {
@@ -767,11 +962,11 @@
       border: none;
       color: var(--text-muted);
       font-size: 0.68rem;
-      font-weight: 500;
+      font-weight: 600;
       cursor: pointer;
-      padding: 4px 10px;
-      border-radius: 8px;
-      transition: all 0.2s;
+      padding: 4px 12px;
+      border-radius: 12px;
+      transition: all 0.25s;
     }
 
     .nav-btn svg {
@@ -780,16 +975,22 @@
       fill: none;
       stroke: currentColor;
       stroke-width: 2;
+      transition: transform 0.2s;
     }
 
     .nav-btn.active {
       color: var(--accent);
     }
 
-    /* Toast Notification */
+    .nav-btn.active svg {
+      transform: translateY(-2px);
+      filter: drop-shadow(0 0 8px var(--accent));
+    }
+
+    /* Toast Notification Center */
     #toast-wrap {
       position: fixed;
-      top: 70px;
+      top: 66px;
       left: 50%;
       transform: translateX(-50%);
       z-index: 100000;
@@ -802,20 +1003,20 @@
     }
 
     .toast-box {
-      background: rgba(15, 23, 42, 0.95);
+      background: rgba(14, 21, 37, 0.95);
       border: 1px solid var(--accent);
       color: #fff;
-      padding: 10px 14px;
+      padding: 10px 16px;
       border-radius: 999px;
       font-size: 0.78rem;
       text-align: center;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(16px);
       animation: dropToast 0.3s ease;
     }
 
     body.red-mode .toast-box {
-      background: rgba(28, 4, 4, 0.95);
+      background: rgba(28, 4, 4, 0.96);
       border-color: #ef4444;
       color: #fca5a5;
     }
@@ -828,13 +1029,20 @@
 </head>
 <body>
 
+  <!-- Ambient Nebula Dust Backdrop -->
+  <div class="nebula-backdrop">
+    <div class="nebula-cloud-1"></div>
+    <div class="nebula-cloud-2"></div>
+    <div class="nebula-cloud-3"></div>
+  </div>
+
   <!-- Dynamic Starfield Canvas -->
   <canvas id="star-canvas"></canvas>
 
   <!-- Toast Notification Center -->
   <div id="toast-wrap"></div>
 
-  <!-- Screenless "Eyes to Sky" Blanket Mode -->
+  <!-- Screenless "Eyes to Sky" Blanket Mode (True 0-Nit OLED Black) -->
   <div id="screenless-overlay" onclick="handleScreenlessTap(event)">
     <div style="display:flex; flex-direction:column; align-items:center;">
       <div class="blank-orb"></div>
@@ -849,15 +1057,17 @@
     </div>
 
     <div style="display:flex; flex-direction:column; align-items:center; gap: 14px;">
-      <div class="blank-hint">Tap screen: Pause / Play • Earbud clicks: Active</div>
+      <div style="font-size:0.72rem; color:#441111; font-family:'JetBrains Mono',monospace;">
+        Tap screen: Pause / Play • Earbud clicks: Active
+      </div>
       <button class="btn-wake" onclick="exitScreenlessMode(event)">Wake Screen</button>
     </div>
   </div>
 
-  <!-- App Header -->
+  <!-- VisionOS Glass App Header -->
   <header class="app-header">
     <div class="brand">
-      <div class="brand-disc" id="brand-indicator"></div>
+      <div class="brand-astrolabe"></div>
       <div>
         <div class="brand-title">WOTS</div>
       </div>
@@ -885,9 +1095,15 @@
     <!-- ==================== TAB 1: STARGAZE ==================== -->
     <section class="tab-content active" id="tab-stargaze">
       <div class="hero-orb-wrap">
-        <div class="celestial-orb" id="hero-orb" onclick="toggleAudioPlayback()">
-          <span class="orb-icon" id="orb-state-icon">▶</span>
-          <span class="orb-label" id="orb-state-label">Start Tour</span>
+        
+        <!-- VisionOS Astrolabe Celestial Orb -->
+        <div class="astrolabe-system">
+          <div class="ring-outer"></div>
+          <div class="ring-inner"></div>
+          <div class="celestial-orb" id="hero-orb" onclick="toggleAudioPlayback()">
+            <span class="orb-icon" id="orb-state-icon">▶</span>
+            <span class="orb-label" id="orb-state-label">Stargaze</span>
+          </div>
         </div>
 
         <h1 class="hero-heading">Whispers of the Sky</h1>
@@ -905,7 +1121,7 @@
         </div>
 
         <!-- Biological Rhodopsin Tracker -->
-        <div class="rhodopsin-box">
+        <div class="glass-card" style="width: 100%; margin-top: 8px;">
           <div class="rhodopsin-top">
             <span><strong>Dark Adaptation:</strong> <span id="lbl-rhodopsin-phase">Cone Decay (15%)</span></span>
             <span class="rhodopsin-time" id="lbl-rhodopsin-timer">00:00</span>
@@ -917,10 +1133,10 @@
       </div>
 
       <!-- Audio Chapters Card -->
-      <div class="player-card">
+      <div class="glass-card">
         <div class="card-title">
           <span>Tour Chapters (Gemma 2B)</span>
-          <span style="font-size:0.7rem; color:var(--accent); font-family:'JetBrains Mono',monospace;">Spatial Audio Active</span>
+          <span style="font-size:0.7rem; color:var(--accent); font-family:'JetBrains Mono',monospace;">Spatial 3D Audio</span>
         </div>
 
         <div id="chapter-list">
@@ -963,35 +1179,100 @@
       </div>
 
       <!-- Spontaneous Voice Query -->
-      <div class="player-card" style="margin-top: 14px;">
+      <div class="glass-card">
         <div class="card-title">
-          <span>Ask WOTS (Voice / Text)</span>
-          <button class="icon-btn" style="width:30px; height:30px; font-size:0.75rem;" onclick="toggleVoiceRecognition()">🎤</button>
+          <span>Ask WOTS (Hands-Free Voice / Text)</span>
+          <button class="icon-btn" style="width:32px; height:32px; font-size:0.78rem;" onclick="toggleVoiceRecognition()">🎤</button>
         </div>
         <div style="display:flex; gap:8px;">
-          <input type="text" id="ask-input" class="input-field" placeholder="e.g. 'Where is Jupiter right now?'" onkeydown="if(event.key==='Enter') askQuestion()">
-          <button class="btn-main" style="flex:0; padding:8px 16px; border-radius:10px;" onclick="askQuestion()">Ask</button>
+          <input type="text" id="ask-input" class="input-field" style="margin-bottom:0;" placeholder="e.g. 'Where is Jupiter right now?'" onkeydown="if(event.key==='Enter') askQuestion()">
+          <button class="btn-main" style="flex:0; padding:10px 18px; border-radius:12px;" onclick="askQuestion()">Ask</button>
         </div>
-        <div id="ask-response" style="margin-top:10px; font-size:0.8rem; color:var(--accent); line-height:1.45; display:none;"></div>
+        <div id="ask-response" style="margin-top:10px; font-size:0.82rem; color:var(--accent); line-height:1.45; display:none;"></div>
       </div>
     </section>
 
-    <!-- ==================== TAB 2: SKY MAP ==================== -->
+    <!-- ==================== TAB 2: SKY MAP & CONSTELLATION ART ==================== -->
     <section class="tab-content" id="tab-sky">
-      <div style="margin-bottom: 12px; display:flex; justify-content:space-between; align-items:center;">
-        <h2 style="font-family:'Cinzel',serif; font-size:1.1rem;">Tonight's Sky Landmarks</h2>
-        <span style="font-size:0.7rem; color:var(--text-muted); font-family:'JetBrains Mono',monospace;" id="sky-coords-tag">37.77°N, 122.42°W</span>
+      
+      <!-- Hemispheric Sky Radar Dome -->
+      <div class="dome-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+          <h2 style="font-family:'Cinzel',serif; font-size:1.05rem;">Overhead Celestial Dome</h2>
+          <span style="font-size:0.7rem; color:var(--text-muted); font-family:'JetBrains Mono',monospace;" id="sky-coords-tag">37.77°N, 122.42°W</span>
+        </div>
+
+        <div class="dome-svg-wrap">
+          <svg class="dome-svg" viewBox="0 0 200 200">
+            <!-- Horizon & Altitude Rings -->
+            <circle class="dome-ring" cx="100" cy="100" r="95"></circle>
+            <circle class="dome-ring" cx="100" cy="100" r="65"></circle>
+            <circle class="dome-ring" cx="100" cy="100" r="35"></circle>
+            
+            <!-- Crosshairs -->
+            <line class="dome-crosshair" x1="100" y1="5" x2="100" y2="195"></line>
+            <line class="dome-crosshair" x1="5" y1="100" x2="195" y2="100"></line>
+
+            <!-- Cardinal Headings -->
+            <text x="100" y="14" class="dome-label" text-anchor="middle">N</text>
+            <text x="190" y="103" class="dome-label" text-anchor="middle">E</text>
+            <text x="100" y="194" class="dome-label" text-anchor="middle">S</text>
+            <text x="12" y="103" class="dome-label" text-anchor="middle">W</text>
+            <text x="100" y="96" class="dome-label" text-anchor="middle" style="fill:rgba(255,255,255,0.3); font-size:6px;">ZENITH</text>
+
+            <!-- Celestial Object Nodes (Plotted Alt/Az) -->
+            <!-- Polaris (North, 37 deg alt) -->
+            <g class="dome-node" onclick="triggerTargetAudio('Polaris (The North Star)')">
+              <circle cx="100" cy="62" r="4.5" fill="#38bdf8"></circle>
+              <text x="100" y="54" class="dome-label" text-anchor="middle">Polaris</text>
+            </g>
+
+            <!-- Cassiopeia (NE, 60 deg alt) -->
+            <g class="dome-node" onclick="triggerTargetAudio('Cassiopeia (The Celestial Queen)')">
+              <circle cx="128" cy="72" r="4" fill="#fbbf24"></circle>
+              <text x="128" y="64" class="dome-label" text-anchor="middle">Cassiopeia</text>
+            </g>
+
+            <!-- Andromeda M31 (East, 41 deg alt) -->
+            <g class="dome-node" onclick="triggerTargetAudio('Andromeda Galaxy (M31)')">
+              <circle cx="152" cy="100" r="4" fill="#c084fc"></circle>
+              <text x="152" y="92" class="dome-label" text-anchor="middle">M31 Galaxy</text>
+            </g>
+
+            <!-- Jupiter (East, 21 deg alt) -->
+            <g class="dome-node" onclick="triggerTargetAudio('Jupiter (The King of Planets)')">
+              <circle cx="174" cy="100" r="5" fill="#f8fafc"></circle>
+              <text x="174" y="92" class="dome-label" text-anchor="middle">Jupiter</text>
+            </g>
+
+            <!-- Saturn (South, 35 deg alt) -->
+            <g class="dome-node" onclick="triggerTargetAudio('Saturn (The Ringed Giant)')">
+              <circle cx="100" cy="138" r="4.5" fill="#f59e0b"></circle>
+              <text x="100" y="150" class="dome-label" text-anchor="middle">Saturn</text>
+            </g>
+
+            <!-- Cygnus (Overhead Zenith, 82 deg alt) -->
+            <g class="dome-node" onclick="triggerTargetAudio('Cygnus (The Northern Cross)')">
+              <circle cx="104" cy="92" r="4.5" fill="#38bdf8"></circle>
+              <text x="104" y="84" class="dome-label" text-anchor="middle">Cygnus</text>
+            </g>
+          </svg>
+        </div>
+        <div style="font-size:0.7rem; color:var(--text-muted);">Tap any target on the dome to hear its star-hop guide.</div>
       </div>
 
+      <!-- Constellation Vector Cards -->
       <div class="target-grid" id="target-list-container">
-        <!-- Loaded by JS -->
+        <!-- Built by JS with Custom Glowing Vector Glyphs -->
       </div>
     </section>
 
     <!-- ==================== TAB 3: SEEING (TabPFN) ==================== -->
     <section class="tab-content" id="tab-seeing">
       <div class="gauge-card">
-        <h2 style="font-family:'Cinzel',serif; font-size:1.1rem; margin-bottom:14px;">Atmospheric Seeing (TabPFN)</h2>
+        <h2 style="font-family:'Cinzel',serif; font-size:1.15rem; margin-bottom:14px; text-shadow:0 0 16px var(--accent-glow);">
+          Atmospheric Seeing (TabPFN)
+        </h2>
 
         <div class="gauge-svg-wrap">
           <svg viewBox="0 0 120 120">
@@ -1030,17 +1311,17 @@
           <!-- Rendered by JS -->
         </div>
 
-        <div style="margin-top:18px; text-align:left;">
+        <div style="margin-top:20px; text-align:left;">
           <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
             <span style="font-size:0.75rem; color:var(--text-muted);">Adjust Weather Parameters:</span>
-            <button onclick="autoDetectSky()" style="background:transparent; border:none; color:var(--accent); font-size:0.72rem; cursor:pointer;">Sync Live Weather 📍</button>
+            <button onclick="autoDetectSky()" style="background:transparent; border:none; color:var(--accent); font-size:0.75rem; cursor:pointer; font-weight:600;">Sync Live Weather 📍</button>
           </div>
-          <div class="slider-item" style="margin-bottom:6px;">
+          <div class="slider-item" style="margin-bottom:8px;">
             <span style="width:75px;">Cloud Cover</span>
             <input type="range" id="slider-cloud" min="0" max="100" value="8" oninput="updateWeatherPrediction()">
             <span id="lbl-cloud" style="font-family:'JetBrains Mono',monospace; width:34px;">8%</span>
           </div>
-          <div class="slider-item" style="margin-bottom:6px;">
+          <div class="slider-item" style="margin-bottom:8px;">
             <span style="width:75px;">Humidity</span>
             <input type="range" id="slider-humidity" min="10" max="100" value="38" oninput="updateWeatherPrediction()">
             <span id="lbl-humidity" style="font-family:'JetBrains Mono',monospace; width:34px;">38%</span>
@@ -1054,12 +1335,12 @@
       </div>
     </section>
 
-    <!-- ==================== TAB 4: JOURNAL ==================== -->
+    <!-- ==================== TAB 4: OBSERVATION LOGS ==================== -->
     <section class="tab-content" id="tab-journal">
-      <div class="journal-card">
-        <h2 style="font-family:'Cinzel',serif; font-size:1.1rem; margin-bottom:14px;">Outdoor Observation Log</h2>
+      <div class="glass-card">
+        <h2 style="font-family:'Cinzel',serif; font-size:1.1rem; margin-bottom:14px;">Outdoor Observation Journal</h2>
 
-        <div class="form-group">
+        <div>
           <input type="text" id="log-location" class="input-field" placeholder="Location (e.g. Mountain Pass, Backyard)">
           <select id="log-bortle" class="input-field">
             <option value="1">Bortle 1 (Pristine Dark Sky)</option>
@@ -1069,10 +1350,10 @@
             <option value="5">Bortle 5 (Suburban)</option>
           </select>
           <textarea id="log-notes" class="input-field" style="height:70px; resize:none;" placeholder="What did you observe? Did you keep screen dark?"></textarea>
-          <button class="btn-main" onclick="saveFieldLog()">Save Session Log</button>
+          <button class="btn-main" style="width:100%; border-radius:12px;" onclick="saveFieldLog()">Save Session Log</button>
         </div>
 
-        <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:8px; text-transform:uppercase;">
+        <div style="font-size:0.75rem; color:var(--text-muted); margin-top:20px; margin-bottom:8px; text-transform:uppercase;">
           Saved Outdoor Logs:
         </div>
         <div id="field-logs-container">
@@ -1117,7 +1398,7 @@
     let speechRate = 0.88;
     const audioEl = document.getElementById('audio-player');
 
-    // Rhodopsin Timer
+    // Rhodopsin Adaptation Timer
     let darkSeconds = 0;
     setInterval(() => {
       darkSeconds++;
@@ -1146,16 +1427,17 @@
       btn.classList.add('active');
     }
 
-    // Dynamic Starfield Canvas
+    // Dynamic Starfield Canvas with Occasional Meteors
     const canvas = document.getElementById('star-canvas');
     const ctx = canvas.getContext('2d');
     let stars = [];
+    let meteors = [];
 
     function resizeCanvas() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
       stars = [];
-      const count = Math.floor((canvas.width * canvas.height) / 3600);
+      const count = Math.floor((canvas.width * canvas.height) / 3400);
       for (let i = 0; i < count; i++) {
         stars.push({
           x: Math.random() * canvas.width,
@@ -1174,6 +1456,7 @@
     function renderStars() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       const isRed = document.body.classList.contains('red-mode');
+      
       stars.forEach(s => {
         s.phase += s.twinkle;
         const a = s.alpha * (0.6 + 0.4 * Math.sin(s.phase));
@@ -1184,11 +1467,37 @@
         s.y -= s.speed;
         if (s.y < 0) s.y = canvas.height;
       });
+
+      // Random shooting star
+      if (Math.random() < 0.006 && meteors.length < 2) {
+        meteors.push({
+          x: Math.random() * canvas.width * 0.8,
+          y: Math.random() * canvas.height * 0.4,
+          len: Math.random() * 80 + 40,
+          speed: Math.random() * 6 + 7,
+          alpha: 1.0
+        });
+      }
+
+      meteors.forEach((m, idx) => {
+        ctx.beginPath();
+        ctx.moveTo(m.x, m.y);
+        ctx.lineTo(m.x + m.len, m.y + m.len * 0.6);
+        ctx.strokeStyle = isRed ? `rgba(255, 120, 120, ${m.alpha})` : `rgba(255, 255, 255, ${m.alpha})`;
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+
+        m.x += m.speed;
+        m.y += m.speed * 0.6;
+        m.alpha -= 0.025;
+        if (m.alpha <= 0) meteors.splice(idx, 1);
+      });
+
       requestAnimationFrame(renderStars);
     }
     requestAnimationFrame(renderStars);
 
-    // Toast Function
+    // Toast Notifications
     function showToast(msg) {
       const wrap = document.getElementById('toast-wrap');
       const box = document.createElement('div');
@@ -1272,8 +1581,8 @@
     function setSpatialCompass(dir) {
       if (!stereoPanner || !audioCtx) return;
       let pan = 0;
-      if (dir.includes('East')) pan = -0.35;
-      else if (dir.includes('West')) pan = 0.35;
+      if (dir.includes('East')) pan = -0.38;
+      else if (dir.includes('West')) pan = 0.38;
       stereoPanner.pan.setTargetAtTime(pan, audioCtx.currentTime, 0.4);
     }
 
@@ -1421,7 +1730,17 @@
       fetchSeeingPrediction();
     }
 
-    // Sky Targets
+    // Sky Targets with Glowing SVG Line Art Glyphs
+    const targetGlyphs = {
+      'cassiopeia': `<svg class="target-glyph-svg" viewBox="0 0 40 40"><polyline points="6,12 14,26 20,16 28,24 34,14"></polyline><circle cx="6" cy="12" r="2" fill="currentColor"></circle><circle cx="14" cy="26" r="2" fill="currentColor"></circle><circle cx="20" cy="16" r="2" fill="currentColor"></circle><circle cx="28" cy="24" r="2" fill="currentColor"></circle><circle cx="34" cy="14" r="2" fill="currentColor"></circle></svg>`,
+      'andromeda_galaxy': `<svg class="target-glyph-svg" viewBox="0 0 40 40"><ellipse cx="20" cy="20" rx="14" ry="7" transform="rotate(-30 20 20)"></ellipse><circle cx="20" cy="20" r="2.5" fill="currentColor"></circle></svg>`,
+      'saturn': `<svg class="target-glyph-svg" viewBox="0 0 40 40"><circle cx="20" cy="20" r="7"></circle><ellipse cx="20" cy="20" rx="16" ry="4" transform="rotate(-25 20 20)"></ellipse></svg>`,
+      'jupiter': `<svg class="target-glyph-svg" viewBox="0 0 40 40"><circle cx="20" cy="20" r="8"></circle><circle cx="6" cy="20" r="1" fill="currentColor"></circle><circle cx="10" cy="20" r="1.2" fill="currentColor"></circle><circle cx="30" cy="20" r="1.3" fill="currentColor"></circle><circle cx="34" cy="20" r="1" fill="currentColor"></circle></svg>`,
+      'summer_triangle': `<svg class="target-glyph-svg" viewBox="0 0 40 40"><polygon points="20,8 8,30 32,30"></polygon><circle cx="20" cy="8" r="2" fill="currentColor"></circle><circle cx="8" cy="30" r="2" fill="currentColor"></circle><circle cx="32" cy="30" r="2" fill="currentColor"></circle></svg>`,
+      'cygnus': `<svg class="target-glyph-svg" viewBox="0 0 40 40"><line x1="20" y1="6" x2="20" y2="34"></line><line x1="8" y1="18" x2="32" y2="18"></line><circle cx="20" cy="18" r="2" fill="currentColor"></circle></svg>`,
+      'polaris': `<svg class="target-glyph-svg" viewBox="0 0 40 40"><circle cx="20" cy="20" r="3.5" fill="currentColor"></circle><line x1="20" y1="8" x2="20" y2="32"></line><line x1="8" y1="20" x2="32" y2="20"></line></svg>`
+    };
+
     async function fetchVisibleSky() {
       try {
         const res = await fetch('/api/visible-sky', {
@@ -1434,10 +1753,12 @@
         container.innerHTML = '';
 
         data.targets.forEach(t => {
+          const glyph = targetGlyphs[t.id] || targetGlyphs['polaris'];
           const div = document.createElement('div');
           div.className = 'target-card';
           div.innerHTML = `
-            <div>
+            <div class="target-glyph-wrap">${glyph}</div>
+            <div class="target-info">
               <div class="target-name">${t.name}</div>
               <div class="target-meta">${t.cardinal_direction} • ${t.altitude_deg}° Alt (${t.elevation_description})</div>
               <div class="target-desc">${t.star_hop}</div>
@@ -1449,6 +1770,12 @@
           container.appendChild(div);
         });
       } catch (err) {}
+    }
+
+    function triggerTargetAudio(name) {
+      showToast(`Target Selected: ${name}`);
+      const btn = document.querySelector(`.target-card [onclick*="${name.split(' ')[0]}"]`);
+      if (btn) btn.click();
     }
 
     // Audio Narration
