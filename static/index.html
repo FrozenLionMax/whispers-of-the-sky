@@ -2,38 +2,38 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Whispers of the Sky (WOTS) | Screenless Audio Celestial Guide</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Cinzel:wght@600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #06080d;
-      --card-bg: rgba(14, 18, 28, 0.78);
-      --card-border: rgba(255, 255, 255, 0.08);
-      --text: #e2e8f0;
+      --bg: #04060a;
+      --card-bg: rgba(16, 22, 36, 0.65);
+      --card-border: rgba(255, 255, 255, 0.07);
+      --card-hover: rgba(255, 255, 255, 0.12);
+      --text: #f1f5f9;
       --text-muted: #94a3b8;
-      --accent: #60a5fa;
-      --accent-glow: rgba(96, 165, 250, 0.3);
-      --star-gold: #fbbf24;
-      --success: #34d399;
-      --purple: #c084fc;
-      --screenless-bg: #000000;
+      --accent: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.35);
+      --star-gold: #f59e0b;
+      --success: #10b981;
+      --danger: #ef4444;
+      --safe-bottom: env(safe-area-inset-bottom, 16px);
     }
 
-    /* Standard Astronomical Red-Light Mode (650nm) to preserve rhodopsin / night vision */
     body.red-mode {
-      --bg: #080000;
-      --card-bg: rgba(28, 4, 4, 0.88);
-      --card-border: rgba(255, 30, 30, 0.22);
-      --text: #ff6666;
-      --text-muted: #cc4444;
-      --accent: #ff2222;
-      --accent-glow: rgba(255, 34, 34, 0.4);
+      --bg: #070000;
+      --card-bg: rgba(30, 4, 4, 0.85);
+      --card-border: rgba(255, 30, 30, 0.2);
+      --card-hover: rgba(255, 40, 40, 0.3);
+      --text: #fca5a5;
+      --text-muted: #b91c1c;
+      --accent: #ef4444;
+      --accent-glow: rgba(239, 68, 68, 0.4);
       --star-gold: #ff5555;
-      --success: #ff5555;
-      --purple: #ff3333;
+      --success: #ff4444;
     }
 
     * {
@@ -41,19 +41,24 @@
       margin: 0;
       padding: 0;
       -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    input, textarea {
+      user-select: auto;
     }
 
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: 'Inter', sans-serif;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       min-height: 100vh;
       overflow-x: hidden;
-      transition: background 0.4s ease, color 0.4s ease;
-      position: relative;
+      display: flex;
+      flex-direction: column;
+      transition: background 0.4s ease;
     }
 
-    /* Background Interactive Star Canvas */
     #star-canvas {
       position: fixed;
       top: 0;
@@ -64,7 +69,7 @@
       pointer-events: none;
     }
 
-    /* Screenless "Eyes to the Sky" Overlay (True 0-Nit OLED Black) */
+    /* Screenless "Eyes to Sky" Blanket Mode (Pure OLED 0-nit black) */
     #screenless-overlay {
       position: fixed;
       top: 0;
@@ -72,370 +77,318 @@
       width: 100vw;
       height: 100vh;
       background: #000000;
-      z-index: 99999;
+      z-index: 999999;
       display: none;
       flex-direction: column;
-      justify-content: center;
+      justify-content: space-between;
       align-items: center;
       text-align: center;
-      padding: 24px;
-      user-select: none;
+      padding: 40px 24px;
     }
 
     #screenless-overlay.active {
       display: flex;
     }
 
-    .pulse-disc {
-      width: 14px;
-      height: 14px;
+    .blank-orb {
+      width: 16px;
+      height: 16px;
       border-radius: 50%;
-      background: #ff2222;
-      box-shadow: 0 0 20px #ff2222;
-      animation: pulse 3s infinite ease-in-out;
-      margin-bottom: 24px;
-      opacity: 0.55;
+      background: #ef4444;
+      box-shadow: 0 0 25px #ef4444;
+      animation: blankBreathe 4s infinite ease-in-out;
+      opacity: 0.6;
     }
 
-    @keyframes pulse {
-      0%, 100% { transform: scale(0.9); opacity: 0.25; }
+    @keyframes blankBreathe {
+      0%, 100% { transform: scale(0.9); opacity: 0.3; }
       50% { transform: scale(1.4); opacity: 0.85; }
     }
 
-    .screenless-title {
+    .blank-title {
       font-family: 'Cinzel', serif;
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       letter-spacing: 3px;
-      color: #771111;
-      margin-bottom: 8px;
+      color: #661111;
+      margin-top: 14px;
     }
 
-    .screenless-sub {
-      font-size: 0.85rem;
-      color: #551111;
-      max-width: 380px;
+    .blank-sub {
+      font-size: 0.8rem;
+      color: #441111;
+      max-width: 320px;
       line-height: 1.5;
+      margin-top: 8px;
     }
 
-    .screenless-rhodopsin {
-      margin-top: 24px;
-      padding: 10px 18px;
+    .blank-rhodopsin {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: #881111;
+      padding: 8px 16px;
       border: 1px solid #331111;
       border-radius: 999px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
-      color: #772222;
     }
 
-    .screenless-hints {
-      margin-top: 20px;
-      font-size: 0.75rem;
-      color: #441111;
+    .blank-hint {
+      font-size: 0.72rem;
+      color: #331111;
       font-family: 'JetBrains Mono', monospace;
-      line-height: 1.6;
     }
 
-    .wake-button {
-      margin-top: 32px;
-      padding: 12px 28px;
+    .btn-wake {
+      padding: 12px 32px;
       border: 1px solid #441111;
       background: transparent;
       color: #661111;
       border-radius: 999px;
       font-size: 0.75rem;
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
       cursor: pointer;
       text-transform: uppercase;
-      transition: all 0.2s;
     }
 
-    .wake-button:hover {
-      border-color: #881111;
-      color: #992222;
-    }
-
-    /* Header & Navigation */
-    header {
-      padding: 16px 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid var(--card-border);
-      backdrop-filter: blur(14px);
+    /* App Shell Header */
+    .app-header {
       position: sticky;
       top: 0;
       z-index: 100;
-      background: rgba(6, 8, 13, 0.85);
+      background: rgba(4, 6, 10, 0.75);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--card-border);
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
-    body.red-mode header {
-      background: rgba(8, 0, 0, 0.9);
+    body.red-mode .app-header {
+      background: rgba(7, 0, 0, 0.85);
     }
 
-    .logo-group {
+    .brand {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
-    .logo-orb {
-      width: 28px;
-      height: 28px;
+    .brand-disc {
+      width: 22px;
+      height: 22px;
       border-radius: 50%;
-      background: radial-gradient(circle at 35% 35%, #93c5fd, #1e3a8a);
-      box-shadow: 0 0 12px var(--accent-glow);
-      position: relative;
+      background: radial-gradient(circle at 30% 30%, #38bdf8, #0369a1);
+      box-shadow: 0 0 10px var(--accent-glow);
       transition: all 0.3s;
     }
 
-    body.red-mode .logo-orb {
-      background: radial-gradient(circle at 35% 35%, #fca5a5, #991b1b);
+    body.red-mode .brand-disc {
+      background: radial-gradient(circle at 30% 30%, #f87171, #991b1b);
     }
 
-    .logo-orb.singing {
-      animation: orbSing 2s infinite alternate ease-in-out;
-    }
-
-    @keyframes orbSing {
-      0% { transform: scale(1); box-shadow: 0 0 12px var(--accent-glow); }
-      100% { transform: scale(1.15); box-shadow: 0 0 24px var(--accent-glow); }
-    }
-
-    .app-title {
+    .brand-title {
       font-family: 'Cinzel', serif;
-      font-size: 1.2rem;
+      font-size: 1.05rem;
       font-weight: 700;
-      letter-spacing: 1px;
-      color: var(--text);
-    }
-
-    .app-tagline {
-      font-size: 0.7rem;
-      color: var(--text-muted);
       letter-spacing: 0.5px;
-      text-transform: uppercase;
     }
 
-    .controls-group {
+    .header-actions {
       display: flex;
       gap: 8px;
-      flex-wrap: wrap;
+      align-items: center;
     }
 
-    .btn-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 14px;
-      border-radius: 999px;
+    .icon-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.04);
       border: 1px solid var(--card-border);
-      background: var(--card-bg);
       color: var(--text);
-      font-size: 0.78rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      backdrop-filter: blur(8px);
-    }
-
-    .btn-pill:hover {
-      border-color: var(--accent);
-      box-shadow: 0 0 10px var(--accent-glow);
-    }
-
-    .btn-pill.active {
-      background: var(--accent);
-      color: #000;
-      border-color: var(--accent);
-      font-weight: 600;
-    }
-
-    body.red-mode .btn-pill.active {
-      background: #ff2222;
-      color: #000;
-    }
-
-    /* Panoramic Sky Compass Tape */
-    .compass-tape-container {
-      width: 100%;
-      background: rgba(0, 0, 0, 0.35);
-      border-bottom: 1px solid var(--card-border);
-      padding: 8px 16px;
-      position: relative;
-      z-index: 10;
-      overflow-x: auto;
-      white-space: nowrap;
-      scrollbar-width: none;
-    }
-
-    .compass-tape-container::-webkit-scrollbar {
-      display: none;
-    }
-
-    .compass-tape {
-      display: inline-flex;
+      display: flex;
       align-items: center;
-      gap: 24px;
-      padding: 2px 8px;
-    }
-
-    .compass-cardinal {
-      font-family: 'Cinzel', serif;
-      font-weight: 700;
-      font-size: 0.85rem;
-      color: var(--accent);
-      padding: 2px 8px;
-      border-radius: 6px;
-      background: rgba(255, 255, 255, 0.03);
-    }
-
-    .compass-target-node {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 3px 10px;
-      border-radius: 999px;
-      background: rgba(0, 0, 0, 0.5);
-      border: 1px solid var(--card-border);
-      font-size: 0.72rem;
-      font-family: 'JetBrains Mono', monospace;
-      color: var(--text);
+      justify-content: center;
       cursor: pointer;
+      font-size: 0.95rem;
       transition: all 0.2s;
     }
 
-    .compass-target-node:hover {
+    .icon-btn:hover {
       border-color: var(--accent);
-      color: var(--accent);
+      background: rgba(255, 255, 255, 0.08);
     }
 
-    /* Main Container */
-    .container {
-      max-width: 1200px;
+    .icon-btn.active {
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+    }
+
+    body.red-mode .icon-btn.active {
+      background: #ef4444;
+      color: #000;
+    }
+
+    /* Main Content Layout */
+    .app-main {
+      flex: 1;
+      max-width: 720px;
+      width: 100%;
       margin: 0 auto;
-      padding: 24px 16px 80px 16px;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 24px;
+      padding: 16px 16px calc(80px + var(--safe-bottom)) 16px;
       position: relative;
       z-index: 2;
     }
 
-    @media (min-width: 900px) {
-      .container {
-        grid-template-columns: 1.15fr 1fr;
-      }
-      .span-full {
-        grid-column: 1 / -1;
-      }
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.3s ease;
     }
 
-    /* Cards */
-    .card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 18px;
-      padding: 22px;
-      backdrop-filter: blur(18px);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* TAB 1: STARGAZE HERO */
+    .hero-orb-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 16px 20px 16px;
+      text-align: center;
+    }
+
+    .celestial-orb {
+      width: 170px;
+      height: 170px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, rgba(56, 189, 248, 0.35), rgba(14, 165, 233, 0.08) 60%, transparent 80%);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      box-shadow: 0 0 50px rgba(56, 189, 248, 0.15), inset 0 0 30px rgba(56, 189, 248, 0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       position: relative;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      margin-bottom: 24px;
     }
 
-    .card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
+    body.red-mode .celestial-orb {
+      background: radial-gradient(circle at 35% 35%, rgba(239, 68, 68, 0.4), rgba(220, 38, 38, 0.1) 60%, transparent 80%);
+      border-color: rgba(239, 68, 68, 0.4);
+      box-shadow: 0 0 50px rgba(239, 68, 68, 0.2), inset 0 0 30px rgba(239, 68, 68, 0.2);
     }
 
-    .card-title {
-      font-family: 'Cinzel', serif;
-      font-size: 1.05rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: var(--text);
+    .celestial-orb.playing {
+      animation: orbPulse 2.5s infinite ease-in-out;
     }
 
-    .badge {
-      font-size: 0.65rem;
-      padding: 4px 10px;
-      border-radius: 6px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--card-border);
-      font-family: 'JetBrains Mono', monospace;
+    @keyframes orbPulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 50px rgba(56, 189, 248, 0.2); }
+      50% { transform: scale(1.06); box-shadow: 0 0 80px rgba(56, 189, 248, 0.4); }
+    }
+
+    .orb-icon {
+      font-size: 2.2rem;
+      margin-bottom: 4px;
+    }
+
+    .orb-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
       color: var(--accent);
     }
 
-    /* Hero Banner */
-    .hero-banner {
-      background: linear-gradient(135deg, rgba(20, 38, 80, 0.5), rgba(12, 17, 30, 0.85));
-      border: 1px solid rgba(96, 165, 250, 0.35);
-      border-radius: 20px;
-      padding: 32px 24px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    body.red-mode .hero-banner {
-      background: linear-gradient(135deg, rgba(70, 10, 10, 0.5), rgba(25, 4, 4, 0.85));
-      border-color: rgba(255, 30, 30, 0.4);
-    }
-
-    .hero-h1 {
+    .hero-heading {
       font-family: 'Cinzel', serif;
-      font-size: 2.1rem;
+      font-size: 1.6rem;
       font-weight: 700;
-      margin-bottom: 8px;
-      letter-spacing: 1px;
+      margin-bottom: 6px;
     }
 
-    .hero-p {
-      font-size: 0.95rem;
+    .hero-sub {
+      font-size: 0.85rem;
       color: var(--text-muted);
-      max-width: 680px;
-      margin: 0 auto 20px auto;
-      line-height: 1.6;
+      max-width: 440px;
+      line-height: 1.5;
+      margin-bottom: 24px;
     }
 
-    .btn-hero {
-      background: var(--accent);
-      color: #07090e;
-      font-weight: 600;
-      font-size: 1.05rem;
-      padding: 14px 34px;
+    .cta-row {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+      max-width: 420px;
+      margin-bottom: 20px;
+    }
+
+    .btn-main {
+      flex: 1.4;
+      padding: 14px 20px;
       border-radius: 999px;
+      background: var(--accent);
+      color: #04060a;
       border: none;
-      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.95rem;
       display: inline-flex;
       align-items: center;
-      gap: 10px;
-      transition: all 0.25s ease;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
       box-shadow: 0 4px 20px var(--accent-glow);
+      transition: all 0.2s;
     }
 
-    body.red-mode .btn-hero {
-      background: #ff2222;
+    .btn-main:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px var(--accent-glow);
+    }
+
+    body.red-mode .btn-main {
+      background: #ef4444;
       color: #000;
     }
 
-    .btn-hero:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 32px var(--accent-glow);
-    }
-
-    /* Rhodopsin Dark-Adaptation Tracker */
-    .rhodopsin-card {
-      background: rgba(0, 0, 0, 0.28);
-      border: 1px solid var(--card-border);
-      border-radius: 14px;
+    .btn-dark-blank {
+      flex: 1;
       padding: 14px 18px;
-      margin-top: 18px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.6);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      font-weight: 600;
+      font-size: 0.88rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
     }
 
-    .rhodopsin-header {
+    /* Rhodopsin Tracker Card */
+    .rhodopsin-box {
+      width: 100%;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 14px 16px;
+      margin-top: 8px;
+      backdrop-filter: blur(12px);
+    }
+
+    .rhodopsin-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -443,71 +396,200 @@
       margin-bottom: 8px;
     }
 
-    .progress-track {
-      height: 8px;
+    .rhodopsin-time {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent);
+      font-size: 0.8rem;
+    }
+
+    .bar-bg {
+      height: 6px;
       border-radius: 999px;
       background: rgba(255, 255, 255, 0.06);
       overflow: hidden;
-      position: relative;
     }
 
-    .progress-bar-fill {
+    .bar-fill {
       height: 100%;
-      width: 15%;
+      width: 18%;
+      background: linear-gradient(90deg, #38bdf8, #818cf8);
       border-radius: 999px;
-      background: linear-gradient(90deg, #3b82f6, #60a5fa);
       transition: width 1s linear;
     }
 
-    body.red-mode .progress-bar-fill {
-      background: #ff2222;
+    body.red-mode .bar-fill {
+      background: #ef4444;
     }
 
-    .milestone-tags {
+    /* Chapter List Card */
+    .player-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 18px;
+      margin-top: 16px;
+      backdrop-filter: blur(14px);
+    }
+
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .chapter-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--card-border);
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .chapter-row.active {
+      border-color: var(--accent);
+      background: rgba(56, 189, 248, 0.08);
+    }
+
+    body.red-mode .chapter-row.active {
+      background: rgba(239, 68, 68, 0.12);
+      border-color: #ef4444;
+    }
+
+    .ch-title {
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .ch-desc {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* Controls Strip */
+    .mixer-strip {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--card-border);
+    }
+
+    .slider-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .slider-item input[type="range"] {
+      flex: 1;
+      accent-color: var(--accent);
+      height: 4px;
+    }
+
+    /* TAB 2: SKY MAP TARGETS */
+    .target-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .target-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 16px;
       display: flex;
       justify-content: space-between;
-      font-size: 0.65rem;
-      color: var(--text-muted);
-      margin-top: 6px;
+      align-items: center;
+      gap: 12px;
+      backdrop-filter: blur(12px);
+      transition: all 0.2s;
+    }
+
+    .target-card:hover {
+      border-color: var(--accent);
+    }
+
+    .target-name {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .target-meta {
+      font-size: 0.72rem;
+      color: var(--accent);
       font-family: 'JetBrains Mono', monospace;
     }
 
-    /* TabPFN Gauge Layout */
-    .gauge-layout {
-      display: grid;
-      grid-template-columns: 140px 1fr;
-      gap: 18px;
+    .target-desc {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+      line-height: 1.4;
+    }
+
+    .btn-listen-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      color: var(--accent);
+      display: flex;
       align-items: center;
-      margin-bottom: 18px;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1rem;
+      flex-shrink: 0;
     }
 
-    @media (max-width: 600px) {
-      .gauge-layout {
-        grid-template-columns: 1fr;
-        text-align: center;
-      }
+    /* TAB 3: SEEING GAUGE (TabPFN) */
+    .gauge-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 24px 20px;
+      backdrop-filter: blur(14px);
+      text-align: center;
     }
 
-    .circular-gauge {
-      width: 130px;
-      height: 130px;
+    .gauge-svg-wrap {
+      width: 140px;
+      height: 140px;
+      margin: 0 auto 16px auto;
       position: relative;
-      margin: 0 auto;
     }
 
-    .circular-gauge svg {
+    .gauge-svg-wrap svg {
       width: 100%;
       height: 100%;
       transform: rotate(-90deg);
     }
 
-    .gauge-bg {
+    .g-bg {
       fill: none;
       stroke: rgba(255, 255, 255, 0.08);
       stroke-width: 10;
     }
 
-    .gauge-progress {
+    .g-bar {
       fill: none;
       stroke: var(--accent);
       stroke-width: 10;
@@ -517,325 +599,137 @@
       transition: stroke-dashoffset 0.8s ease;
     }
 
-    body.red-mode .gauge-progress {
-      stroke: #ff2222;
+    body.red-mode .g-bar {
+      stroke: #ef4444;
     }
 
-    .gauge-center-text {
+    .g-text {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      text-align: center;
     }
 
-    .gauge-val {
-      font-size: 1.45rem;
+    .g-pct {
+      font-size: 1.6rem;
       font-weight: 700;
       font-family: 'JetBrains Mono', monospace;
       color: var(--accent);
     }
 
-    .gauge-sub {
-      font-size: 0.65rem;
+    .g-label {
+      font-size: 0.68rem;
       color: var(--text-muted);
       text-transform: uppercase;
     }
 
-    .stats-column {
+    .seeing-stats-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin: 18px 0;
     }
 
-    .stat-box {
+    .s-box {
       background: rgba(0, 0, 0, 0.3);
-      padding: 10px 12px;
+      padding: 10px 8px;
       border-radius: 12px;
       border: 1px solid var(--card-border);
-      text-align: center;
     }
 
-    .stat-label {
-      font-size: 0.68rem;
+    .s-lbl {
+      font-size: 0.65rem;
       color: var(--text-muted);
       text-transform: uppercase;
       margin-bottom: 2px;
     }
 
-    .stat-value {
-      font-size: 1.25rem;
+    .s-val {
+      font-size: 1.1rem;
       font-weight: 700;
       font-family: 'JetBrains Mono', monospace;
       color: var(--accent);
     }
 
-    .recommendation-box {
+    .recom-box {
       background: rgba(255, 255, 255, 0.03);
       border-left: 3px solid var(--accent);
       padding: 12px 14px;
       border-radius: 0 10px 10px 0;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       line-height: 1.45;
-      margin-bottom: 16px;
+      text-align: left;
+      margin-bottom: 18px;
     }
 
-    /* Timeline Bar */
-    .timeline-container {
+    .hourly-strip {
       display: flex;
       gap: 6px;
       overflow-x: auto;
-      padding-bottom: 6px;
+      padding-bottom: 8px;
+      scrollbar-width: none;
     }
 
-    .timeline-hour {
+    .hourly-strip::-webkit-scrollbar {
+      display: none;
+    }
+
+    .h-cell {
       flex: 1;
-      min-width: 48px;
-      text-align: center;
+      min-width: 52px;
       padding: 8px 4px;
-      background: rgba(0, 0, 0, 0.25);
+      background: rgba(0, 0, 0, 0.3);
       border-radius: 8px;
       border: 1px solid var(--card-border);
       font-size: 0.72rem;
     }
 
-    .timeline-hour.gold {
+    .h-cell.gold {
       border-color: var(--star-gold);
-      background: rgba(251, 191, 36, 0.12);
+      background: rgba(245, 158, 11, 0.12);
     }
 
-    /* Sliders */
-    .slider-row {
-      margin-top: 10px;
+    /* TAB 4: OBSERVATION LOGS */
+    .journal-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 18px;
+      backdrop-filter: blur(14px);
+    }
+
+    .form-group {
       display: flex;
       flex-direction: column;
-      gap: 3px;
+      gap: 8px;
+      margin-bottom: 16px;
     }
 
-    .slider-label {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
-
-    input[type=range] {
-      accent-color: var(--accent);
+    .input-field {
       width: 100%;
-    }
-
-    /* Visible Sky Targets */
-    .target-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      max-height: 480px;
-      overflow-y: auto;
-    }
-
-    .target-card {
-      background: rgba(0, 0, 0, 0.25);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 14px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      transition: all 0.2s ease;
-    }
-
-    .target-card:hover {
-      border-color: var(--accent);
-    }
-
-    .target-info {
-      flex: 1;
-    }
-
-    .target-name {
-      font-weight: 600;
-      font-size: 0.95rem;
-      margin-bottom: 3px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .target-coords {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      font-family: 'JetBrains Mono', monospace;
-    }
-
-    .target-desc {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-top: 4px;
-      line-height: 1.35;
-    }
-
-    /* Audio Player Widget */
-    .audio-player-card {
-      background: linear-gradient(180deg, rgba(18, 24, 38, 0.88), rgba(9, 13, 22, 0.96));
-      border: 1px solid var(--card-border);
-    }
-
-    .audio-chapter-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-top: 14px;
-    }
-
-    .chapter-item {
-      padding: 12px 14px;
-      background: rgba(0, 0, 0, 0.3);
+      background: rgba(0, 0, 0, 0.35);
       border: 1px solid var(--card-border);
       border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .chapter-item.active {
-      border-color: var(--accent);
-      background: rgba(96, 165, 250, 0.12);
-    }
-
-    body.red-mode .chapter-item.active {
-      background: rgba(255, 34, 34, 0.16);
-      border-color: #ff2222;
-    }
-
-    .chapter-title {
-      font-size: 0.85rem;
-      font-weight: 500;
-    }
-
-    .audio-controls {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-      margin-top: 20px;
-    }
-
-    .btn-circle {
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      background: var(--accent);
-      color: #07090e;
-      border: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 1.3rem;
-      box-shadow: 0 4px 16px var(--accent-glow);
-      transition: transform 0.2s;
-    }
-
-    .btn-circle:hover {
-      transform: scale(1.05);
-    }
-
-    body.red-mode .btn-circle {
-      background: #ff2222;
-      color: #000;
-    }
-
-    /* Audio Mixer Strip */
-    .audio-mixer-strip {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 12px;
-      background: rgba(0, 0, 0, 0.25);
-      border-radius: 12px;
-      border: 1px solid var(--card-border);
-      padding: 14px 16px;
-      margin-top: 18px;
-    }
-
-    .mixer-item {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .mixer-label {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.72rem;
-      color: var(--text-muted);
-    }
-
-    .speed-btn-group {
-      display: flex;
-      gap: 6px;
-      margin-top: 4px;
-    }
-
-    .speed-btn {
-      padding: 4px 10px;
-      border-radius: 6px;
-      border: 1px solid var(--card-border);
-      background: rgba(0, 0, 0, 0.3);
-      color: var(--text-muted);
-      font-size: 0.72rem;
-      cursor: pointer;
-    }
-
-    .speed-btn.active {
-      border-color: var(--accent);
-      color: var(--accent);
-      background: rgba(96, 165, 250, 0.1);
-    }
-
-    /* Voice / Ask Widget */
-    .ask-box {
-      display: flex;
-      gap: 8px;
-      margin-top: 12px;
-    }
-
-    .ask-input {
-      flex: 1;
-      background: rgba(0, 0, 0, 0.3);
-      border: 1px solid var(--card-border);
-      border-radius: 10px;
-      padding: 10px 14px;
+      padding: 10px 12px;
       color: var(--text);
       font-size: 0.85rem;
+      outline: none;
     }
 
-    .ask-input:focus {
-      outline: none;
+    .input-field:focus {
       border-color: var(--accent);
     }
 
-    /* Observation Logs */
-    .log-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 12px;
-      max-height: 250px;
-      overflow-y: auto;
-    }
-
-    .log-entry {
-      background: rgba(0, 0, 0, 0.25);
-      border-radius: 10px;
+    .log-item {
+      background: rgba(0, 0, 0, 0.3);
       border: 1px solid var(--card-border);
-      padding: 10px 14px;
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 8px;
       font-size: 0.8rem;
     }
 
-    .log-meta {
+    .log-hdr {
       display: flex;
       justify-content: space-between;
       color: var(--accent);
@@ -844,384 +738,373 @@
       margin-bottom: 4px;
     }
 
-    /* Toast Notification System */
-    #toast-container {
+    /* Bottom Mobile Navigation Bar */
+    .bottom-nav {
       position: fixed;
-      bottom: 24px;
-      right: 24px;
-      z-index: 100000;
+      bottom: 0;
+      left: 0;
+      width: 100vw;
+      background: rgba(4, 6, 10, 0.85);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid var(--card-border);
+      padding: 8px 12px calc(8px + var(--safe-bottom)) 12px;
+      z-index: 1000;
       display: flex;
-      flex-direction: column;
-      gap: 8px;
-      pointer-events: none;
+      justify-content: space-around;
+      align-items: center;
     }
 
-    .toast-msg {
+    body.red-mode .bottom-nav {
+      background: rgba(7, 0, 0, 0.9);
+    }
+
+    .nav-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.68rem;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 4px 10px;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .nav-btn svg {
+      width: 20px;
+      height: 20px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+    }
+
+    .nav-btn.active {
+      color: var(--accent);
+    }
+
+    /* Toast Notification */
+    #toast-wrap {
+      position: fixed;
+      top: 70px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100000;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      width: 90%;
+      max-width: 360px;
+    }
+
+    .toast-box {
       background: rgba(15, 23, 42, 0.95);
       border: 1px solid var(--accent);
       color: #fff;
-      padding: 10px 16px;
-      border-radius: 10px;
-      font-size: 0.8rem;
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      text-align: center;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
       backdrop-filter: blur(12px);
-      animation: slideToast 0.3s ease forwards;
+      animation: dropToast 0.3s ease;
     }
 
-    body.red-mode .toast-msg {
+    body.red-mode .toast-box {
       background: rgba(28, 4, 4, 0.95);
-      border-color: #ff3333;
-      color: #ffaaaa;
+      border-color: #ef4444;
+      color: #fca5a5;
     }
 
-    @keyframes slideToast {
-      from { transform: translateY(20px); opacity: 0; }
+    @keyframes dropToast {
+      from { transform: translateY(-10px); opacity: 0; }
       to { transform: translateY(0); opacity: 1; }
-    }
-
-    .status-bar {
-      display: flex;
-      gap: 16px;
-      justify-content: center;
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      margin-top: 24px;
-      font-family: 'JetBrains Mono', monospace;
-      flex-wrap: wrap;
-    }
-
-    .status-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      display: inline-block;
-      margin-right: 4px;
-    }
-
-    .status-dot.green { background: #34d399; }
-    .status-dot.blue { background: #60a5fa; }
-    .status-dot.purple { background: #c084fc; }
-
-    .offline-pill {
-      background: rgba(52, 211, 153, 0.15);
-      color: #34d399;
-      border: 1px solid rgba(52, 211, 153, 0.3);
-      font-size: 0.7rem;
-      padding: 4px 10px;
-      border-radius: 999px;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
     }
   </style>
 </head>
 <body>
 
-  <!-- Dynamic Star Canvas -->
+  <!-- Dynamic Starfield Canvas -->
   <canvas id="star-canvas"></canvas>
 
-  <!-- Screenless "Eyes to the Sky" Mode Overlay (True 0-Nit OLED Black) -->
+  <!-- Toast Notification Center -->
+  <div id="toast-wrap"></div>
+
+  <!-- Screenless "Eyes to Sky" Blanket Mode -->
   <div id="screenless-overlay" onclick="handleScreenlessTap(event)">
-    <div class="pulse-disc"></div>
-    <div class="screenless-title">EYES TO THE SKY</div>
-    <div class="screenless-sub">
-      Your display is blanked to true OLED black. Rhodopsin is regenerating.
-      Lie back on the grass, listen to the whisper, and gaze bare-eyed at the cosmos.
-    </div>
-    <div class="screenless-rhodopsin" id="overlay-rhodopsin-text">
-      Dark Adaptation: 0m 00s (15%) &bull; Cone Decay Phase
-    </div>
-    <div class="screenless-hints">
-      Tap anywhere: Pause / Resume &bull; Headphone Clickers: Active<br>
-      Flip phone face-up or tap button below to wake display
-    </div>
-    <button class="wake-button" onclick="exitScreenlessMode(event)">Wake Display</button>
-  </div>
-
-  <!-- Toast Notification Container -->
-  <div id="toast-container"></div>
-
-  <!-- Main Header -->
-  <header>
-    <div class="logo-group">
-      <div class="logo-orb" id="logo-singing-orb"></div>
-      <div>
-        <div class="app-title">Whispers of the Sky (WOTS)</div>
-        <div class="app-tagline">WOT's up tonight? &bull; Screenless Audio Celestial Guide</div>
+    <div style="display:flex; flex-direction:column; align-items:center;">
+      <div class="blank-orb"></div>
+      <div class="blank-title">EYES TO THE SKY</div>
+      <div class="blank-sub">
+        Display blanked to 0-nit true OLED black. Put phone face-down on grass.
       </div>
     </div>
 
-    <div class="controls-group">
-      <button class="btn-pill" id="btn-gps" onclick="autoDetectSky()">
-        <span>&#128225;</span> <span id="lbl-gps-text">Auto-Detect My Sky</span>
+    <div class="blank-rhodopsin" id="overlay-rhodopsin-tag">
+      Dark Adaptation: 00:00 (15%) • Cone Decay
+    </div>
+
+    <div style="display:flex; flex-direction:column; align-items:center; gap: 14px;">
+      <div class="blank-hint">Tap screen: Pause / Play • Earbud clicks: Active</div>
+      <button class="btn-wake" onclick="exitScreenlessMode(event)">Wake Screen</button>
+    </div>
+  </div>
+
+  <!-- App Header -->
+  <header class="app-header">
+    <div class="brand">
+      <div class="brand-disc" id="brand-indicator"></div>
+      <div>
+        <div class="brand-title">WOTS</div>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <button class="icon-btn" id="btn-gps" onclick="autoDetectSky()" title="Auto-Detect Live Sky">
+        <span>📍</span>
       </button>
-      <button class="btn-pill" id="btn-drone-toggle" onclick="toggleCosmicDrone()">
-        <span>&#127756;</span> Cosmic Drone (432Hz)
+      <button class="icon-btn" id="btn-drone" onclick="toggleCosmicDrone()" title="Cosmic Drone (432Hz)">
+        <span>🪐</span>
       </button>
-      <button class="btn-pill" id="btn-red-mode" onclick="toggleRedMode()">
-        <span>&#128308;</span> Red Light (650nm)
+      <button class="icon-btn" id="btn-red" onclick="toggleRedMode()" title="650nm Red Mode">
+        <span>🔴</span>
       </button>
-      <button class="btn-pill" onclick="enterScreenlessMode()" style="background: rgba(0,0,0,0.6); border-color: #ff3333; color: #ff6666;">
-        <span>&#127761;</span> Eyes to Sky
+      <button class="icon-btn" onclick="enterScreenlessMode()" title="Eyes to Sky" style="border-color: #ef4444; color: #ef4444;">
+        <span>🌙</span>
       </button>
     </div>
   </header>
 
-  <!-- Panoramic Horizon Compass Tape -->
-  <div class="compass-tape-container">
-    <div class="compass-tape" id="compass-tape-strip">
-      <span class="compass-cardinal">NORTH</span>
-      <span class="compass-target-node" onclick="triggerTargetAudio('Polaris (The North Star)')">&#10022; Polaris (37&deg;)</span>
-      <span class="compass-cardinal">NORTH-EAST</span>
-      <span class="compass-target-node" onclick="triggerTargetAudio('Cassiopeia (The Celestial Queen)')">&#10022; Cassiopeia (60&deg;)</span>
-      <span class="compass-target-node" onclick="triggerTargetAudio('Andromeda Galaxy (M31)')">&#127756; Andromeda Galaxy (41&deg;)</span>
-      <span class="compass-cardinal">EAST</span>
-      <span class="compass-target-node" onclick="triggerTargetAudio('Jupiter (The King of Planets)')">&#129680; Jupiter (21&deg;)</span>
-      <span class="compass-cardinal">SOUTH</span>
-      <span class="compass-target-node" onclick="triggerTargetAudio('Saturn (The Ringed Giant)')">&#129680; Saturn (35&deg;)</span>
-      <span class="compass-cardinal">WEST</span>
-      <span class="compass-target-node" onclick="triggerTargetAudio('The Summer Triangle (Deneb, Vega, Altair)')">&#10022; Vega / Deneb (25&deg;)</span>
-      <span class="compass-cardinal">ZENITH</span>
-      <span class="compass-target-node" onclick="triggerTargetAudio('Cygnus (The Northern Cross)')">&#10022; Cygnus (82&deg;)</span>
-    </div>
-  </div>
+  <!-- Main Scrollable App Container -->
+  <main class="app-main">
 
-  <!-- Content Container -->
-  <div class="container">
-
-    <!-- Hero Banner -->
-    <div class="hero-banner span-full">
-      <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
-        <span class="offline-pill">&#9889; 100% Offline Capable</span>
-        <span class="offline-pill" style="border-color: rgba(96, 165, 250, 0.4); color: #60a5fa;">&#129504; Gemma 2B Local</span>
-        <span class="offline-pill" style="border-color: rgba(251, 191, 36, 0.4); color: #fbbf24;">&#128202; TabPFN Seeing</span>
-        <span class="offline-pill" id="badge-location" style="border-color: rgba(167, 139, 250, 0.4); color: #c084fc;">&#128205; Default: 37.77&deg;N, 122.42&deg;W</span>
-      </div>
-
-      <h1 class="hero-h1">WOT's Up in the Sky Tonight?</h1>
-      <p class="hero-p">
-        Every smartphone screen blazes with blue light that bleaches your eyes' rhodopsin for 30 minutes. 
-        <strong>Whispers of the Sky</strong> cuts screen time to zero: it blanks your screen to pitch black and whispers star navigation, astrophysics, and cosmic lore directly into your earbuds while you lie on the grass.
-      </p>
-
-      <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
-        <button class="btn-hero" onclick="launchGuidedSession()">
-          <span>&#9654;</span> Start Screenless Celestial Tour
-        </button>
-        <button class="btn-pill" onclick="enterScreenlessMode()" style="padding: 12px 24px; font-size: 0.95rem;">
-          <span>&#127761;</span> Blanket Mode (Pitch Black)
-        </button>
-      </div>
-
-      <!-- Biological Rhodopsin Adaptation Progress Meter -->
-      <div class="rhodopsin-card">
-        <div class="rhodopsin-header">
-          <span><strong>Biological Night-Vision Adaptation:</strong> <span id="lbl-rhodopsin-status">Cone Cell Phase (15%)</span></span>
-          <span id="lbl-rhodopsin-time" style="font-family:'JetBrains Mono',monospace;">00:00 elapsed</span>
-        </div>
-        <div class="progress-track">
-          <div class="progress-bar-fill" id="rhodopsin-bar" style="width: 15%;"></div>
-        </div>
-        <div class="milestone-tags">
-          <span>0m: Dusk</span>
-          <span>5m: Cone Shutdown</span>
-          <span>12m: Rod Saturation</span>
-          <span>20m: Full Scotopic Vision</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Column 1: TabPFN Atmospheric Seeing Forecast -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <span>&#127777;</span> Atmospheric Seeing Forecast
-        </div>
-        <span class="badge">Prior Labs TabPFN v2</span>
-      </div>
-
-      <!-- Live Circular Gauge + Stats -->
-      <div class="gauge-layout">
-        <div class="circular-gauge">
-          <svg viewBox="0 0 120 120">
-            <circle class="gauge-bg" cx="60" cy="60" r="50"></circle>
-            <circle class="gauge-progress" id="svg-gauge-bar" cx="60" cy="60" r="50"></circle>
-          </svg>
-          <div class="gauge-center-text">
-            <div class="gauge-val" id="stat-transparency">94%</div>
-            <div class="gauge-sub">Clarity</div>
-          </div>
+    <!-- ==================== TAB 1: STARGAZE ==================== -->
+    <section class="tab-content active" id="tab-stargaze">
+      <div class="hero-orb-wrap">
+        <div class="celestial-orb" id="hero-orb" onclick="toggleAudioPlayback()">
+          <span class="orb-icon" id="orb-state-icon">▶</span>
+          <span class="orb-label" id="orb-state-label">Start Tour</span>
         </div>
 
-        <div class="stats-column">
-          <div class="stat-box">
-            <div class="stat-label">Seeing (FWHM)</div>
-            <div class="stat-value" id="stat-fwhm">0.8"</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-label">Limiting Mag</div>
-            <div class="stat-value" id="stat-mag">6.2</div>
-          </div>
-          <div class="stat-box" style="grid-column: 1 / -1;">
-            <div class="stat-label">Observation Window</div>
-            <div class="stat-value" style="font-size: 0.95rem;" id="stat-golden-window">11 PM &ndash; 2 AM (Peak)</div>
-          </div>
-        </div>
-      </div>
+        <h1 class="hero-heading">Whispers of the Sky</h1>
+        <p class="hero-sub">
+          Cut screen time to zero. Put your headphones on, place your phone on the grass, and let open AI whisper celestial navigation.
+        </p>
 
-      <div class="recommendation-box" id="seeing-recommendation">
-        Analyzing meteorological parameters with TabPFN tabular foundation model...
-      </div>
-
-      <div style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase;">
-        Nightly Seeing Window (8 PM &ndash; 4 AM):
-      </div>
-      <div class="timeline-container" id="hourly-timeline">
-        <!-- Rendered by JS -->
-      </div>
-
-      <!-- Live Simulator / Telemetry Controls -->
-      <div style="margin-top: 18px; border-top: 1px solid var(--card-border); padding-top: 14px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-          <span style="font-size: 0.75rem; color: var(--text-muted);">Atmospheric Parameters:</span>
-          <button class="btn-pill" style="font-size: 0.7rem; padding: 4px 10px;" onclick="autoDetectSky()">Sync Live Weather</button>
-        </div>
-        <div class="slider-row">
-          <div class="slider-label"><span>Cloud Cover</span><span id="lbl-cloud">8%</span></div>
-          <input type="range" id="slider-cloud" min="0" max="100" value="8" oninput="updateWeatherPrediction()">
-        </div>
-        <div class="slider-row">
-          <div class="slider-label"><span>Relative Humidity</span><span id="lbl-humidity">38%</span></div>
-          <input type="range" id="slider-humidity" min="10" max="100" value="38" oninput="updateWeatherPrediction()">
-        </div>
-        <div class="slider-row">
-          <div class="slider-label"><span>Wind Speed (km/h)</span><span id="lbl-wind">6 km/h</span></div>
-          <input type="range" id="slider-wind" min="0" max="40" value="6" oninput="updateWeatherPrediction()">
-        </div>
-      </div>
-    </div>
-
-    <!-- Column 2: Tonight's Visible Sky (Astropy) -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <span>&#128301;</span> Visible Sky Landmarks
-        </div>
-        <span class="badge">Astropy Alt/Az</span>
-      </div>
-
-      <div class="target-list" id="target-list-container">
-        <!-- Rendered by JS -->
-      </div>
-    </div>
-
-    <!-- Row: Audio Player & Guided Narration -->
-    <div class="card audio-player-card span-full">
-      <div class="card-header">
-        <div class="card-title">
-          <span>&#127911;</span> Whisperer Audio Guide
-        </div>
-        <div style="display: flex; gap: 6px;">
-          <span class="badge" id="audio-provider-badge">ElevenLabs / Web Audio</span>
-          <span class="badge" style="color: #34d399;">3D Spatial Panning</span>
-        </div>
-      </div>
-
-      <p id="tour-status-text" style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">
-        Ready to whisper your bespoke tour. Hit play and place your phone face down on the grass.
-      </p>
-
-      <div class="audio-chapter-list" id="chapter-list">
-        <!-- Chapters loaded here -->
-      </div>
-
-      <div class="audio-controls">
-        <button class="btn-circle" id="btn-play-pause" onclick="toggleAudioPlayback()">&#9654;</button>
-        <button class="btn-pill" onclick="enterScreenlessMode()">
-          <span>&#127761;</span> Blanket Mode (Blank Screen)
-        </button>
-      </div>
-
-      <!-- Audio Mixer & Speech Rate Controls -->
-      <div class="audio-mixer-strip">
-        <div class="mixer-item">
-          <div class="mixer-label"><span>Cosmic Drone (432Hz) Volume</span><span id="lbl-drone-vol">30%</span></div>
-          <input type="range" id="slider-drone-vol" min="0" max="100" value="30" oninput="setDroneVolume(this.value)">
-        </div>
-        <div class="mixer-item">
-          <div class="mixer-label"><span>Narration Cadence</span><span id="lbl-rate-val">0.88x (Meditative)</span></div>
-          <div class="speed-btn-group">
-            <button class="speed-btn active" onclick="setNarrationRate(0.85, '0.85x (Meditative)', this)">Meditative</button>
-            <button class="speed-btn" onclick="setNarrationRate(1.0, '1.0x (Normal)', this)">Normal</button>
-            <button class="speed-btn" onclick="setNarrationRate(1.18, '1.18x (Brisk)', this)">Brisk</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Voice Question Widget ("Hey WOTS...") -->
-      <div style="margin-top: 20px; border-top: 1px solid var(--card-border); padding-top: 16px;">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <div style="font-size: 0.8rem; font-weight: 500;">Ask WOTS (Hands-Free Voice / Text):</div>
-          <button class="btn-pill" id="btn-mic" onclick="toggleVoiceRecognition()" style="font-size: 0.72rem; padding: 4px 10px;">
-            <span>&#127908;</span> <span id="lbl-mic-text">Speak Question</span>
+        <div class="cta-row">
+          <button class="btn-main" onclick="launchGuidedSession()">
+            <span>▶</span> Start Stargazing Tour
+          </button>
+          <button class="btn-dark-blank" onclick="enterScreenlessMode()">
+            <span>🌙</span> Blanket Mode
           </button>
         </div>
-        <div class="ask-box">
-          <input type="text" id="ask-input" class="ask-input" placeholder="e.g. 'WOT is Jupiter right now?' or 'Why doesn't Saturn twinkle?'" onkeydown="if(event.key==='Enter') askQuestion()">
-          <button class="btn-pill" onclick="askQuestion()">Ask</button>
-        </div>
-        <div id="ask-response" style="margin-top: 10px; font-size: 0.85rem; color: var(--accent); line-height: 1.45; display: none;"></div>
-      </div>
-    </div>
 
-    <!-- Row: Offline Field Test Logger -->
-    <div class="card span-full">
-      <div class="card-header">
+        <!-- Biological Rhodopsin Tracker -->
+        <div class="rhodopsin-box">
+          <div class="rhodopsin-top">
+            <span><strong>Dark Adaptation:</strong> <span id="lbl-rhodopsin-phase">Cone Decay (15%)</span></span>
+            <span class="rhodopsin-time" id="lbl-rhodopsin-timer">00:00</span>
+          </div>
+          <div class="bar-bg">
+            <div class="bar-fill" id="rhodopsin-bar"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Audio Chapters Card -->
+      <div class="player-card">
         <div class="card-title">
-          <span>&#128221;</span> Outdoor Observation Journal
+          <span>Tour Chapters (Gemma 2B)</span>
+          <span style="font-size:0.7rem; color:var(--accent); font-family:'JetBrains Mono',monospace;">Spatial Audio Active</span>
         </div>
-        <span class="badge">Session Logs</span>
+
+        <div id="chapter-list">
+          <div class="chapter-row active" onclick="playChapter(0)">
+            <div>
+              <div class="ch-title">Chapter 1: Eyes to the Darkness</div>
+              <div class="ch-desc">Night vision grounding & breath</div>
+            </div>
+            <span>▶</span>
+          </div>
+          <div class="chapter-row" onclick="playChapter(1)">
+            <div>
+              <div class="ch-title">Chapter 2: Star-Hop to Andromeda Galaxy</div>
+              <div class="ch-desc">Looking North-East toward Cassiopeia</div>
+            </div>
+            <span>▶</span>
+          </div>
+          <div class="chapter-row" onclick="playChapter(2)">
+            <div>
+              <div class="ch-title">Chapter 3: The Deep Quiet of Space</div>
+              <div class="ch-desc">Cosmic reflection & light travel time</div>
+            </div>
+            <span>▶</span>
+          </div>
+        </div>
+
+        <!-- Audio Settings / Mixer -->
+        <div class="mixer-strip">
+          <div class="slider-item">
+            <span>432Hz Drone Vol</span>
+            <input type="range" min="0" max="100" value="30" oninput="setDroneVolume(this.value)">
+            <span id="lbl-drone-vol" style="font-family:'JetBrains Mono',monospace; width:34px;">30%</span>
+          </div>
+          <div class="slider-item">
+            <span>Voice Speed</span>
+            <input type="range" min="75" max="125" value="88" oninput="setVoiceSpeed(this.value)">
+            <span id="lbl-voice-speed" style="font-family:'JetBrains Mono',monospace; width:34px;">0.88x</span>
+          </div>
+        </div>
       </div>
 
-      <div style="display: grid; grid-template-columns: 1fr; gap: 16px;" id="field-log-layout">
-        <div>
-          <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px;">Log an outdoor stargazing session:</div>
-          <div style="display: flex; gap: 8px; margin-bottom: 8px;">
-            <input type="text" id="log-location" class="ask-input" placeholder="Location (e.g. Backyard, State Park)">
-            <select id="log-bortle" class="ask-input" style="max-width: 150px;">
-              <option value="1">Bortle 1 (Pristine)</option>
-              <option value="2">Bortle 2 (Truly Dark)</option>
-              <option value="3" selected>Bortle 3 (Rural Sky)</option>
-              <option value="4">Bortle 4 (Rural/Suburban)</option>
-              <option value="5">Bortle 5 (Suburban)</option>
-            </select>
+      <!-- Spontaneous Voice Query -->
+      <div class="player-card" style="margin-top: 14px;">
+        <div class="card-title">
+          <span>Ask WOTS (Voice / Text)</span>
+          <button class="icon-btn" style="width:30px; height:30px; font-size:0.75rem;" onclick="toggleVoiceRecognition()">🎤</button>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <input type="text" id="ask-input" class="input-field" placeholder="e.g. 'Where is Jupiter right now?'" onkeydown="if(event.key==='Enter') askQuestion()">
+          <button class="btn-main" style="flex:0; padding:8px 16px; border-radius:10px;" onclick="askQuestion()">Ask</button>
+        </div>
+        <div id="ask-response" style="margin-top:10px; font-size:0.8rem; color:var(--accent); line-height:1.45; display:none;"></div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 2: SKY MAP ==================== -->
+    <section class="tab-content" id="tab-sky">
+      <div style="margin-bottom: 12px; display:flex; justify-content:space-between; align-items:center;">
+        <h2 style="font-family:'Cinzel',serif; font-size:1.1rem;">Tonight's Sky Landmarks</h2>
+        <span style="font-size:0.7rem; color:var(--text-muted); font-family:'JetBrains Mono',monospace;" id="sky-coords-tag">37.77°N, 122.42°W</span>
+      </div>
+
+      <div class="target-grid" id="target-list-container">
+        <!-- Loaded by JS -->
+      </div>
+    </section>
+
+    <!-- ==================== TAB 3: SEEING (TabPFN) ==================== -->
+    <section class="tab-content" id="tab-seeing">
+      <div class="gauge-card">
+        <h2 style="font-family:'Cinzel',serif; font-size:1.1rem; margin-bottom:14px;">Atmospheric Seeing (TabPFN)</h2>
+
+        <div class="gauge-svg-wrap">
+          <svg viewBox="0 0 120 120">
+            <circle class="g-bg" cx="60" cy="60" r="50"></circle>
+            <circle class="g-bar" id="gauge-bar" cx="60" cy="60" r="50"></circle>
+          </svg>
+          <div class="g-text">
+            <div class="g-pct" id="stat-transparency">94%</div>
+            <div class="g-label">Transparency</div>
           </div>
-          <textarea id="log-notes" class="ask-input" style="width: 100%; height: 70px; resize: none; margin-bottom: 8px;" placeholder="What did you observe? Did you keep the screen off? How was your rhodopsin adaptation?"></textarea>
-          <button class="btn-pill" onclick="saveFieldLog()">Save Outdoor Field Log</button>
         </div>
 
-        <div>
-          <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px;">Logged Sessions:</div>
-          <div class="log-list" id="field-logs-container">
-            <!-- Loaded by JS -->
+        <div class="seeing-stats-grid">
+          <div class="s-box">
+            <div class="s-lbl">FWHM Seeing</div>
+            <div class="s-val" id="stat-fwhm">0.8"</div>
+          </div>
+          <div class="s-box">
+            <div class="s-lbl">Limiting Mag</div>
+            <div class="s-val" id="stat-mag">6.2</div>
+          </div>
+          <div class="s-box">
+            <div class="s-lbl">Peak Window</div>
+            <div class="s-val" style="font-size:0.85rem;" id="stat-window">11 PM</div>
+          </div>
+        </div>
+
+        <div class="recom-box" id="seeing-recommendation">
+          Analyzing weather telemetry via TabPFN foundation model...
+        </div>
+
+        <div style="font-size:0.72rem; color:var(--text-muted); text-align:left; margin-bottom:6px; text-transform:uppercase;">
+          Hourly Seeing Window (8 PM – 4 AM):
+        </div>
+        <div class="hourly-strip" id="hourly-timeline">
+          <!-- Rendered by JS -->
+        </div>
+
+        <div style="margin-top:18px; text-align:left;">
+          <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+            <span style="font-size:0.75rem; color:var(--text-muted);">Adjust Weather Parameters:</span>
+            <button onclick="autoDetectSky()" style="background:transparent; border:none; color:var(--accent); font-size:0.72rem; cursor:pointer;">Sync Live Weather 📍</button>
+          </div>
+          <div class="slider-item" style="margin-bottom:6px;">
+            <span style="width:75px;">Cloud Cover</span>
+            <input type="range" id="slider-cloud" min="0" max="100" value="8" oninput="updateWeatherPrediction()">
+            <span id="lbl-cloud" style="font-family:'JetBrains Mono',monospace; width:34px;">8%</span>
+          </div>
+          <div class="slider-item" style="margin-bottom:6px;">
+            <span style="width:75px;">Humidity</span>
+            <input type="range" id="slider-humidity" min="10" max="100" value="38" oninput="updateWeatherPrediction()">
+            <span id="lbl-humidity" style="font-family:'JetBrains Mono',monospace; width:34px;">38%</span>
+          </div>
+          <div class="slider-item">
+            <span style="width:75px;">Wind Speed</span>
+            <input type="range" id="slider-wind" min="0" max="40" value="6" oninput="updateWeatherPrediction()">
+            <span id="lbl-wind" style="font-family:'JetBrains Mono',monospace; width:34px;">6 km/h</span>
           </div>
         </div>
       </div>
-    </div>
+    </section>
 
-  </div>
+    <!-- ==================== TAB 4: JOURNAL ==================== -->
+    <section class="tab-content" id="tab-journal">
+      <div class="journal-card">
+        <h2 style="font-family:'Cinzel',serif; font-size:1.1rem; margin-bottom:14px;">Outdoor Observation Log</h2>
 
-  <!-- Status Bar Footer -->
-  <div class="status-bar">
-    <span><span class="status-dot green"></span> Prior Labs TabPFN Active</span>
-    <span><span class="status-dot blue"></span> Google Gemma 2B Ready</span>
-    <span><span class="status-dot purple"></span> ElevenLabs Voice Stream</span>
-    <span><span class="status-dot green"></span> Web Audio 432Hz Drone</span>
-    <span><span class="status-dot blue"></span> Spatial Audio Compass</span>
-  </div>
+        <div class="form-group">
+          <input type="text" id="log-location" class="input-field" placeholder="Location (e.g. Mountain Pass, Backyard)">
+          <select id="log-bortle" class="input-field">
+            <option value="1">Bortle 1 (Pristine Dark Sky)</option>
+            <option value="2">Bortle 2 (Truly Dark)</option>
+            <option value="3" selected>Bortle 3 (Rural Sky)</option>
+            <option value="4">Bortle 4 (Rural / Suburban)</option>
+            <option value="5">Bortle 5 (Suburban)</option>
+          </select>
+          <textarea id="log-notes" class="input-field" style="height:70px; resize:none;" placeholder="What did you observe? Did you keep screen dark?"></textarea>
+          <button class="btn-main" onclick="saveFieldLog()">Save Session Log</button>
+        </div>
+
+        <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:8px; text-transform:uppercase;">
+          Saved Outdoor Logs:
+        </div>
+        <div id="field-logs-container">
+          <!-- Loaded by JS -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Mobile Bottom Navigation Bar -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" onclick="switchTab('stargaze', this)">
+      <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      <span>Stargaze</span>
+    </button>
+    <button class="nav-btn" onclick="switchTab('sky', this)">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20M2 12h20"/></svg>
+      <span>Sky Map</span>
+    </button>
+    <button class="nav-btn" onclick="switchTab('seeing', this)">
+      <svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      <span>Seeing</span>
+    </button>
+    <button class="nav-btn" onclick="switchTab('journal', this)">
+      <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/></svg>
+      <span>Journal</span>
+    </button>
+  </nav>
 
   <!-- Audio Element -->
-  <audio id="audio-player" style="display: none;" onended="onAudioEnded()"></audio>
+  <audio id="audio-player" style="display:none;" onended="onAudioEnded()"></audio>
 
   <script>
     // State
@@ -1234,102 +1117,97 @@
     let speechRate = 0.88;
     const audioEl = document.getElementById('audio-player');
 
-    // Rhodopsin Adaptation Timer
+    // Rhodopsin Timer
     let darkSeconds = 0;
-    let rhodopsinInterval = null;
+    setInterval(() => {
+      darkSeconds++;
+      const m = Math.floor(darkSeconds / 60);
+      const s = darkSeconds % 60;
+      const str = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+      const pct = Math.min(100, Math.round(15 + (darkSeconds / 1200) * 85));
+      
+      document.getElementById('rhodopsin-bar').style.width = `${pct}%`;
+      document.getElementById('lbl-rhodopsin-timer').textContent = str;
 
-    function startRhodopsinTimer() {
-      if (!rhodopsinInterval) {
-        rhodopsinInterval = setInterval(() => {
-          darkSeconds++;
-          const mins = Math.floor(darkSeconds / 60);
-          const secs = darkSeconds % 60;
-          const timeStr = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-          
-          // Calculate percentage (0 to 20 minutes = 1200 seconds max)
-          const pct = Math.min(100, Math.round(15 + (darkSeconds / 1200) * 85));
-          document.getElementById('rhodopsin-bar').style.width = `${pct}%`;
-          document.getElementById('lbl-rhodopsin-time').textContent = `${timeStr} elapsed`;
+      let phase = "Cone Decay";
+      if (pct >= 85) phase = "Full Scotopic Rod Vision";
+      else if (pct >= 50) phase = "Rhodopsin Synthesis";
+      else if (pct >= 30) phase = "Cone Shutdown";
 
-          let statusText = "Cone Cell Phase";
-          if (pct >= 85) statusText = "Full Scotopic Vision (M31 Andromeda Visible)";
-          else if (pct >= 55) statusText = "Rhodopsin Synthesis Phase";
-          else if (pct >= 30) statusText = "Cone Shutdown Phase";
+      document.getElementById('lbl-rhodopsin-phase').textContent = `${phase} (${pct}%)`;
+      document.getElementById('overlay-rhodopsin-tag').textContent = `Dark Adaptation: ${str} (${pct}%) • ${phase}`;
+    }, 1000);
 
-          document.getElementById('lbl-rhodopsin-status').textContent = `${statusText} (${pct}%)`;
-          document.getElementById('overlay-rhodopsin-text').textContent = `Dark Adaptation: ${timeStr} (${pct}%) • ${statusText}`;
-        }, 1000);
-      }
+    // Tab Switching
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(`tab-${tabId}`).classList.add('active');
+      btn.classList.add('active');
     }
 
-    // Interactive Starfield Canvas
+    // Dynamic Starfield Canvas
     const canvas = document.getElementById('star-canvas');
     const ctx = canvas.getContext('2d');
     let stars = [];
 
-    function resizeStarCanvas() {
+    function resizeCanvas() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
       stars = [];
-      const numStars = Math.floor((canvas.width * canvas.height) / 3200);
-      for (let i = 0; i < numStars; i++) {
+      const count = Math.floor((canvas.width * canvas.height) / 3600);
+      for (let i = 0; i < count; i++) {
         stars.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          radius: Math.random() * 1.4 + 0.3,
+          radius: Math.random() * 1.3 + 0.3,
           alpha: Math.random() * 0.8 + 0.2,
           speed: Math.random() * 0.02 + 0.005,
-          twinkleSpeed: Math.random() * 0.03 + 0.01,
-          twinklePhase: Math.random() * Math.PI * 2
+          twinkle: Math.random() * 0.03 + 0.01,
+          phase: Math.random() * Math.PI * 2
         });
       }
     }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
 
-    window.addEventListener('resize', resizeStarCanvas);
-    resizeStarCanvas();
-
-    function drawStars() {
+    function renderStars() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       const isRed = document.body.classList.contains('red-mode');
-      
       stars.forEach(s => {
-        s.twinklePhase += s.twinkleSpeed;
-        const currentAlpha = s.alpha * (0.6 + 0.4 * Math.sin(s.twinklePhase));
+        s.phase += s.twinkle;
+        const a = s.alpha * (0.6 + 0.4 * Math.sin(s.phase));
         ctx.beginPath();
         ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
-        ctx.fillStyle = isRed ? `rgba(255, 60, 60, ${currentAlpha})` : `rgba(255, 255, 255, ${currentAlpha})`;
+        ctx.fillStyle = isRed ? `rgba(239, 68, 68, ${a})` : `rgba(255, 255, 255, ${a})`;
         ctx.fill();
-
-        // Slow celestial drift
         s.y -= s.speed;
         if (s.y < 0) s.y = canvas.height;
       });
-      requestAnimationFrame(drawStars);
+      requestAnimationFrame(renderStars);
     }
-    requestAnimationFrame(drawStars);
+    requestAnimationFrame(renderStars);
 
-    // Toast Notification System
+    // Toast Function
     function showToast(msg) {
-      const container = document.getElementById('toast-container');
-      const toast = document.createElement('div');
-      toast.className = 'toast-msg';
-      toast.textContent = msg;
-      container.appendChild(toast);
+      const wrap = document.getElementById('toast-wrap');
+      const box = document.createElement('div');
+      box.className = 'toast-box';
+      box.textContent = msg;
+      wrap.appendChild(box);
       setTimeout(() => {
-        toast.style.opacity = '0';
-        toast.style.transition = 'opacity 0.4s';
-        setTimeout(() => toast.remove(), 400);
-      }, 3500);
+        box.style.opacity = '0';
+        box.style.transition = 'opacity 0.3s';
+        setTimeout(() => box.remove(), 300);
+      }, 3000);
     }
 
-    // Web Audio Procedural 432Hz Cosmic Drone Synthesizer
+    // Web Audio Procedural 432Hz Drone
     let audioCtx = null;
-    let droneOsc1 = null;
-    let droneOsc2 = null;
     let droneGain = null;
     let isDroneActive = false;
     let stereoPanner = null;
-    let droneBaseGain = 0.08;
+    let droneBaseVol = 0.08;
 
     function initWebAudio() {
       if (!audioCtx) {
@@ -1353,145 +1231,115 @@
         }
         filter.connect(audioCtx.destination);
 
-        droneOsc1 = audioCtx.createOscillator();
-        droneOsc1.type = 'sine';
-        droneOsc1.frequency.setValueAtTime(108, audioCtx.currentTime); // 432Hz Sub-harmonic
-        droneOsc1.connect(droneGain);
-        droneOsc1.start();
+        const osc1 = audioCtx.createOscillator();
+        osc1.type = 'sine';
+        osc1.frequency.setValueAtTime(108, audioCtx.currentTime);
+        osc1.connect(droneGain);
+        osc1.start();
 
-        droneOsc2 = audioCtx.createOscillator();
-        droneOsc2.type = 'triangle';
-        droneOsc2.frequency.setValueAtTime(162, audioCtx.currentTime);
-        droneOsc2.connect(droneGain);
-        droneOsc2.start();
+        const osc2 = audioCtx.createOscillator();
+        osc2.type = 'triangle';
+        osc2.frequency.setValueAtTime(162, audioCtx.currentTime);
+        osc2.connect(droneGain);
+        osc2.start();
       }
     }
 
     function toggleCosmicDrone() {
       initWebAudio();
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-
+      if (audioCtx.state === 'suspended') audioCtx.resume();
       isDroneActive = !isDroneActive;
-      const targetGain = isDroneActive ? droneBaseGain : 0.0;
-      droneGain.gain.setTargetAtTime(targetGain, audioCtx.currentTime, 0.4);
-
-      document.getElementById('btn-drone-toggle').classList.toggle('active', isDroneActive);
-      document.getElementById('logo-singing-orb').classList.toggle('singing', isDroneActive);
-      showToast(isDroneActive ? "🪐 Cosmic Drone (432Hz) Active" : "Cosmic Drone Paused");
+      const target = isDroneActive ? droneBaseVol : 0.0;
+      droneGain.gain.setTargetAtTime(target, audioCtx.currentTime, 0.4);
+      document.getElementById('btn-drone').classList.toggle('active', isDroneActive);
+      showToast(isDroneActive ? "🪐 432Hz Cosmic Drone Active" : "Cosmic Drone Paused");
     }
 
     function setDroneVolume(val) {
       document.getElementById('lbl-drone-vol').textContent = `${val}%`;
-      droneBaseGain = (val / 100) * 0.25;
+      droneBaseVol = (val / 100) * 0.25;
       if (isDroneActive && droneGain) {
-        droneGain.gain.setTargetAtTime(droneBaseGain, audioCtx.currentTime, 0.1);
+        droneGain.gain.setTargetAtTime(droneBaseVol, audioCtx.currentTime, 0.1);
       }
     }
 
-    function setNarrationRate(rate, label, btn) {
-      speechRate = rate;
-      document.getElementById('lbl-rate-val').textContent = label;
-      document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      showToast(`Narration Pace: ${label}`);
+    function setVoiceSpeed(val) {
+      speechRate = val / 100;
+      document.getElementById('lbl-voice-speed').textContent = `${speechRate}x`;
+      if (audioEl) audioEl.playbackRate = speechRate;
     }
 
-    function setAudioCompassDirection(cardinal) {
+    function setSpatialCompass(dir) {
       if (!stereoPanner || !audioCtx) return;
       let pan = 0;
-      if (cardinal.includes('East')) pan = -0.38;
-      else if (cardinal.includes('West')) pan = 0.38;
-      else pan = 0.0;
-      stereoPanner.pan.setTargetAtTime(pan, audioCtx.currentTime, 0.5);
+      if (dir.includes('East')) pan = -0.35;
+      else if (dir.includes('West')) pan = 0.35;
+      stereoPanner.pan.setTargetAtTime(pan, audioCtx.currentTime, 0.4);
     }
 
-    // Screen Wake Lock API
+    // WakeLock API
     async function requestWakeLock() {
       if ('wakeLock' in navigator) {
-        try {
-          wakeLock = await navigator.wakeLock.request('screen');
-        } catch (err) {
-          console.log('WakeLock error:', err);
-        }
+        try { wakeLock = await navigator.wakeLock.request('screen'); } catch(e) {}
       }
     }
-
     function releaseWakeLock() {
-      if (wakeLock) {
-        wakeLock.release().then(() => { wakeLock = null; });
-      }
+      if (wakeLock) { wakeLock.release().then(() => { wakeLock = null; }); }
     }
 
-    // Flip-to-Dark Accelerometer / Gyroscope Sensor
+    // Flip-to-Dark
     if (window.DeviceOrientationEvent) {
       window.addEventListener('deviceorientation', (e) => {
         if (e.beta !== null && Math.abs(e.beta) > 145) {
           const overlay = document.getElementById('screenless-overlay');
-          if (!overlay.classList.contains('active')) {
-            enterScreenlessMode();
-          }
+          if (!overlay.classList.contains('active')) enterScreenlessMode();
         }
       });
     }
 
-    // MediaSession API for Headphone Clickers
-    function setupMediaSession(chapterTitle) {
-      if ('mediaSession' in navigator) {
-        navigator.mediaSession.metadata = new MediaMetadata({
-          title: chapterTitle || "Celestial Tour",
-          artist: "Whispers of the Sky (WOTS)",
-          album: "Screenless Stargazing Journey",
-          artwork: [
-            { src: 'https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?w=512', sizes: '512x512', type: 'image/jpeg' }
-          ]
-        });
-
-        navigator.mediaSession.setActionHandler('play', () => toggleAudioPlayback());
-        navigator.mediaSession.setActionHandler('pause', () => toggleAudioPlayback());
-        navigator.mediaSession.setActionHandler('nexttrack', () => {
-          if (currentTour && activeChapterIndex + 1 < currentTour.chapters.length) {
-            playChapter(activeChapterIndex + 1);
-          }
-        });
-        navigator.mediaSession.setActionHandler('previoustrack', () => {
-          if (currentTour && activeChapterIndex > 0) {
-            playChapter(activeChapterIndex - 1);
-          }
-        });
-      }
+    // Screenless Overlay
+    function enterScreenlessMode() {
+      document.getElementById('screenless-overlay').classList.add('active');
+      requestWakeLock();
+      if (!isDroneActive) toggleCosmicDrone();
+      if (!isPlaying) toggleAudioPlayback();
+      showToast("🌙 Blanket Mode Active — Display 100% Dark");
     }
 
-    // Live Geolocation Auto-Detection
+    function exitScreenlessMode(e) {
+      if (e) e.stopPropagation();
+      document.getElementById('screenless-overlay').classList.remove('active');
+      releaseWakeLock();
+    }
+
+    function handleScreenlessTap(e) {
+      if (e.target.classList.contains('btn-wake')) return;
+      toggleAudioPlayback();
+    }
+
+    // 650nm Red Mode
+    function toggleRedMode() {
+      document.body.classList.toggle('red-mode');
+      const isRed = document.body.classList.contains('red-mode');
+      document.getElementById('btn-red').classList.toggle('active', isRed);
+      showToast(isRed ? "🔴 650nm Red Mode Active" : "Normal Mode");
+    }
+
+    // GPS & Live Telemetry
     function autoDetectSky() {
-      const btnText = document.getElementById('lbl-gps-text');
-      btnText.textContent = 'Detecting GPS...';
-
-      if (!('geolocation' in navigator)) {
-        showToast('Geolocation not supported. Using default.');
-        btnText.textContent = 'Auto-Detect My Sky';
-        return;
-      }
-
+      showToast("Detecting GPS coordinates...");
+      if (!('geolocation' in navigator)) return;
       navigator.geolocation.getCurrentPosition(
         async (pos) => {
           currentLat = Math.round(pos.coords.latitude * 100) / 100;
           currentLon = Math.round(pos.coords.longitude * 100) / 100;
-
-          document.getElementById('badge-location').textContent = `📍 GPS: ${currentLat}°, ${currentLon}°`;
-          btnText.textContent = 'Live Sky Synced';
-          showToast(`📍 GPS Locked: ${currentLat}°N, ${currentLon}°E`);
-
+          document.getElementById('sky-coords-tag').textContent = `${currentLat}°N, ${currentLon}°W`;
+          showToast(`📍 Locked: ${currentLat}°, ${currentLon}°`);
           await fetchLiveTelemetry();
           await fetchVisibleSky();
         },
-        (err) => {
-          showToast('GPS access denied. Using coordinates.');
-          btnText.textContent = 'Sync Live Weather';
-          fetchLiveTelemetry();
-        },
-        { timeout: 7000 }
+        () => fetchLiveTelemetry(),
+        { timeout: 6000 }
       );
     }
 
@@ -1514,56 +1362,12 @@
         document.getElementById('lbl-wind').textContent = `${Math.round(telem.wind_speed_kmh)} km/h`;
 
         updateSeeingUI(pred, data.hourly_timeline);
-        showToast(`🛰️ TabPFN Evaluated Seeing: ${pred.seeing_label}`);
+        showToast(`🛰️ TabPFN Seeing: ${pred.seeing_label}`);
       } catch (err) {
-        console.error('Telemetry error:', err);
         fetchSeeingPrediction();
       }
     }
 
-    // Lifecycle Init
-    window.addEventListener('DOMContentLoaded', () => {
-      fetchSeeingPrediction();
-      fetchVisibleSky();
-      fetchFieldLogs();
-      startRhodopsinTimer();
-    });
-
-    // Astronomical Red-Light Mode Toggle
-    function toggleRedMode() {
-      document.body.classList.toggle('red-mode');
-      const btn = document.getElementById('btn-red-mode');
-      btn.classList.toggle('active');
-      const isRed = document.body.classList.contains('red-mode');
-      showToast(isRed ? "🔴 650nm Red Mode: Rhodopsin Safe" : "Standard Sky Mode");
-    }
-
-    // Screenless Mode: turns display pitch black
-    function enterScreenlessMode() {
-      const overlay = document.getElementById('screenless-overlay');
-      overlay.classList.add('active');
-      requestWakeLock();
-      if (!isDroneActive) {
-        toggleCosmicDrone();
-      }
-      if (!isPlaying) {
-        toggleAudioPlayback();
-      }
-      showToast("🌙 Blanket Mode Active — Screen Blanked");
-    }
-
-    function exitScreenlessMode(e) {
-      if (e) e.stopPropagation();
-      document.getElementById('screenless-overlay').classList.remove('active');
-      releaseWakeLock();
-    }
-
-    function handleScreenlessTap(e) {
-      if (e.target.classList.contains('wake-button')) return;
-      toggleAudioPlayback();
-    }
-
-    // TabPFN Seeing Prediction (Manual Slider Flow)
     async function fetchSeeingPrediction() {
       const cloud = parseFloat(document.getElementById('slider-cloud').value);
       const humidity = parseFloat(document.getElementById('slider-humidity').value);
@@ -1573,17 +1377,11 @@
         const res = await fetch('/api/seeing-forecast', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({
-            cloud_cover_pct: cloud,
-            humidity_pct: humidity,
-            wind_speed_kmh: wind
-          })
+          body: JSON.stringify({ cloud_cover_pct: cloud, humidity_pct: humidity, wind_speed_kmh: wind })
         });
         const data = await res.json();
         updateSeeingUI(data.prediction, data.hourly_timeline);
-      } catch (err) {
-        console.error('Seeing error:', err);
-      }
+      } catch (err) {}
     }
 
     function updateSeeingUI(pred, timeline) {
@@ -1592,9 +1390,8 @@
       document.getElementById('stat-mag').textContent = pred.naked_eye_magnitude_limit;
       document.getElementById('seeing-recommendation').textContent = pred.recommendation;
 
-      const circumference = 314;
-      const offset = circumference - (pred.transparency_pct / 100) * circumference;
-      document.getElementById('svg-gauge-bar').style.strokeDashoffset = offset;
+      const offset = 314 - (pred.transparency_pct / 100) * 314;
+      document.getElementById('gauge-bar').style.strokeDashoffset = offset;
 
       const timelineEl = document.getElementById('hourly-timeline');
       timelineEl.innerHTML = '';
@@ -1607,16 +1404,14 @@
           bestHour = h.time;
         }
         const div = document.createElement('div');
-        div.className = `timeline-hour ${h.seeing_score >= 3 ? 'gold' : ''}`;
+        div.className = `h-cell ${h.seeing_score >= 3 ? 'gold' : ''}`;
         div.innerHTML = `
           <div style="font-weight:600;">${h.time}</div>
           <div style="font-size:0.65rem; color:var(--accent);">${h.transparency_pct}%</div>
-          <div style="font-size:0.6rem; color:var(--text-muted);">${h.fwhm}"</div>
         `;
         timelineEl.appendChild(div);
       });
-
-      document.getElementById('stat-golden-window').textContent = `${bestHour} (Peak Clarity)`;
+      document.getElementById('stat-window').textContent = bestHour;
     }
 
     function updateWeatherPrediction() {
@@ -1626,7 +1421,7 @@
       fetchSeeingPrediction();
     }
 
-    // Astropy Visible Sky
+    // Sky Targets
     async function fetchVisibleSky() {
       try {
         const res = await fetch('/api/visible-sky', {
@@ -1635,101 +1430,78 @@
           body: JSON.stringify({ latitude: currentLat, longitude: currentLon })
         });
         const data = await res.json();
-        const listEl = document.getElementById('target-list-container');
-        listEl.innerHTML = '';
+        const container = document.getElementById('target-list-container');
+        container.innerHTML = '';
 
         data.targets.forEach(t => {
           const div = document.createElement('div');
           div.className = 'target-card';
           div.innerHTML = `
-            <div class="target-info">
-              <div class="target-name">
-                <span>&#10022;</span> ${t.name}
-                <span class="badge" style="font-size:0.6rem;">Mag ${t.magnitude}</span>
-              </div>
-              <div class="target-coords">${t.cardinal_direction} &bull; ${t.altitude_deg}&deg; Alt (${t.elevation_description})</div>
+            <div>
+              <div class="target-name">${t.name}</div>
+              <div class="target-meta">${t.cardinal_direction} • ${t.altitude_deg}° Alt (${t.elevation_description})</div>
               <div class="target-desc">${t.star_hop}</div>
             </div>
-            <button class="btn-pill" onclick="speakTarget('${t.name}', '${t.cardinal_direction}', '${t.elevation_description}', '${t.star_hop.replace(/'/g, "\\'")}')">
-              <span>&#128266;</span>
+            <button class="btn-listen-icon" onclick="speakTarget('${t.name}', '${t.cardinal_direction}', '${t.elevation_description}', '${t.star_hop.replace(/'/g, "\\'")}')">
+              🔊
             </button>
           `;
-          listEl.appendChild(div);
+          container.appendChild(div);
         });
-      } catch (err) {
-        console.error('Visible sky error:', err);
-      }
+      } catch (err) {}
     }
 
-    function triggerTargetAudio(name) {
-      showToast(`Celestial Compass Focused: ${name}`);
-      const btn = document.querySelector(`.target-card [onclick*="${name.split(' ')[0]}"]`);
-      if (btn) btn.click();
-    }
-
-    // Launch Guided Stargazing Tour
+    // Audio Narration
     async function launchGuidedSession() {
-      document.getElementById('tour-status-text').textContent = 'Consulting local Gemma 2B model to compose your screenless tour...';
       showToast("🌌 Gemma 2B Composing Stargazing Tour...");
       try {
         const res = await fetch('/api/generate-tour', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({
-            latitude: currentLat,
-            longitude: currentLon,
-            duration_minutes: 10
-          })
+          body: JSON.stringify({ latitude: currentLat, longitude: currentLon, duration_minutes: 10 })
         });
         const data = await res.json();
         currentTour = data.tour;
         renderTourChapters(currentTour.chapters);
         playChapter(0);
-        showToast("🎧 Tour Ready: Audio Streaming Active");
+        showToast("🎧 Tour Ready: Streaming to Earbuds");
       } catch (err) {
-        document.getElementById('tour-status-text').textContent = 'Error generating tour. Using offline fallback guide.';
+        showToast("Using offline celestial guide");
       }
     }
 
     function renderTourChapters(chapters) {
-      const listEl = document.getElementById('chapter-list');
-      listEl.innerHTML = '';
+      const container = document.getElementById('chapter-list');
+      container.innerHTML = '';
       chapters.forEach((ch, idx) => {
         const div = document.createElement('div');
-        div.className = `chapter-item ${idx === 0 ? 'active' : ''}`;
-        div.id = `chapter-item-${idx}`;
+        div.className = `chapter-row ${idx === 0 ? 'active' : ''}`;
         div.onclick = () => playChapter(idx);
         div.innerHTML = `
           <div>
-            <div class="chapter-title">${ch.title}</div>
-            <div style="font-size:0.7rem; color:var(--text-muted);">${ch.target}</div>
+            <div class="ch-title">${ch.title}</div>
+            <div class="ch-desc">${ch.target}</div>
           </div>
-          <span style="font-size:0.8rem; color:var(--accent);">&#9654;</span>
+          <span>▶</span>
         `;
-        listEl.appendChild(div);
+        container.appendChild(div);
       });
-      document.getElementById('tour-status-text').textContent = `Tour Ready: ${chapters.length} chapters curated by Gemma 2B.`;
     }
 
-    function playChapter(index) {
-      if (!currentTour || !currentTour.chapters[index]) return;
-      activeChapterIndex = index;
+    function playChapter(idx) {
+      if (!currentTour || !currentTour.chapters[idx]) return;
+      activeChapterIndex = idx;
+      document.querySelectorAll('.chapter-row').forEach((el, i) => el.classList.toggle('active', i === idx));
+      const ch = currentTour.chapters[idx];
 
-      document.querySelectorAll('.chapter-item').forEach((el, i) => {
-        el.classList.toggle('active', i === index);
-      });
-
-      const chapter = currentTour.chapters[index];
-      setupMediaSession(chapter.title);
-
-      if (chapter.audio_url) {
-        audioEl.src = chapter.audio_url;
+      if (ch.audio_url) {
+        audioEl.src = ch.audio_url;
         audioEl.playbackRate = speechRate;
         audioEl.play();
         isPlaying = true;
-        updatePlayButtonState();
+        updatePlayState();
       } else {
-        speakBrowserTTS(chapter.text);
+        speakBrowserTTS(ch.text);
       }
     }
 
@@ -1744,21 +1516,27 @@
         isPlaying = false;
         showToast("Audio Paused");
       } else {
-        if (audioEl.src) {
-          audioEl.play();
-        } else {
-          playChapter(activeChapterIndex);
-        }
+        if (audioEl.src) audioEl.play();
+        else playChapter(activeChapterIndex);
         isPlaying = true;
         showToast("Audio Resumed");
       }
-      updatePlayButtonState();
+      updatePlayState();
     }
 
-    function updatePlayButtonState() {
-      const btn = document.getElementById('btn-play-pause');
-      btn.innerHTML = isPlaying ? '&#10074;&#10074;' : '&#9654;';
-      document.getElementById('logo-singing-orb').classList.toggle('singing', isPlaying || isDroneActive);
+    function updatePlayState() {
+      const orb = document.getElementById('hero-orb');
+      const icon = document.getElementById('orb-state-icon');
+      const lbl = document.getElementById('orb-state-label');
+      if (isPlaying) {
+        orb.classList.add('playing');
+        icon.textContent = '❚❚';
+        lbl.textContent = 'Playing';
+      } else {
+        orb.classList.remove('playing');
+        icon.textContent = '▶';
+        lbl.textContent = 'Paused';
+      }
     }
 
     function onAudioEnded() {
@@ -1766,154 +1544,118 @@
         playChapter(activeChapterIndex + 1);
       } else {
         isPlaying = false;
-        updatePlayButtonState();
+        updatePlayState();
       }
     }
 
-    // Web Speech API Fallback
     function speakBrowserTTS(text) {
       if (!('speechSynthesis' in window)) return;
       window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = speechRate;
-      utterance.pitch = 0.95;
-      utterance.onend = () => onAudioEnded();
-      window.speechSynthesis.speak(utterance);
+      const u = new SpeechSynthesisUtterance(text);
+      u.rate = speechRate;
+      u.pitch = 0.95;
+      u.onend = onAudioEnded;
+      window.speechSynthesis.speak(u);
       isPlaying = true;
-      updatePlayButtonState();
+      updatePlayState();
     }
 
     function speakTarget(name, dir, elev, hop) {
-      setAudioCompassDirection(dir);
-      const text = `${name}. Look towards ${dir}. It is ${elev}. To find it: ${hop}`;
-      speakBrowserTTS(text);
+      setSpatialCompass(dir);
+      speakBrowserTTS(`${name}. Look toward ${dir}. ${elev}. To locate it: ${hop}`);
       showToast(`Guided Star-Hop: ${name}`);
     }
 
-    // Voice / Text Question
-    async function askQuestion(explicitQuery) {
+    // Voice Ask
+    async function askQuestion(text) {
       const qInput = document.getElementById('ask-input');
-      const question = explicitQuery || qInput.value.trim();
+      const question = text || qInput.value.trim();
       if (!question) return;
 
-      const respEl = document.getElementById('ask-response');
-      respEl.style.display = 'block';
-      respEl.textContent = 'Consulting Gemma 2B celestial knowledge...';
-      showToast("Consulting Gemma 2B in the dark...");
+      const resp = document.getElementById('ask-response');
+      resp.style.display = 'block';
+      resp.textContent = 'Consulting Gemma 2B celestial knowledge...';
 
       try {
         const res = await fetch('/api/ask-astronomer', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({ question: question, latitude: currentLat, longitude: currentLon })
+          body: JSON.stringify({ question, latitude: currentLat, longitude: currentLon })
         });
         const data = await res.json();
-        respEl.textContent = `"${data.answer}"`;
-
+        resp.textContent = `"${data.answer}"`;
         if (data.audio_url) {
           audioEl.src = data.audio_url;
           audioEl.playbackRate = speechRate;
           audioEl.play();
           isPlaying = true;
-          updatePlayButtonState();
+          updatePlayState();
         } else {
           speakBrowserTTS(data.answer);
         }
-      } catch (err) {
-        respEl.textContent = 'Could not retrieve answer. Check local model connection.';
+      } catch (e) {
+        resp.textContent = 'Could not retrieve answer.';
       }
     }
 
-    // Speech Recognition ("Hey WOTS" Microphone)
-    let recognition = null;
     function toggleVoiceRecognition() {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SpeechRecognition) {
-        showToast('Voice speech recognition not supported in browser.');
-        return;
-      }
-
-      if (!recognition) {
-        recognition = new SpeechRecognition();
-        recognition.continuous = false;
-        recognition.interimResults = false;
-        recognition.lang = 'en-US';
-
-        recognition.onstart = () => {
-          document.getElementById('lbl-mic-text').textContent = 'Listening in dark...';
-          document.getElementById('btn-mic').classList.add('active');
-          showToast('🎤 Microphone Active: Speak your question now');
-        };
-
-        recognition.onresult = (event) => {
-          const transcript = event.results[0][0].transcript;
-          document.getElementById('ask-input').value = transcript;
-          askQuestion(transcript);
-        };
-
-        recognition.onerror = () => {
-          document.getElementById('lbl-mic-text').textContent = 'Speak Question';
-          document.getElementById('btn-mic').classList.remove('active');
-        };
-
-        recognition.onend = () => {
-          document.getElementById('lbl-mic-text').textContent = 'Speak Question';
-          document.getElementById('btn-mic').classList.remove('active');
-        };
-      }
-
-      recognition.start();
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SR) return showToast('Speech recognition not available.');
+      const r = new SR();
+      r.lang = 'en-US';
+      r.onstart = () => showToast('🎤 Speak your question...');
+      r.onresult = (e) => {
+        const t = e.results[0][0].transcript;
+        document.getElementById('ask-input').value = t;
+        askQuestion(t);
+      };
+      r.start();
     }
 
-    // Field Test Logs
+    // Field Logs
     async function fetchFieldLogs() {
       try {
         const res = await fetch('/api/field-logs');
         const logs = await res.json();
-        const container = document.getElementById('field-logs-container');
-        container.innerHTML = '';
+        const c = document.getElementById('field-logs-container');
+        c.innerHTML = '';
         logs.forEach(l => {
-          const div = document.createElement('div');
-          div.className = 'log-entry';
-          div.innerHTML = `
-            <div class="log-meta">
-              <span>${l.location} &bull; Bortle ${l.bortle_scale}</span>
-              <span>${new Date(l.timestamp).toLocaleDateString()}</span>
-            </div>
+          const d = document.createElement('div');
+          d.className = 'log-item';
+          d.innerHTML = `
+            <div class="log-hdr"><span>${l.location} • Bortle ${l.bortle_scale}</span><span>${new Date(l.timestamp).toLocaleDateString()}</span></div>
             <div>${l.notes}</div>
           `;
-          container.appendChild(div);
+          c.appendChild(d);
         });
-      } catch (err) {
-        console.error('Logs error:', err);
-      }
+      } catch (e) {}
     }
 
     async function saveFieldLog() {
       const loc = document.getElementById('log-location').value.trim();
       const bortle = parseInt(document.getElementById('log-bortle').value);
       const notes = document.getElementById('log-notes').value.trim();
-      if (!loc || !notes) return alert('Please enter location and notes.');
+      if (!loc || !notes) return alert('Enter location and notes.');
 
       try {
         await fetch('/api/log-field-test', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({
-            location: loc,
-            bortle_scale: bortle,
-            targets: ['Cassiopeia', 'Andromeda Galaxy'],
-            notes: notes
-          })
+          body: JSON.stringify({ location: loc, bortle_scale: bortle, targets: ['Cassiopeia'], notes })
         });
         document.getElementById('log-location').value = '';
         document.getElementById('log-notes').value = '';
         fetchFieldLogs();
-        showToast("✅ Observation Session Saved to Journal");
-      } catch (err) {
-        alert('Error saving log.');
-      }
+        showToast("✅ Observation Saved");
+      } catch(e) {}
     }
+
+    // Init
+    window.addEventListener('DOMContentLoaded', () => {
+      fetchSeeingPrediction();
+      fetchVisibleSky();
+      fetchFieldLogs();
+    });
   </script>
 </body>
 </html>
