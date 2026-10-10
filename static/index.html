@@ -1170,6 +1170,60 @@
       height: 4px;
     }
 
+    /* 24-Hour Situation Modes & Sleep Timer */
+    .situation-pill {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text-muted);
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 0.72rem;
+      font-family: 'Space Grotesk', sans-serif;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .situation-pill:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+    .situation-pill.active {
+      background: var(--accent);
+      color: #050814;
+      font-weight: 700;
+      border-color: var(--accent);
+      box-shadow: 0 0 12px rgba(239, 68, 68, 0.35);
+    }
+    body.red-mode .situation-pill.active {
+      background: #ef4444;
+      color: #000;
+      border-color: #ef4444;
+    }
+    .timer-chip {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text-muted);
+      border-radius: 6px;
+      padding: 3px 8px;
+      font-size: 0.68rem;
+      font-family: 'JetBrains Mono', monospace;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .timer-chip:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+    }
+    .timer-chip.active {
+      background: var(--accent);
+      color: #050814;
+      font-weight: 700;
+      border-color: var(--accent);
+    }
+
     /* ==================== TAB 2: SKY MAP & CONSTELLATION ART ==================== */
     /* ==================== TAB 2: SKY MAP & CONSTELLATION ART ==================== */
     /* Hemispheric Sky Radar Dome */
@@ -1856,6 +1910,37 @@
 
     <!-- ==================== TAB 1: STARGAZE ==================== -->
     <section class="tab-content active" id="tab-stargaze">
+
+      <!-- 24-Hour Sky Intelligence & Situational Banner -->
+      <div id="sky-situation-banner" style="background:rgba(15,23,42,0.85); border:1px solid rgba(255,255,255,0.12); border-radius:16px; padding:12px 16px; margin:0 auto 16px auto; max-width:680px; display:flex; align-items:center; justify-content:space-between; gap:12px; backdrop-filter:blur(16px);">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span id="situation-badge-icon" style="font-size:1.4rem;">🌅</span>
+          <div>
+            <div id="situation-title" style="font-family:'Space Grotesk',sans-serif; font-size:0.86rem; font-weight:700; color:#fff;">Golden Hour &amp; Twilight</div>
+            <div id="situation-advice" style="font-size:0.7rem; color:var(--text-muted); line-height:1.3;">First beacons piercing the dusk. True darkness falls soon.</div>
+          </div>
+        </div>
+        <div id="situation-sun-alt" style="font-family:'JetBrains Mono',monospace; font-size:0.72rem; color:var(--accent); white-space:nowrap; padding:4px 10px; background:rgba(0,0,0,0.45); border:1px solid rgba(255,255,255,0.08); border-radius:10px;">
+          Sun: -1.6°
+        </div>
+      </div>
+
+      <!-- 24-Hour Situational Mode Switcher -->
+      <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-bottom:20px;">
+        <button class="situation-pill active" id="pill-mode-wilderness" onclick="selectSituationMode('wilderness')" title="Full 0-nit naked-eye deep sky on grass">
+          🌲 Wilderness (0 Nits)
+        </button>
+        <button class="situation-pill" id="pill-mode-city" onclick="selectSituationMode('city')" title="Pierces urban streetlights: planets, bright stars &amp; Moon">
+          🌆 City Sky (Light Pollution)
+        </button>
+        <button class="situation-pill" id="pill-mode-indoor" onclick="selectSituationMode('indoor')" title="Cloudy/Rainy indoor 432Hz sleep sanctuary">
+          🌧️ Indoor Sanctuary
+        </button>
+        <button class="situation-pill" id="pill-mode-daytime" onclick="selectSituationMode('daytime')" title="Solar tracker, TabPFN seeing preview &amp; tonight's lineup">
+          ☀️ Day Plan
+        </button>
+      </div>
+
       <div class="hero-orb-wrap">
         
         <!-- VisionOS Astrolabe Celestial Orb -->
@@ -2077,6 +2162,15 @@
             <span>Voice Speed</span>
             <input type="range" min="75" max="125" value="88" oninput="setVoiceSpeed(this.value)">
             <span id="lbl-voice-speed" style="font-family:'JetBrains Mono',monospace; width:34px;">0.88x</span>
+          </div>
+          <div class="slider-item">
+            <span>Sleep Timer</span>
+            <div style="display:flex; gap:6px;">
+              <button class="timer-chip active" id="timer-chip-0" onclick="setSleepTimer(0)">Off</button>
+              <button class="timer-chip" id="timer-chip-15" onclick="setSleepTimer(15)">15m</button>
+              <button class="timer-chip" id="timer-chip-30" onclick="setSleepTimer(30)">30m</button>
+              <button class="timer-chip" id="timer-chip-45" onclick="setSleepTimer(45)">45m</button>
+            </div>
           </div>
         </div>
       </div>
@@ -2719,6 +2813,76 @@
       whisperVoiceNotice("Holding your place in the sky.");
     }
 
+    let currentSituationMode = 'wilderness';
+    let sleepTimerMinutes = 0;
+    let sleepTimerRemainingSec = 0;
+    let sleepTimerInterval = null;
+
+    function updateSituationBanner(solar) {
+      if (!solar) return;
+      const icon = document.getElementById('situation-badge-icon');
+      const title = document.getElementById('situation-title');
+      const adv = document.getElementById('situation-advice');
+      const alt = document.getElementById('situation-sun-alt');
+      const banner = document.getElementById('sky-situation-banner');
+
+      if (icon) icon.textContent = solar.badge_icon || '🌌';
+      if (title) title.textContent = solar.title || 'Live Sky';
+      if (adv) adv.textContent = solar.advice || 'Aligning to the heavens.';
+      if (alt) alt.textContent = `Sun: ${solar.sun_altitude_deg > 0 ? '+' : ''}${solar.sun_altitude_deg}°`;
+      if (banner && solar.ambient_color) {
+        banner.style.borderColor = `${solar.ambient_color}55`;
+      }
+    }
+
+    function selectSituationMode(mode) {
+      currentSituationMode = mode;
+      document.querySelectorAll('.situation-pill').forEach(btn => {
+        btn.classList.toggle('active', btn.id === `pill-mode-${mode}`);
+      });
+      const modeNames = {
+        wilderness: '🌲 Wilderness (0-Nit Deep Sky)',
+        city: '🌆 City Sky (Light Pollution Piercing)',
+        indoor: '🌧️ Indoor Cosmic Sanctuary',
+        daytime: '☀️ Daytime Mission Planning'
+      };
+      showToast(`Situation: ${modeNames[mode] || mode}`);
+      fetchBodyAlignedSky(liveCompassHeading);
+    }
+
+    function setSleepTimer(minutes) {
+      sleepTimerMinutes = minutes;
+      if (sleepTimerInterval) {
+        clearInterval(sleepTimerInterval);
+        sleepTimerInterval = null;
+      }
+
+      document.querySelectorAll('.timer-chip').forEach(btn => {
+        btn.classList.toggle('active', btn.id === `timer-chip-${minutes}`);
+      });
+
+      if (minutes <= 0) {
+        showToast("Sleep Timer Off");
+        return;
+      }
+
+      sleepTimerRemainingSec = minutes * 60;
+      showToast(`⏳ Sleep Timer Set: ${minutes} Minutes`);
+
+      sleepTimerInterval = setInterval(() => {
+        sleepTimerRemainingSec--;
+        if (sleepTimerRemainingSec <= 0) {
+          clearInterval(sleepTimerInterval);
+          sleepTimerInterval = null;
+          pauseLiveSkyTour();
+          whisperVoiceNotice("Sleep well under the quiet sky.");
+          showToast("🌙 Sleep Timer Complete: Narration Ended");
+        } else if (sleepTimerRemainingSec === 60) {
+          whisperVoiceNotice("Fading gently into stillness.");
+        }
+      }, 1000);
+    }
+
     async function fetchBodyAlignedSky(heading) {
       lastAnatomicalFetchHeading = heading || 0;
       try {
@@ -2728,12 +2892,16 @@
           body: JSON.stringify({
             latitude: currentLat,
             longitude: currentLon,
-            head_heading_deg: heading || 0
+            head_heading_deg: heading || 0,
+            situation_mode: currentSituationMode
           })
         });
         const data = await res.json();
         if (data && data.body_targets) {
           cachedBodyAlignedTour = data;
+          if (data.solar_phase) {
+            updateSituationBanner(data.solar_phase);
+          }
           updateAnatomicalHUD(data);
           buildLiveTourSteps(data);
         }
@@ -3061,6 +3229,9 @@
           body: JSON.stringify({ latitude: currentLat, longitude: currentLon })
         });
         const data = await res.json();
+        if (data && data.solar_phase) {
+          updateSituationBanner(data.solar_phase);
+        }
         cachedTargets = data.targets || [];
         renderDomeNodes(cachedTargets);
 

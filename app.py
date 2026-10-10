@@ -96,6 +96,7 @@ class BodyAlignedSkyRequest(BaseModel):
     longitude: float = Field(default=-122.4194)
     head_heading_deg: float = Field(default=0.0)
     voice: Optional[str] = "male"
+    situation_mode: Optional[str] = "wilderness"
 
 class FieldLogEntry(BaseModel):
     location: str
@@ -169,8 +170,10 @@ async def get_visible_sky(req: SkyRequest):
     """Computes real-time horizontal coordinates for autumn celestial landmarks."""
     engine = CelestialEngine(lat=req.latitude, lon=req.longitude, elevation_m=req.elevation_m)
     visible_targets = engine.compute_visible_sky()
+    solar_phase = engine.compute_solar_phase()
     return {
         "observer": {"lat": req.latitude, "lon": req.longitude},
+        "solar_phase": solar_phase,
         "total_visible": len(visible_targets),
         "targets": visible_targets
     }
@@ -216,7 +219,10 @@ async def generate_tour(req: TourRequest):
 async def body_aligned_sky_endpoint(req: BodyAlignedSkyRequest):
     """Computes real-time sky targets mapped to observer's anatomy (Head, Feet, Shoulders, Zenith)."""
     engine = CelestialEngine(lat=req.latitude, lon=req.longitude)
-    tour = engine.compute_body_aligned_tour(head_heading_deg=req.head_heading_deg)
+    tour = engine.compute_body_aligned_tour(
+        head_heading_deg=req.head_heading_deg,
+        situation_mode=req.situation_mode or "wilderness"
+    )
     return tour
 
 

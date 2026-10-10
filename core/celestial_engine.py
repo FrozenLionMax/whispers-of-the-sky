@@ -11,7 +11,7 @@ import math
 
 try:
     from astropy.time import Time
-    from astropy.coordinates import EarthLocation, AltAz, SkyCoord
+    from astropy.coordinates import EarthLocation, AltAz, SkyCoord, get_sun
     import astropy.units as u
     ASTROPY_AVAILABLE = True
 except ImportError:
@@ -194,6 +194,89 @@ class CelestialEngine:
         self.lon = lon
         self.elevation_m = elevation_m
 
+    def compute_solar_phase(self, utc_time: Optional[datetime] = None) -> Dict[str, Any]:
+        """
+        Calculates the 24-hour solar situation of the observer:
+        - DAYLIGHT: Sun > 0° (Daytime Mission Planning Mode)
+        - GOLDEN_HOUR: -6° <= Sun <= 0° (Civil Twilight / Sunset)
+        - NAUTICAL_TWILIGHT: -12° <= Sun < -6° (First stars & navigation beacons emerge)
+        - ASTRONOMICAL_TWILIGHT: -18° <= Sun < -12° (Faint constellations appear)
+        - TRUE_NIGHT: Sun < -18° (Pristine 0-nit stargazing darkness)
+        """
+        if utc_time is None:
+            utc_time = datetime.now(timezone.utc)
+
+        sun_alt = -25.0
+        if ASTROPY_AVAILABLE:
+            try:
+                obs_time = Time(utc_time)
+                location = EarthLocation(lat=self.lat * u.deg, lon=self.lon * u.deg, height=self.elevation_m * u.m)
+                altaz_frame = AltAz(obstime=obs_time, location=location)
+                sun_coord = get_sun(obs_time).transform_to(altaz_frame)
+                sun_alt = float(sun_coord.alt.deg)
+            except Exception:
+                sun_alt = self._approximate_sun_alt(utc_time)
+        else:
+            sun_alt = self._approximate_sun_alt(utc_time)
+
+        if sun_alt > 0:
+            phase = "DAYLIGHT"
+            title = "Daytime Mission Planning"
+            advice = "The Sun illuminates the heavens. Review TabPFN seeing forecast to plan tonight's expedition."
+            badge_icon = "☀️"
+            ambient_color = "#f59e0b"
+        elif sun_alt >= -6.0:
+            phase = "GOLDEN_HOUR"
+            title = "Golden Hour & Sunset"
+            advice = "The Sun has dipped below the horizon. The brightest beacons (Venus / Jupiter) are piercing the dusk."
+            badge_icon = "🌅"
+            ambient_color = "#f97316"
+        elif sun_alt >= -12.0:
+            phase = "NAUTICAL_TWILIGHT"
+            title = "Nautical Dusk"
+            advice = "The horizon meets deep cobalt. Navigational pointer stars and gas giants are now visible."
+            badge_icon = "🌆"
+            ambient_color = "#6366f1"
+        elif sun_alt >= -18.0:
+            phase = "ASTRONOMICAL_TWILIGHT"
+            title = "Astronomical Twilight"
+            advice = "Solar glow is fading completely. Constellations are emerging overhead."
+            badge_icon = "🌌"
+            ambient_color = "#3b82f6"
+        else:
+            phase = "TRUE_NIGHT"
+            title = "Pristine Dark Sky"
+            advice = "Full astronomical darkness. Rhodopsin dark adaptation active. Rest phone on chest for 0-nit guidance."
+            badge_icon = "🌙"
+            ambient_color = "#ef4444"
+
+        return {
+            "sun_altitude_deg": round(sun_alt, 1),
+            "phase": phase,
+            "title": title,
+            "advice": advice,
+            "badge_icon": badge_icon,
+            "ambient_color": ambient_color,
+            "is_daytime": sun_alt > 0,
+            "is_twilight": -18.0 <= sun_alt <= 0.0,
+            "is_night": sun_alt < -18.0
+        }
+
+    def _approximate_sun_alt(self, utc_time: datetime) -> float:
+        """Analytical solar elevation calculation based on day of year and hour angle."""
+        day_of_year = utc_time.timetuple().tm_yday
+        declination = -23.44 * math.cos(math.radians((360.0 / 365.0) * (day_of_year + 10)))
+        utc_hours = utc_time.hour + utc_time.minute / 60.0 + utc_time.second / 3600.0
+        solar_time = (utc_hours + self.lon / 15.0) % 24.0
+        hour_angle = (solar_time - 12.0) * 15.0
+
+        lat_rad = math.radians(self.lat)
+        dec_rad = math.radians(declination)
+        ha_rad = math.radians(hour_angle)
+
+        sin_alt = math.sin(lat_rad) * math.sin(dec_rad) + math.cos(lat_rad) * math.cos(dec_rad) * math.cos(ha_rad)
+        return math.degrees(math.asin(max(-1.0, min(1.0, sin_alt))))
+
     def compute_visible_sky(self, utc_time: Optional[datetime] = None) -> List[Dict[str, Any]]:
         """
         Computes the real-time altitude and azimuth for celestial targets.
@@ -278,7 +361,8 @@ class CelestialEngine:
     def compute_body_aligned_tour(
         self,
         head_heading_deg: float = 0.0,
-        utc_time: Optional[datetime] = None
+        utc_time: Optional[datetime] = None,
+        situation_mode: str = "wilderness"
     ) -> Dict[str, Any]:
         """
         Maps celestial objects to the physical anatomy of an observer lying on their back:
@@ -287,10 +371,19 @@ class CelestialEngine:
         - Left side points toward Left Shoulder ((head_heading_deg + 90) % 360)
         - Right side points toward Right Shoulder ((head_heading_deg + 270) % 360)
         - Zenith points directly above the chest and eyes (Altitude > 65°)
+        Supports 24-hour situational adaptation: 'wilderness', 'city', 'indoor', 'daytime'.
         """
         visible = self.compute_visible_sky(utc_time)
         if not visible:
             return {"error": "No celestial objects currently visible above horizon"}
+
+        solar = self.compute_solar_phase(utc_time)
+
+        # If City Mode: prioritize bright targets that pierce urban light pollution
+        if situation_mode == "city":
+            city_visible = [t for t in visible if t.get("magnitude", 3.0) <= 2.8 or t.get("type") in ["planet", "asterism"]]
+            if city_visible:
+                visible = city_visible
 
         head_deg = head_heading_deg % 360.0
         feet_deg = (head_deg + 180.0) % 360.0
@@ -308,7 +401,6 @@ class CelestialEngine:
             available = [t for t in pool if t["id"] not in used_ids]
             if not available:
                 available = pool
-            # Rank by proximity to angle and visibility
             best = min(available, key=lambda t: angle_difference(t["azimuth_deg"], target_deg))
             used_ids.add(best["id"])
             return best
@@ -323,16 +415,46 @@ class CelestialEngine:
         left_cardinal = azimuth_to_cardinal(left_deg)
         right_cardinal = azimuth_to_cardinal(right_deg)
 
-        # Build personalized spoken narration
-        script_paragraphs = [
-            # Grounding & posture
-            (
+        # Build situational spoken narration
+        if situation_mode == "indoor":
+            grounding_text = (
+                f"Welcome to your indoor cosmic sanctuary. Outside, clouds or rain may shelter the night, "
+                f"but one hundred kilometers above the storm, the galaxy is silently turning. "
+                f"Your phone is resting upon your chest, aligned with your spine pointing toward the {head_cardinal}. "
+                f"Close your eyes, feel the bed or floor beneath you, and listen as we journey across the hidden universe."
+            )
+        elif situation_mode == "city":
+            grounding_text = (
+                f"Welcome to your urban celestial observatory. Your phone is resting face-down upon your chest. "
+                f"Even with city streetlights around you, the brightest beacons of the cosmos pierce straight through. "
+                f"Your head points toward the {head_cardinal}, your feet toward the {feet_cardinal}. "
+                f"Breathe slowly, let your eyes relax, and listen to the sky."
+            )
+        elif solar["is_daytime"] or situation_mode == "daytime":
+            grounding_text = (
+                f"Welcome to your daytime sky observatory. Your phone is resting face-down upon your chest. "
+                f"The Sun illuminates the heavens with brilliant Rayleigh light. "
+                f"While daylight conceals the stars from your eyes right now, directly above your chest, "
+                f"{zenith_target['name']} is quietly crossing the meridian. "
+                f"Here is what will unveil itself as soon as dusk falls."
+            )
+        elif solar["is_twilight"]:
+            grounding_text = (
+                f"Welcome to the twilight transition. The Sun has slipped below the horizon, and the first beacons of the evening "
+                f"are beginning to pierce the dusk. Your head rests toward the {head_cardinal}, your feet toward the {feet_cardinal}. "
+                f"Relax your gaze as the sky deepens from amber into dark indigo."
+            )
+        else:
+            grounding_text = (
                 f"Welcome to your personal sky observatory. Your phone is resting face-down upon your chest. "
                 f"Your head is resting back toward the {head_cardinal}, your feet stretching forward toward the {feet_cardinal}. "
                 f"Close your eyes for three slow, grounding breaths of cool night air. "
                 f"Your screen is in complete darkness at zero nits. Over the next twenty minutes, "
                 f"your eyes will adapt, growing thousands of times more sensitive to the faint light of the universe."
-            ),
+            )
+
+        script_paragraphs = [
+            grounding_text,
             # Zenith (chest)
             (
                 f"Now gently open your eyes straight up into the darkness. "
@@ -370,6 +492,8 @@ class CelestialEngine:
         full_script = "\n\n".join(script_paragraphs)
 
         return {
+            "solar_phase": solar,
+            "situation_mode": situation_mode,
             "orientation": {
                 "head_heading_deg": round(head_deg, 1),
                 "head_cardinal": head_cardinal,
