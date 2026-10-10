@@ -243,21 +243,36 @@ class AudioNarrator:
 
 ### 4. Celestial Mechanics & 24-Hour Solar Phase Tracking (Astropy)
 
-WOTS uses **Astropy v7** to calculate rigorous horizontal coordinate transformations for observer latitude $\phi$, longitude $\lambda$, and observation epoch $t$:
+Instead of relying on pre-rendered planetarium approximations, WOTS runs high-precision astrodynamics locally using **Astropy v7**. It transforms International Celestial Reference System (ICRS) Right Ascension and Declination coordinates into local topocentric Altitude and Azimuth horizontal frames in real time:
 
-$$\sin(a) = \sin(\phi)\sin(\delta) + \cos(\phi)\cos(\delta)\cos(H)$$
+```python
+# From core/celestial_engine.py
+from astropy.coordinates import EarthLocation, AltAz, SkyCoord, get_sun
+from astropy.time import Time
+import astropy.units as u
 
-$$\cos(A) = \frac{\sin(\delta) - \sin(\phi)\sin(a)}{\cos(\phi)\cos(a)}$$
+def compute_local_sky(lat: float, lon: float, ra_hours: float, dec_deg: float):
+    location = EarthLocation(lat=lat * u.deg, lon=lon * u.deg)
+    altaz_frame = AltAz(obstime=Time.now(), location=location)
+    
+    # Real-time horizontal coordinate transformation
+    target = SkyCoord(ra=ra_hours * u.hourangle, dec=dec_deg * u.deg)
+    local_target = target.transform_to(altaz_frame)
+    
+    return local_target.alt.deg, local_target.az.deg
+```
 
-Where $a$ is Altitude, $A$ is Azimuth, $\delta$ is Declination, and $H$ is the Local Hour Angle ($H = \text{LST} - \alpha$).
+#### Real-Time 24-Hour Solar Phase Engine
+By calculating the Sun's continuous ephemeris via `get_sun(Time.now())`, WOTS dynamically transitions its experience across all 24 hours of the day:
 
-#### Real-Time 24-Hour Solar Tracking
-By calculating the Sun's continuous ephemeris via `get_sun(t)`, WOTS computes the exact solar phase of the sky:
-* **Daylight** ($a_{\odot} > 0^\circ$): Sun above horizon; initiates mission planning and previews the invisible stars crossing the meridian overhead.
-* **Civil Twilight / Golden Hour** ($-6^\circ \le a_{\odot} \le 0^\circ$): Sun below horizon; identifies the first naked-eye planetary beacons.
-* **Nautical Twilight** ($-12^\circ \le a_{\odot} < -6^\circ$): Sea horizon visible; navigational stars emerge.
-* **Astronomical Twilight** ($-18^\circ \le a_{\odot} < -12^\circ$): Faint sky background decays into true night.
-* **True Astronomical Night** ($a_{\odot} < -18^\circ$): 100% dark sky; Milky Way and Andromeda visible.
+| Solar Phase | Sun Elevation | Sky Condition & App Action |
+| :--- | :--- | :--- |
+| **☀️ Daytime** | Sun > 0° | Sun is up. Initiates mission planning & previews tonight's meridian crossings. |
+| **🌅 Civil Twilight** | 0° to -6° | Golden hour. Primes dark adaptation; tracks the first visible beacons (Venus, Jupiter). |
+| **⛵ Nautical Twilight** | -6° to -12° | Sea horizon visible. Guides observers toward major navigational stars. |
+| **🌌 Astronomical Twilight** | -12° to -18° | Faint atmospheric glow decays. Secondary constellations and clusters emerge. |
+| **✨ True Dark Night** | Below -18° | Full 100% scotopic dark sky. Milky Way rift and Andromeda Galaxy tours unlock. |
+
 
 ---
 
