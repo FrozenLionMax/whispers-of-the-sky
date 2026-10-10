@@ -15,13 +15,19 @@ class GemmaAstronomer:
     def __init__(self, model_name: str = "gemma2:2b", ollama_host: str = "http://localhost:11434"):
         self.model_name = model_name
         self.ollama_host = ollama_host
-        self.is_connected = self._check_ollama()
+        self._connected: Optional[bool] = None
+
+    @property
+    def is_connected(self) -> bool:
+        if self._connected is None:
+            self._connected = self._check_ollama()
+        return self._connected
 
     def _check_ollama(self) -> bool:
         """Verifies connection to local Ollama instance running Gemma."""
         try:
             req = urllib.request.Request(f"{self.ollama_host}/api/tags")
-            with urllib.request.urlopen(req, timeout=2.0) as resp:
+            with urllib.request.urlopen(req, timeout=0.5) as resp:
                 data = json.loads(resp.read().decode())
                 models = [m.get("name", "") for m in data.get("models", [])]
                 for m in models:

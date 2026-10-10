@@ -69,7 +69,11 @@ class TabPFNSeeingPredictor:
         y_class = np.array([item[1] for item in SYNTHETIC_OBSERVATORY_DATA])
         y_transparency = np.array([item[2] for item in SYNTHETIC_OBSERVATORY_DATA])
 
-        if TABPFN_AVAILABLE:
+        # In memory-constrained environments (e.g. 512MB cloud free tiers), loading
+        # multiple PyTorch foundation transformers will exceed RAM limits.
+        # TabPFN foundation models are loaded when ENABLE_HEAVY_TABPFN=true and token is set.
+        enable_heavy = os.environ.get("ENABLE_HEAVY_TABPFN", "").lower() == "true"
+        if TABPFN_AVAILABLE and enable_heavy:
             try:
                 # TabPFN is a prior-data foundation model requiring zero hyperparameter tuning
                 self.classifier = TabPFNClassifier(device=self.device)
