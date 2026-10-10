@@ -1890,25 +1890,25 @@
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px;">
             <div style="display:flex; align-items:center; gap: 8px;">
               <span style="font-size: 1rem;">🎙️</span>
-              <span style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:0.85rem; color:var(--text);">Narrator Voice Options</span>
+              <span style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:0.85rem; color:var(--text);">Celestial Narrator</span>
             </div>
             <span id="active-voice-pill" style="font-size:0.62rem; color:var(--accent); font-family:'JetBrains Mono',monospace; background:rgba(56,189,248,0.12); padding:3px 9px; border-radius:12px; border:1px solid rgba(56,189,248,0.3); font-weight:600;">
-              Boy's Voice (George)
+              George (Warm & Deep)
             </span>
           </div>
           <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
             <button type="button" class="voice-card-btn active" id="btn-voice-male" onclick="selectNarratorVoice('male')">
               <span class="voice-icon">🌌</span>
               <div class="voice-details">
-                <span class="voice-title">Boy's Voice</span>
-                <span class="voice-actor">George • Deep & Warm</span>
+                <span class="voice-title">George</span>
+                <span class="voice-actor">Warm & Meditative</span>
               </div>
             </button>
             <button type="button" class="voice-card-btn" id="btn-voice-female" onclick="selectNarratorVoice('female')">
               <span class="voice-icon">✨</span>
               <div class="voice-details">
-                <span class="voice-title">Lady's Voice</span>
-                <span class="voice-actor">Sarah • Soft & Gentle</span>
+                <span class="voice-title">Sarah</span>
+                <span class="voice-actor">Soft & Whispered</span>
               </div>
             </button>
           </div>
@@ -3277,7 +3277,7 @@
     const voiceProfiles = {
       male: {
         id: 'male',
-        name: "Boy's Voice (George)",
+        name: "George",
         actor: "George (ElevenLabs)",
         url: '/audio/stargaze_tour_male.mp3',
         chapters: [
@@ -3288,7 +3288,7 @@
       },
       female: {
         id: 'female',
-        name: "Lady's Voice (Sarah)",
+        name: "Sarah",
         actor: "Sarah (ElevenLabs)",
         url: '/audio/stargaze_tour_female.mp3',
         chapters: [
@@ -3309,11 +3309,11 @@
 
       if (btnMale) btnMale.classList.toggle('active', voiceId === 'male');
       if (btnFemale) btnFemale.classList.toggle('active', voiceId === 'female');
-      if (pill) pill.textContent = voiceProfiles[voiceId].name;
+      if (pill) pill.textContent = voiceId === 'male' ? 'George (Warm & Deep)' : 'Sarah (Soft & Whispered)';
 
       updateChapterDescriptions();
 
-      showToast(`🎙️ Voice Selected: ${voiceProfiles[voiceId].name}`);
+      showToast(`🎙️ Narrator: ${voiceProfiles[voiceId].name}`);
 
       // If already playing, switch track seamlessly without interruption
       if (isPlaying) {
