@@ -85,6 +85,7 @@ class AskQuestionRequest(BaseModel):
     question: str
     latitude: float = Field(default=37.7749)
     longitude: float = Field(default=-122.4194)
+    voice_id: Optional[str] = "male"
 
 class SynthesizeRequest(BaseModel):
     text: str
@@ -239,8 +240,10 @@ async def ask_astronomer_endpoint(req: AskQuestionRequest):
         seeing_data=seeing_data
     )
 
-    # Synthesize answer audio
-    audio_res = audio_narrator.synthesize_speech(answer)
+    # Synthesize answer audio with narrator voice
+    voice_key = req.voice_id or "male"
+    chosen_voice = "EXAVITQu4vr4xnSDxMaL" if voice_key == "female" else "JBFqnCBsd6RMkjVDRZzb"
+    audio_res = audio_narrator.synthesize_speech(answer, voice_id=chosen_voice)
 
     return {
         "question": req.question,

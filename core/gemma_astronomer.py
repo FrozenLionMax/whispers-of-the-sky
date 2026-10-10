@@ -119,13 +119,37 @@ Current seeing quality: {seeing_data.get('seeing_label', 'Clear')}
 The stargazer asks: "{question}"
 Provide a calm, direct, spoken answer:
 """
+        # Check for direct object query in question
+        q_lower = question.lower()
+        matched_target = None
+        if any(w in q_lower for w in ["overhead", "zenith", "above me", "straight up", "above my head", "top"]):
+            if visible_targets:
+                matched_target = max(visible_targets, key=lambda t: t.get("altitude_deg", 0))
+        if not matched_target:
+            for t in visible_targets:
+                t_id = t["id"].lower()
+                t_name = t["name"].lower()
+                if t_id in q_lower or any(word in q_lower for word in t_name.split() if len(word) > 3):
+                    matched_target = t
+                    break
+
         ans = self._query_gemma(prompt, system_instruction)
         if not ans:
-            ans = f"In tonight's sky, looking toward {visible_targets[0]['cardinal_direction']}, you can see {visible_targets[0]['name']}. Its steady glow reaches your eyes through a clear autumn atmosphere."
+            if matched_target:
+                lore = matched_target.get('history_lore', matched_target.get('star_hop', ''))
+                ans = f"In tonight's sky, look toward the {matched_target['cardinal_direction']} at {matched_target['altitude_deg']} degrees altitude for {matched_target['name']}. {lore}"
+            elif visible_targets:
+                top = visible_targets[0]
+                ans = f"Looking up into tonight's sky toward the {top['cardinal_direction']}, {top['name']} shines brightly at {top['altitude_deg']} degrees elevation. The atmosphere is clear, allowing its ancient light to reach your eyes unhindered."
+            else:
+                ans = "The heavens are open above you. Rest quietly against the earth and let the starlight find your pupils."
         return ans.strip()
 
     def _query_gemma(self, prompt: str, system_instruction: str) -> Optional[str]:
-        """Queries local Ollama Gemma instance."""
+        """Queries local Ollama Gemma instance with fast timeout."""
+        if not self.is_connected:
+            return None
+
         payload = {
             "model": self.model_name,
             "prompt": f"{system_instruction}\n\n{prompt}",
@@ -133,7 +157,7 @@ Provide a calm, direct, spoken answer:
             "options": {
                 "temperature": 0.7,
                 "top_p": 0.9,
-                "num_predict": 280,
+                "num_predict": 180,
             }
         }
         try:
@@ -142,11 +166,11 @@ Provide a calm, direct, spoken answer:
                 data=json.dumps(payload).encode("utf-8"),
                 headers={"Content-Type": "application/json"}
             )
-            with urllib.request.urlopen(req, timeout=90.0) as resp:
+            with urllib.request.urlopen(req, timeout=6.0) as resp:
                 res = json.loads(resp.read().decode())
                 return res.get("response", "").strip()
         except Exception as e:
-            print(f"[GemmaAstronomer] Local inference call note: {e}")
+            print(f"[GemmaAstronomer] Inference call note: {e}")
             return None
 
     def _split_into_chapters(self, full_text: str, targets: List[Dict[str, Any]]) -> List[Dict[str, str]]:

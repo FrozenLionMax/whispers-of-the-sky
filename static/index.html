@@ -1792,9 +1792,15 @@
       Dark Adaptation: 00:00 (15%) • Cone Decay
     </div>
 
-    <div style="display:flex; flex-direction:column; align-items:center; gap: 14px;">
-      <div style="font-size:0.72rem; color:#661111; font-family:'JetBrains Mono',monospace;">
-        Tap anywhere: Pause / Play • Earbud clicks: Active
+    <!-- Active Live Celestial Target -->
+    <div id="overlay-live-target" style="font-family:'Space Grotesk',sans-serif; font-size:0.85rem; color:#f87171; text-align:center; padding:6px 14px; background:rgba(0,0,0,0.6); border:1px solid rgba(239,68,68,0.25); border-radius:12px; max-width:85%;">
+      Connecting to Tonight's Real Sky...
+    </div>
+
+    <div style="display:flex; flex-direction:column; align-items:center; gap: 10px;">
+      <div style="font-size:0.65rem; color:#882222; font-family:'JetBrains Mono',monospace; text-align:center; line-height:1.5;">
+        Single Tap: Pause / Play • Double Tap: Skip Target<br>
+        Turn Face-Up: Auto Pause • Speak: Ask Any Question
       </div>
       <button class="btn-wake" onclick="exitScreenlessMode(event)">Wake Screen</button>
     </div>
@@ -2011,29 +2017,50 @@
       <!-- Audio Chapters Card -->
       <div class="glass-card">
         <div class="card-title">
-          <span style="font-family:'Space Grotesk',sans-serif; font-weight:700;">Autonomous Tour Chapters (Gemma 2B)</span>
-          <span style="font-size:0.66rem; color:var(--accent); font-family:'JetBrains Mono',monospace; letter-spacing:0.5px;">SPATIAL 3D AUDIO</span>
+          <span style="font-family:'Space Grotesk',sans-serif; font-weight:700;">Live Celestial Tour (Tonight's Sky)</span>
+          <span style="font-size:0.66rem; color:var(--accent); font-family:'JetBrains Mono',monospace; letter-spacing:0.5px;">100% REAL-TIME LIVE</span>
         </div>
 
         <div id="chapter-list">
-          <div class="chapter-row active" onclick="playChapterSegment(0)">
+          <div class="chapter-row active" onclick="playLiveTargetStep(0)">
             <div>
-              <div class="ch-title">Chapter 1: Eyes to the Darkness</div>
-              <div class="ch-desc" id="ch-desc-0">Night vision grounding & somatic breathwork • George</div>
+              <div class="ch-title">1. Grounding &amp; Body Alignment</div>
+              <div class="ch-desc" id="ch-desc-0">Aligning head &amp; spine to tonight's sky • George</div>
             </div>
             <span class="ch-play-glyph"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></span>
           </div>
-          <div class="chapter-row" onclick="playChapterSegment(1)">
+          <div class="chapter-row" onclick="playLiveTargetStep(1)">
             <div>
-              <div class="ch-title">Chapter 2: Celestial Star-Hop to Andromeda</div>
-              <div class="ch-desc" id="ch-desc-1">Zenith, Polaris, Cassiopeia & M31 • George</div>
+              <div class="ch-title">2. Overhead Zenith</div>
+              <div class="ch-desc" id="ch-desc-1">Directly above chest &amp; eyes • George</div>
             </div>
             <span class="ch-play-glyph"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></span>
           </div>
-          <div class="chapter-row" onclick="playChapterSegment(2)">
+          <div class="chapter-row" onclick="playLiveTargetStep(2)">
             <div>
-              <div class="ch-title">Chapter 3: The Deep Quiet of Space</div>
-              <div class="ch-desc" id="ch-desc-2">Cosmic reflection & 2.5M light-year voyage • George</div>
+              <div class="ch-title">3. Crown Horizon</div>
+              <div class="ch-desc" id="ch-desc-2">Past crown of head • George</div>
+            </div>
+            <span class="ch-play-glyph"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></span>
+          </div>
+          <div class="chapter-row" onclick="playLiveTargetStep(3)">
+            <div>
+              <div class="ch-title">4. Feet &amp; Toes Horizon</div>
+              <div class="ch-desc" id="ch-desc-3">Past toes toward horizon • George</div>
+            </div>
+            <span class="ch-play-glyph"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></span>
+          </div>
+          <div class="chapter-row" onclick="playLiveTargetStep(4)">
+            <div>
+              <div class="ch-title">5. Left &amp; Right Shoulders</div>
+              <div class="ch-desc" id="ch-desc-4">East &amp; West lateral sky • George</div>
+            </div>
+            <span class="ch-play-glyph"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></span>
+          </div>
+          <div class="chapter-row" onclick="playLiveTargetStep(5)">
+            <div>
+              <div class="ch-title">6. Deep Cosmic Stillness</div>
+              <div class="ch-desc" id="ch-desc-5">Atmospheric Seeing &amp; Zero Screen • George</div>
             </div>
             <span class="ch-play-glyph"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></span>
           </div>
@@ -2671,18 +2698,25 @@
     function onChestPlacementEngaged() {
       enterScreenlessMode();
       if ('vibrate' in navigator) {
-        try { navigator.vibrate([60, 50, 60]); } catch(err) {}
+        try { navigator.vibrate([60, 40, 60]); } catch(err) {}
       }
       showToast("🫁 Chest Placement Locked: Screen Blanked to 0 Nits");
       fetchBodyAlignedSky(liveCompassHeading);
-      // If user hasn't started yet, begin the full master celestial journey!
       if (!isExperienceStarted) {
         startCompleteStargazeExperience();
+      } else {
+        resumeLiveSkyTour();
+        whisperVoiceNotice("Resuming under the stars.");
       }
     }
 
     function onChestPlacementDisengaged() {
-      showToast("📱 Phone Lifted: Eyes Returning to Horizon");
+      showToast("📱 Screen Turned Up: Audio Paused");
+      if ('vibrate' in navigator) {
+        try { navigator.vibrate([40, 30, 40]); } catch(err) {}
+      }
+      pauseLiveSkyTour();
+      whisperVoiceNotice("Holding your place in the sky.");
     }
 
     async function fetchBodyAlignedSky(heading) {
@@ -2701,6 +2735,7 @@
         if (data && data.body_targets) {
           cachedBodyAlignedTour = data;
           updateAnatomicalHUD(data);
+          buildLiveTourSteps(data);
         }
       } catch (err) {
         console.warn("Body-aligned sky fetch note:", err);
@@ -2793,6 +2828,7 @@
         liveGravityZ = 9.8;
         liveBetaTilt = 15;
         isChestPlacementDetected = false;
+        onChestPlacementDisengaged();
         exitScreenlessMode();
         updateChestSensorUI();
       } else {
@@ -2819,9 +2855,36 @@
       releaseWakeLock();
     }
 
+    let screenlessTapCount = 0;
+    let screenlessTapTimer = null;
+
     function handleScreenlessTap(e) {
-      if (e.target.classList.contains('btn-wake')) return;
-      toggleAudioPlayback();
+      if (e && e.target && e.target.classList && e.target.classList.contains('btn-wake')) return;
+      screenlessTapCount++;
+      if (screenlessTapCount === 1) {
+        screenlessTapTimer = setTimeout(() => {
+          screenlessTapCount = 0;
+          if ('vibrate' in navigator) {
+            try { navigator.vibrate(50); } catch(err) {}
+          }
+          if (isPlaying) {
+            pauseLiveSkyTour();
+            whisperVoiceNotice("Paused.");
+            showToast("Audio Paused");
+          } else {
+            resumeLiveSkyTour();
+            whisperVoiceNotice("Resumed.");
+            showToast("Audio Resumed");
+          }
+        }, 280);
+      } else if (screenlessTapCount >= 2) {
+        clearTimeout(screenlessTapTimer);
+        screenlessTapCount = 0;
+        if ('vibrate' in navigator) {
+          try { navigator.vibrate([40, 40, 80]); } catch(err) {}
+        }
+        advanceToNextLiveTarget();
+      }
     }
 
     // 650nm Red Mode
@@ -3046,20 +3109,31 @@
       const voices = window.speechSynthesis.getVoices();
       if (!voices || voices.length === 0) return null;
 
-      const priorityChecks = [
-        v => v.lang.startsWith('en') && v.name.includes('Natural'),
-        v => v.name.includes('Google UK English Female'),
-        v => v.name.includes('Google US English'),
-        v => v.name.includes('Samantha'),
+      const isMale = (currentNarratorVoice === 'male');
+
+      const maleChecks = [
+        v => v.name.includes('George'),
         v => v.name.includes('Daniel'),
-        v => v.name.includes('Serena'),
-        v => v.name.includes('Karen'),
-        v => v.name.includes('Moira'),
         v => v.name.includes('Google UK English Male'),
+        v => v.name.includes('Natural') && (v.name.includes('Male') || v.name.includes('Guy')),
+        v => v.name.includes('Guy') || v.name.includes('David') || v.name.includes('Alex') || v.name.includes('Oliver'),
         v => v.lang.startsWith('en-GB'),
         v => v.lang.startsWith('en-US'),
         v => v.lang.startsWith('en')
       ];
+
+      const femaleChecks = [
+        v => v.name.includes('Sarah'),
+        v => v.name.includes('Google UK English Female'),
+        v => v.name.includes('Samantha'),
+        v => v.name.includes('Natural') && (v.name.includes('Female') || v.name.includes('Jenny')),
+        v => v.name.includes('Victoria') || v.name.includes('Karen') || v.name.includes('Serena') || v.name.includes('Moira') || v.name.includes('Zira'),
+        v => v.lang.startsWith('en-GB'),
+        v => v.lang.startsWith('en-US'),
+        v => v.lang.startsWith('en')
+      ];
+
+      const priorityChecks = isMale ? maleChecks : femaleChecks;
 
       for (const check of priorityChecks) {
         const match = voices.find(check);
@@ -3149,10 +3223,11 @@
       const text = speechQueue.shift();
       const u = new SpeechSynthesisUtterance(text);
 
-      // Soothing, calm bedtime acoustics
-      u.rate = speechRate || 0.82;
-      u.pitch = 0.88;
-      u.volume = 0.88;
+      // Soothing, calm bedtime acoustics tuned to George or Sarah
+      const isMale = (currentNarratorVoice === 'male');
+      u.rate = speechRate || (isMale ? 0.84 : 0.82);
+      u.pitch = isMale ? 0.88 : 1.05;
+      u.volume = 0.90;
 
       const voice = getBestSoothingVoice();
       if (voice) u.voice = voice;
@@ -3266,38 +3341,111 @@
     }
 
     // =========================================================================
-    // ELEVENLABS STUDIO AUDIO ENGINE (Continuous Unified Tracks, Zero Stutter)
+    // REAL-TIME DYNAMIC SKY TOUR ENGINE (100% Live Celestial Navigation)
     // =========================================================================
     const studioAudio = new Audio();
     studioAudio.preload = 'auto';
 
     let currentNarratorVoice = 'male'; // 'male' (George) | 'female' (Sarah)
-    activeChapterIndex = 0;
+    let liveTourSteps = [];
+    let activeLiveStepIndex = 0;
+    let isLiveTourActive = false;
 
-    const voiceProfiles = {
-      male: {
-        id: 'male',
-        name: "George",
-        actor: "George (ElevenLabs)",
-        url: '/audio/stargaze_tour_male.mp3',
-        chapters: [
-          { start: 0.0, title: 'Chapter 1: Eyes to the Darkness', desc: 'Night vision grounding & somatic breathwork • George' },
-          { start: 23.0, title: 'Chapter 2: Celestial Star-Hop to Andromeda', desc: 'Zenith, Polaris, Cassiopeia & M31 • George' },
-          { start: 67.4, title: 'Chapter 3: The Deep Quiet of Space', desc: 'Cosmic reflection & 2.5M light-year voyage • George' }
-        ]
-      },
-      female: {
-        id: 'female',
-        name: "Sarah",
-        actor: "Sarah (ElevenLabs)",
-        url: '/audio/stargaze_tour_female.mp3',
-        chapters: [
-          { start: 0.0, title: 'Chapter 1: Eyes to the Darkness', desc: 'Night vision grounding & somatic breathwork • Sarah' },
-          { start: 24.2, title: 'Chapter 2: Celestial Star-Hop to Andromeda', desc: 'Zenith, Polaris, Cassiopeia & M31 • Sarah' },
-          { start: 70.7, title: 'Chapter 3: The Deep Quiet of Space', desc: 'Cosmic reflection & 2.5M light-year voyage • Sarah' }
-        ]
-      }
-    };
+    function buildLiveTourSteps(data) {
+      if (!data) return;
+      const orient = data.orientation || { head_cardinal: 'North', feet_cardinal: 'South', left_cardinal: 'East', right_cardinal: 'West', head_heading_deg: 0 };
+      const targets = data.body_targets || {};
+      const paras = data.script_paragraphs || [];
+
+      const narratorName = currentNarratorVoice === 'male' ? 'George' : 'Sarah';
+
+      liveTourSteps = [
+        {
+          index: 0,
+          region: "Grounding & Body Alignment",
+          title: "1. Body Alignment & Grounding",
+          targetName: `Head ${orient.head_cardinal} • Feet ${orient.feet_cardinal}`,
+          meta: `Spine to Earth • Head ${orient.head_cardinal} (${Math.round(orient.head_heading_deg)}°) • 0 Nits`,
+          desc: `Night vision grounding & somatic breathwork • ${narratorName}`,
+          script: paras[0] || `Welcome to your personal sky observatory. Your phone is resting face-down upon your chest. Your head is resting back toward the ${orient.head_cardinal}, and your toes point toward the ${orient.feet_cardinal}. Relax your shoulders into the solid grass.`
+        },
+        {
+          index: 1,
+          region: "Zenith (Directly Overhead)",
+          title: `2. Zenith: ${targets.zenith ? targets.zenith.target.name : 'The Summer Triangle'}`,
+          targetName: targets.zenith ? targets.zenith.target.name : 'The Summer Triangle',
+          meta: `Directly Overhead Chest • ${targets.zenith ? targets.zenith.target.altitude_deg : 80}° Alt`,
+          desc: `Chest & Eyes • ${targets.zenith ? targets.zenith.target.significance : 'Overhead asterism'} • ${narratorName}`,
+          script: paras[1] || `Now gently open your eyes straight up into the darkness. Directly above your chest, at the zenith of the heavens, you are looking at the crown of the night sky.`
+        },
+        {
+          index: 2,
+          region: "Crown (Head Horizon)",
+          title: `3. Crown: ${targets.head ? targets.head.target.name : 'Polaris (The North Star)'}`,
+          targetName: targets.head ? targets.head.target.name : 'Polaris',
+          meta: `Crown of Head (${orient.head_cardinal}) • ${targets.head ? targets.head.target.altitude_deg : 35}° Alt`,
+          desc: `Past Crown • ${targets.head ? targets.head.target.significance : 'Northern pivot'} • ${narratorName}`,
+          script: paras[2] || `Now cast your gaze backward, past the crown of your head toward the ${orient.head_cardinal} horizon. There rests the northern anchor of the sky.`
+        },
+        {
+          index: 3,
+          region: "Toes (Feet Horizon)",
+          title: `4. Feet: ${targets.feet ? targets.feet.target.name : 'Saturn (The Ringed Planet)'}`,
+          targetName: targets.feet ? targets.feet.target.name : 'Saturn',
+          meta: `Past Toes (${orient.feet_cardinal}) • ${targets.feet ? targets.feet.target.altitude_deg : 45}° Alt`,
+          desc: `Southern Horizon • ${targets.feet ? targets.feet.target.significance : 'Planetary beacon'} • ${narratorName}`,
+          script: paras[3] || `Now let your eyes sweep downward toward your feet, gazing toward the ${orient.feet_cardinal}. Rising above your toes is a brilliant beacon in the cosmos.`
+        },
+        {
+          index: 4,
+          region: "Shoulders (Lateral Horizons)",
+          title: `5. Wings: ${targets.left_shoulder ? targets.left_shoulder.target.name : 'Pegasus'} & ${targets.right_shoulder ? targets.right_shoulder.target.name : 'Andromeda'}`,
+          targetName: `${targets.left_shoulder ? targets.left_shoulder.target.name : 'Pegasus'} & ${targets.right_shoulder ? targets.right_shoulder.target.name : 'Andromeda'}`,
+          meta: `Lateral Sky • ${orient.left_cardinal} & ${orient.right_cardinal} Horizons`,
+          desc: `Left & Right Wings • Galactic Rift • ${narratorName}`,
+          script: paras[4] || `Tilt your awareness to your left, above your left shoulder toward the ${orient.left_cardinal}. Also above your right shoulder toward the ${orient.right_cardinal}, explore the lateral expanse of the stars.`
+        },
+        {
+          index: 5,
+          region: "Cosmic Silence & Seeing",
+          title: "6. Deep Cosmic Stillness",
+          targetName: "Cosmic Stillness & Seeing",
+          meta: "Seeing Forecast • Rhodopsin 100% • 0 Nits",
+          desc: `Atmospheric stillness & dark adaptation • ${narratorName}`,
+          script: paras[5] || `Rest here in complete stillness. There is nothing to look at on any screen. The solid earth beneath your spine rotates silently under the cosmos. Listen to the night.`
+        }
+      ];
+
+      renderLiveTourUI();
+    }
+
+    function renderLiveTourUI() {
+      const container = document.getElementById('chapter-list');
+      if (!container || liveTourSteps.length === 0) return;
+
+      container.innerHTML = '';
+      liveTourSteps.forEach((step, idx) => {
+        const row = document.createElement('div');
+        row.className = `chapter-row ${idx === activeLiveStepIndex ? 'active' : ''}`;
+        row.onclick = () => playLiveTargetStep(idx);
+        row.innerHTML = `
+          <div>
+            <div class="ch-title">${step.title}</div>
+            <div class="ch-desc" id="ch-desc-${idx}">${step.desc}</div>
+          </div>
+          <span class="ch-play-glyph">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg>
+          </span>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    function highlightLiveTourRow(idx) {
+      document.querySelectorAll('#chapter-list .chapter-row').forEach((el, i) => {
+        el.classList.toggle('active', i === idx);
+      });
+    }
 
     function selectNarratorVoice(voiceId) {
       if (voiceId !== 'male' && voiceId !== 'female') return;
@@ -3311,127 +3459,109 @@
       if (btnFemale) btnFemale.classList.toggle('active', voiceId === 'female');
       if (pill) pill.textContent = voiceId === 'male' ? 'George (Warm & Deep)' : 'Sarah (Soft & Whispered)';
 
-      updateChapterDescriptions();
+      const narratorName = voiceId === 'male' ? 'George' : 'Sarah';
+      showToast(`🎙️ Narrator: ${narratorName}`);
 
-      showToast(`🎙️ Narrator: ${voiceProfiles[voiceId].name}`);
-
-      // If already playing, switch track seamlessly without interruption
-      if (isPlaying) {
-        const curTime = studioAudio.currentTime || 0;
-        studioAudio.src = voiceProfiles[voiceId].url;
-        studioAudio.playbackRate = speechRate || 1.0;
-        studioAudio.currentTime = Math.min(curTime, 80);
-        studioAudio.play().catch(e => console.warn("Track switch play note:", e));
-        setupMediaSession(voiceProfiles[voiceId].chapters[activeChapterIndex].title, `${voiceProfiles[voiceId].name} • 0 Nits`);
-      }
-    }
-
-    function updateChapterDescriptions() {
-      const prof = voiceProfiles[currentNarratorVoice];
-      prof.chapters.forEach((ch, idx) => {
-        const el = document.getElementById(`ch-desc-${idx}`);
-        if (el) el.textContent = ch.desc;
-      });
-    }
-
-    function playChapterSegment(idx) {
-      const profile = voiceProfiles[currentNarratorVoice];
-      const targetChapter = profile.chapters[idx] || profile.chapters[0];
-      activeChapterIndex = idx;
-
-      // Permanently cancel any stray SpeechSynthesis utterances so voices never collide
-      if ('speechSynthesis' in window) {
-        try { window.speechSynthesis.cancel(); } catch(e) {}
-      }
-
-      highlightChapterRow(idx);
-
-      const targetUrl = profile.url;
-      const currentSrc = studioAudio.src || '';
-      if (!currentSrc.includes(targetUrl)) {
-        studioAudio.src = targetUrl;
-      }
-
-      studioAudio.playbackRate = speechRate || 1.0;
-      studioAudio.currentTime = targetChapter.start;
-
-      studioAudio.play()
-        .then(() => {
-          isPlaying = true;
-          isExperienceStarted = true;
-          updatePlayState();
-          requestWakeLock();
-          setupMediaSession(targetChapter.title, `${profile.name} • 0 Nits`);
-        })
-        .catch(err => {
-          console.warn("Studio audio play notice:", err);
-          showToast("Tap to listen to the heavens");
+      if (liveTourSteps.length > 0) {
+        liveTourSteps.forEach(s => {
+          s.desc = s.desc.replace(/George|Sarah/g, narratorName);
         });
+        renderLiveTourUI();
+      }
+
+      if (isPlaying) {
+        playLiveTargetStep(activeLiveStepIndex);
+      }
     }
 
-    window.playChapter = playChapterSegment;
+    function playLiveTargetStep(idx) {
+      if (!liveTourSteps || liveTourSteps.length === 0) return;
+      if (idx < 0) idx = 0;
+      if (idx >= liveTourSteps.length) idx = 0;
 
-    function highlightChapterRow(idx) {
-      document.querySelectorAll('#chapter-list .chapter-row').forEach((el, i) => {
-        el.classList.toggle('active', i === idx);
+      activeLiveStepIndex = idx;
+      const step = liveTourSteps[idx];
+
+      highlightLiveTourRow(idx);
+
+      const overlayBadge = document.getElementById('overlay-live-target');
+      if (overlayBadge) {
+        overlayBadge.innerHTML = `<strong>${step.title}</strong><br><span style="font-size:0.75rem; opacity:0.85;">${step.meta}</span>`;
+      }
+
+      isPlaying = true;
+      isExperienceStarted = true;
+      isLiveTourActive = true;
+      updatePlayState();
+      requestWakeLock();
+      setupMediaSession(step.title, `${currentNarratorVoice === 'male' ? 'George' : 'Sarah'} • WOTS Live Sky`);
+
+      if (studioAudio && !studioAudio.paused) {
+        try { studioAudio.pause(); } catch(e) {}
+      }
+
+      speakCelestialNarration([step.script], () => {
+        if (isPlaying && activeLiveStepIndex < liveTourSteps.length - 1) {
+          setTimeout(() => {
+            if (isPlaying && isLiveTourActive) {
+              playLiveTargetStep(activeLiveStepIndex + 1);
+            }
+          }, 1400);
+        } else if (isPlaying && activeLiveStepIndex === liveTourSteps.length - 1) {
+          whisperVoiceNotice("You are resting under the eternal sky. Deep peace.");
+        }
       });
     }
 
-    studioAudio.ontimeupdate = () => {
-      if (!isPlaying) return;
-      const t = studioAudio.currentTime;
-      const profile = voiceProfiles[currentNarratorVoice];
-      let idx = 0;
-      if (t >= profile.chapters[2].start) idx = 2;
-      else if (t >= profile.chapters[1].start) idx = 1;
-      else idx = 0;
+    window.playLiveTargetStep = playLiveTargetStep;
+    window.playChapter = playLiveTargetStep;
 
-      if (idx !== activeChapterIndex) {
-        activeChapterIndex = idx;
-        highlightChapterRow(idx);
-        setupMediaSession(profile.chapters[idx].title, `${profile.name} • 0 Nits`);
-      }
-    };
+    function advanceToNextLiveTarget() {
+      if (!liveTourSteps || liveTourSteps.length === 0) return;
+      const nextIdx = (activeLiveStepIndex + 1) % liveTourSteps.length;
+      const nextStep = liveTourSteps[nextIdx];
+      showToast(`⏭️ Skipping to: ${nextStep.targetName}`);
+      whisperVoiceNotice(`Skipping to ${nextStep.targetName}.`);
+      setTimeout(() => {
+        playLiveTargetStep(nextIdx);
+      }, 700);
+    }
 
-    studioAudio.onended = () => {
+    function pauseLiveSkyTour() {
       isPlaying = false;
-      updatePlayState();
-      releaseWakeLock();
-      showToast("🌟 Celestial Audio Tour Complete");
-    };
-
-    // Master Experience Launch: One Tap to Universe
-    async function startCompleteStargazeExperience() {
-      if (isPlaying) {
-        toggleAudioPlayback();
-        return;
+      if ('speechSynthesis' in window) {
+        try { window.speechSynthesis.pause(); } catch(e) {}
       }
-
-      isExperienceStarted = true;
-      const profile = voiceProfiles[currentNarratorVoice];
-      showToast(`🎙️ Starting ${profile.name}...`);
-
-      primeAudioAndSpeech();
-      requestWakeLock();
-      requestOrientationPermission();
-
-      if (!isDroneActive) toggleCosmicDrone();
-
-      playChapterSegment(0);
-      autoDetectSky();
-      fetchBodyAlignedSky(liveCompassHeading);
+      if (studioAudio && !studioAudio.paused) {
+        try { studioAudio.pause(); } catch(e) {}
+      }
+      updatePlayState();
     }
 
-    function beginRealTimeSkyNarration() {
-      playChapterSegment(1);
+    function resumeLiveSkyTour() {
+      isPlaying = true;
+      if ('speechSynthesis' in window && window.speechSynthesis.paused) {
+        try { window.speechSynthesis.resume(); } catch(e) {}
+      } else {
+        if (liveTourSteps.length > 0) {
+          playLiveTargetStep(activeLiveStepIndex || 0);
+        }
+      }
+      updatePlayState();
     }
 
-    function renderDynamicChapters(zenithName) {
-      updateChapterDescriptions();
-    }
-
-    function launchGuidedSession() {
-      startCompleteStargazeExperience();
+    function whisperVoiceNotice(msg) {
+      if (!('speechSynthesis' in window)) return;
+      try {
+        const u = new SpeechSynthesisUtterance(msg);
+        const isMale = (currentNarratorVoice === 'male');
+        u.rate = speechRate || (isMale ? 0.95 : 0.92);
+        u.pitch = isMale ? 0.84 : 1.05;
+        u.volume = 0.65;
+        const voice = getBestSoothingVoice();
+        if (voice) u.voice = voice;
+        window.speechSynthesis.speak(u);
+      } catch(e) {}
     }
 
     function setupMediaSession(title, subtitle) {
@@ -3439,15 +3569,13 @@
         navigator.mediaSession.metadata = new MediaMetadata({
           title: title || 'Whispers of the Sky',
           artist: subtitle || 'Screenless Celestial Audio Guide',
-          album: 'WOTS Stargaze'
+          album: 'WOTS Live Sky'
         });
         navigator.mediaSession.setActionHandler('play', () => toggleAudioPlayback());
         navigator.mediaSession.setActionHandler('pause', () => toggleAudioPlayback());
-        navigator.mediaSession.setActionHandler('nexttrack', () => {
-          if (activeChapterIndex < 2) playChapterSegment(activeChapterIndex + 1);
-        });
+        navigator.mediaSession.setActionHandler('nexttrack', () => advanceToNextLiveTarget());
         navigator.mediaSession.setActionHandler('previoustrack', () => {
-          if (activeChapterIndex > 0) playChapterSegment(activeChapterIndex - 1);
+          if (activeLiveStepIndex > 0) playLiveTargetStep(activeLiveStepIndex - 1);
         });
       }
     }
@@ -3458,26 +3586,14 @@
         return;
       }
       if (isPlaying) {
-        studioAudio.pause();
-        if (window.speechSynthesis) window.speechSynthesis.pause();
-        isPlaying = false;
+        pauseLiveSkyTour();
+        whisperVoiceNotice("Paused.");
         showToast("Audio Paused");
       } else {
-        const profile = voiceProfiles[currentNarratorVoice];
-        if (!studioAudio.src || !studioAudio.src.includes(profile.url)) {
-          studioAudio.src = profile.url;
-        }
-        studioAudio.playbackRate = speechRate || 1.0;
-        studioAudio.play()
-          .then(() => {
-            isPlaying = true;
-            showToast("Audio Resumed");
-          })
-          .catch(() => {
-            playChapterSegment(activeChapterIndex || 0);
-          });
+        resumeLiveSkyTour();
+        whisperVoiceNotice("Resumed.");
+        showToast("Audio Resumed");
       }
-      updatePlayState();
     }
 
     function updatePlayState() {
@@ -3512,35 +3628,169 @@
       showToast(`Guided Star-Hop: ${name}`);
     }
 
-    // Voice Ask
-    async function askQuestion(text) {
-      const qInput = document.getElementById('ask-input');
-      const question = text || qInput.value.trim();
-      if (!question) return;
+    // Master Experience Launch: One Tap to Universe
+    async function startCompleteStargazeExperience() {
+      if (isPlaying) {
+        toggleAudioPlayback();
+        return;
+      }
 
-      const resp = document.getElementById('ask-response');
-      resp.style.display = 'block';
-      resp.textContent = 'Consulting Gemma 2B celestial knowledge...';
+      isExperienceStarted = true;
+      const narratorName = currentNarratorVoice === 'male' ? 'George' : 'Sarah';
+      showToast(`🎙️ Starting Live Celestial Tour (${narratorName})...`);
+
+      primeAudioAndSpeech();
+      requestWakeLock();
+      requestOrientationPermission();
+      initHandsFreeSpeechRecognition();
+
+      if (!isDroneActive) toggleCosmicDrone();
+
+      if (liveTourSteps.length > 0) {
+        playLiveTargetStep(0);
+      } else {
+        await fetchBodyAlignedSky(liveCompassHeading);
+        if (liveTourSteps.length > 0) {
+          playLiveTargetStep(0);
+        }
+      }
+    }
+
+    function beginRealTimeSkyNarration() {
+      playLiveTargetStep(1);
+    }
+
+    function renderDynamicChapters(zenithName) {
+      renderLiveTourUI();
+    }
+
+    function launchGuidedSession() {
+      startCompleteStargazeExperience();
+    }
+
+    // =========================================================================
+    // HANDS-FREE VOICE RECOGNITION & ASTRONOMER Q&A ENGINE
+    // =========================================================================
+    let speechRecognizer = null;
+    let isRecognizingSpeech = false;
+
+    function initHandsFreeSpeechRecognition() {
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SR) {
+        console.log("Speech recognition not supported in this browser");
+        return;
+      }
+      if (speechRecognizer) return;
+
+      try {
+        speechRecognizer = new SR();
+        speechRecognizer.continuous = true;
+        speechRecognizer.interimResults = false;
+        speechRecognizer.lang = 'en-US';
+
+        speechRecognizer.onstart = () => {
+          isRecognizingSpeech = true;
+          console.log("Speech recognition active");
+        };
+
+        speechRecognizer.onresult = (event) => {
+          if (!event.results || event.results.length === 0) return;
+          const latestResult = event.results[event.results.length - 1];
+          if (latestResult.isFinal) {
+            const transcript = latestResult[0].transcript.trim();
+            console.log("Recognized voice inquiry:", transcript);
+            if (transcript.length > 3) {
+              handleLiveVoiceQuestion(transcript);
+            }
+          }
+        };
+
+        speechRecognizer.onerror = (err) => {
+          console.warn("Speech recognition notice:", err);
+        };
+
+        speechRecognizer.onend = () => {
+          isRecognizingSpeech = false;
+          if (isExperienceStarted) {
+            setTimeout(() => {
+              try { speechRecognizer.start(); } catch(e) {}
+            }, 1200);
+          }
+        };
+
+        speechRecognizer.start();
+      } catch (err) {
+        console.warn("Hands-free recognition start note:", err);
+      }
+    }
+
+    function playSoftAcousticPing() {
+      try {
+        if (!audioCtx) initWebAudio();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(528, audioCtx.currentTime); // 528 Hz Solfeggio frequency
+        gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 1.2);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 1.2);
+      } catch(e) {}
+    }
+
+    async function handleLiveVoiceQuestion(question) {
+      pauseLiveSkyTour();
+      playSoftAcousticPing();
+      if ('vibrate' in navigator) {
+        try { navigator.vibrate([30, 30]); } catch(e) {}
+      }
+      showToast(`🎤 Question: "${question}"`);
+      whisperVoiceNotice("Consulting tonight's stars...");
 
       try {
         const res = await fetch('/api/ask-astronomer', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({ question, latitude: currentLat, longitude: currentLon })
+          body: JSON.stringify({
+            question: question,
+            latitude: currentLat,
+            longitude: currentLon,
+            voice_id: currentNarratorVoice
+          })
         });
         const data = await res.json();
-        resp.textContent = `"${data.answer}"`;
-        if (data.audio_url) {
-          audioEl.src = data.audio_url;
-          audioEl.playbackRate = speechRate;
-          audioEl.play().catch(() => speakBrowserTTS(data.answer));
-          isPlaying = true;
-          updatePlayState();
-        } else {
-          speakBrowserTTS(data.answer);
+        if (data && data.answer) {
+          showToast(`✨ Astronomer: "${data.answer.substring(0, 60)}..."`);
+          const respEl = document.getElementById('ask-response');
+          if (respEl) {
+            respEl.style.display = 'block';
+            respEl.textContent = `"${data.answer}"`;
+          }
+
+          if (data.audio_url) {
+            studioAudio.src = data.audio_url;
+            studioAudio.playbackRate = speechRate || 1.0;
+            studioAudio.onended = () => {
+              studioAudio.onended = null;
+              setTimeout(() => { resumeLiveSkyTour(); }, 1200);
+            };
+            studioAudio.play().catch(() => {
+              speakCelestialNarration([data.answer], () => {
+                setTimeout(() => { resumeLiveSkyTour(); }, 1200);
+              });
+            });
+          } else {
+            speakCelestialNarration([data.answer], () => {
+              setTimeout(() => { resumeLiveSkyTour(); }, 1200);
+            });
+          }
         }
-      } catch (e) {
-        resp.textContent = 'Could not retrieve answer.';
+      } catch (err) {
+        console.warn("Astronomer question error:", err);
+        resumeLiveSkyTour();
       }
     }
 
@@ -3552,10 +3802,18 @@
       r.onstart = () => showToast('🎤 Speak your question...');
       r.onresult = (e) => {
         const t = e.results[0][0].transcript;
-        document.getElementById('ask-input').value = t;
-        askQuestion(t);
+        const input = document.getElementById('ask-input');
+        if (input) input.value = t;
+        handleLiveVoiceQuestion(t);
       };
       r.start();
+    }
+
+    async function askQuestion(text) {
+      const qInput = document.getElementById('ask-input');
+      const question = text || (qInput ? qInput.value.trim() : '');
+      if (!question) return;
+      handleLiveVoiceQuestion(question);
     }
 
     // Field Logs
