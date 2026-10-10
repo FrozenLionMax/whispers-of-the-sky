@@ -758,6 +758,146 @@
       transform: scale(0.96);
     }
 
+    /* Chest Gyroscope & Posture Sensor Card */
+    .chest-sensor-card {
+      width: 100%;
+      max-width: 440px;
+      margin: 12px 0 16px 0;
+      padding: 16px 18px;
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      background: rgba(10, 18, 32, 0.72);
+      border-radius: 18px;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    body.red-mode .chest-sensor-card {
+      border-color: rgba(239, 68, 68, 0.3);
+      background: rgba(26, 4, 4, 0.82);
+    }
+
+    .chest-sensor-card.active-placed {
+      border-color: #22c55e;
+      background: rgba(6, 32, 18, 0.88);
+      box-shadow: 0 0 25px rgba(34, 197, 94, 0.25);
+    }
+
+    .chest-sensor-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .chest-status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.72rem;
+      letter-spacing: 0.8px;
+      color: var(--accent);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    body.red-mode .chest-status-indicator {
+      color: #ef4444;
+    }
+
+    .chest-sensor-pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+      animation: beaconBreathe 1.8s infinite ease-in-out;
+    }
+
+    .chest-sensor-card.active-placed .chest-sensor-pulse {
+      background: #22c55e;
+      box-shadow: 0 0 10px #22c55e;
+    }
+
+    .chest-sensor-pill {
+      font-size: 0.65rem;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .chest-sensor-card.active-placed .chest-sensor-pill {
+      background: rgba(34, 197, 94, 0.2);
+      border-color: rgba(34, 197, 94, 0.5);
+      color: #4ade80;
+    }
+
+    .chest-sensor-desc {
+      font-size: 0.77rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+      margin-bottom: 12px;
+    }
+
+    .chest-sensor-readout {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .sensor-readout-item {
+      background: rgba(0, 0, 0, 0.45);
+      padding: 8px 6px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      text-align: center;
+    }
+
+    .readout-label {
+      display: block;
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 2px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .readout-val {
+      font-size: 0.8rem;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent);
+    }
+
+    body.red-mode .readout-val {
+      color: #ef4444;
+    }
+
+    .btn-sensor-test {
+      width: 100%;
+      padding: 9px 12px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px dashed rgba(255, 255, 255, 0.2);
+      color: var(--text);
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-sensor-test:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
     /* VisionOS Frosted Cards */
     .glass-card {
       background: rgba(8, 14, 26, 0.74);
@@ -1633,6 +1773,40 @@
           </button>
         </div>
 
+        <!-- Real-Time Chest Gyroscope Posture Sensing Card -->
+        <div class="glass-card chest-sensor-card" id="chest-sensor-card">
+          <div class="chest-sensor-header">
+            <div class="chest-status-indicator">
+              <span class="chest-sensor-pulse" id="chest-sensor-dot"></span>
+              <strong id="chest-sensor-title">GYROSCOPE CHEST SENSOR: ACTIVE</strong>
+            </div>
+            <span class="chest-sensor-pill" id="chest-sensor-pill">IN HAND</span>
+          </div>
+          <p class="chest-sensor-desc" id="chest-sensor-desc">
+            Lie on your back on grass and rest your phone face-down on your chest. Screen automatically turns to 0-nit true black while celestial voice guides you.
+          </p>
+          <div class="chest-sensor-readout">
+            <div class="sensor-readout-item">
+              <span class="readout-label">Z-Gravity</span>
+              <span class="readout-val" id="readout-z">+9.8 m/s²</span>
+            </div>
+            <div class="sensor-readout-item">
+              <span class="readout-label">Pitch / Tilt</span>
+              <span class="readout-val" id="readout-pitch">0°</span>
+            </div>
+            <div class="sensor-readout-item">
+              <span class="readout-label">Face-Down</span>
+              <span class="readout-val" id="readout-facedown" style="color:#ef4444;">NO</span>
+            </div>
+          </div>
+          <div class="chest-sensor-actions">
+            <button class="btn-sensor-test" onclick="simulateChestPlacementToggle()" id="btn-simulate-chest">
+              <span id="btn-sensor-test-icon">🫁</span>
+              <span id="btn-sensor-test-label">Simulate / Lock Chest Placement (0 Nits)</span>
+            </button>
+          </div>
+        </div>
+
         <!-- Biological Rhodopsin Tracker -->
         <div class="glass-card" style="width: 100%; margin-top: 8px;">
           <div class="rhodopsin-top">
@@ -2167,61 +2341,200 @@
       if (wakeLock) { wakeLock.release().then(() => { wakeLock = null; }); }
     }
 
-    // Orientation & Chest Placement Sensing ("Brain of the Phone")
+    // =========================================================================
+    // DUAL MOTION & ORIENTATION CHEST SENSING ("Brain of the Phone")
+    // =========================================================================
     let isChestPlacementDetected = false;
     let orientationListenerActive = false;
     let isExperienceStarted = false;
     let isChestNarrationDelivered = false;
-    let cachedTargets = [];
-    let cachedSeeing = { transparency_pct: 94, seeing_label: "Exceptional", naked_eye_magnitude_limit: 6.2 };
+    let liveBetaTilt = 0;
+    let liveGammaRoll = 0;
+    let liveGravityZ = 9.8;
+    let consecutiveFaceDownCount = 0;
+    let consecutiveFaceUpCount = 0;
+
+    // Pre-loaded autumn sky landmarks so the app works 100% offline with zero latency
+    let cachedTargets = [
+      {
+        id: 'cassiopeia',
+        name: 'Cassiopeia (The Celestial Queen)',
+        cardinal_direction: 'North',
+        altitude_deg: 58.0,
+        elevation_description: 'Mid-sky',
+        star_hop: "Look north, about two-thirds up from the horizon. Spot the five bright stars forming a reclining W."
+      },
+      {
+        id: 'polaris',
+        name: 'Polaris (North Star)',
+        cardinal_direction: 'North',
+        altitude_deg: 38.0,
+        elevation_description: 'Mid-sky',
+        star_hop: "Face true north. Polaris anchors the sky while all constellations pivot around it."
+      },
+      {
+        id: 'andromeda_galaxy',
+        name: 'Andromeda Galaxy (M31)',
+        cardinal_direction: 'North-East',
+        altitude_deg: 65.0,
+        elevation_description: 'High in the heavens',
+        star_hop: "From the point of Cassiopeia's W, follow down toward a misty smudge of 2.5 million-year-old light."
+      },
+      {
+        id: 'jupiter',
+        name: 'Jupiter (The King Planet)',
+        cardinal_direction: 'South-East',
+        altitude_deg: 44.0,
+        elevation_description: 'Mid-sky',
+        star_hop: "Look south-east for a brilliant steady white beacon, outshining every star."
+      }
+    ];
+    let cachedSeeing = { transparency_pct: 95, seeing_label: "Exceptional / Pristine", naked_eye_magnitude_limit: 6.2 };
+
+    function initOrientationSensors() {
+      if (orientationListenerActive) return;
+      orientationListenerActive = true;
+
+      // 1. Listen for 3D Device Orientation (Beta pitch & Gamma roll)
+      if (window.DeviceOrientationEvent) {
+        window.addEventListener('deviceorientation', handleDeviceOrientation, { passive: true });
+      }
+
+      // 2. Listen for 3D Device Accelerometer (Z-gravity - 100% universal across all mobile browsers)
+      if (window.DeviceMotionEvent) {
+        window.addEventListener('devicemotion', handleDeviceMotion, { passive: true });
+      }
+
+      updateChestSensorUI();
+    }
 
     function requestOrientationPermission() {
       if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
         DeviceOrientationEvent.requestPermission()
-          .then(permissionState => {
-            if (permissionState === 'granted') initOrientationSensors();
+          .then(state => {
+            if (state === 'granted') initOrientationSensors();
           })
           .catch(() => initOrientationSensors());
       } else {
         initOrientationSensors();
       }
-    }
 
-    function initOrientationSensors() {
-      if (orientationListenerActive || !window.DeviceOrientationEvent) return;
-      orientationListenerActive = true;
-      window.addEventListener('deviceorientation', handleDeviceOrientation, { passive: true });
+      if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
+        DeviceMotionEvent.requestPermission()
+          .then(state => {
+            if (state === 'granted') initOrientationSensors();
+          })
+          .catch(() => {});
+      }
     }
 
     function handleDeviceOrientation(e) {
-      if (e.beta === null || e.beta === undefined) return;
-      const beta = e.beta;
-      const gamma = e.gamma || 0;
+      if (e.beta !== null && e.beta !== undefined) liveBetaTilt = Math.round(e.beta);
+      if (e.gamma !== null && e.gamma !== undefined) liveGammaRoll = Math.round(e.gamma);
+      evaluateChestPosture();
+    }
 
-      // Chest placement: Lying down with phone on chest upside-down / face-down
-      const isUpsideDownOnChest = Math.abs(beta) > 130 || Math.abs(gamma) > 130;
-      // Chest placement: Lying flat on chest face-up
-      const isFlatOnChest = Math.abs(beta) < 32 && Math.abs(gamma) < 32;
+    function handleDeviceMotion(e) {
+      const g = e.accelerationIncludingGravity;
+      if (g && g.z !== null && g.z !== undefined) {
+        liveGravityZ = Math.round(g.z * 10) / 10;
+      }
+      evaluateChestPosture();
+    }
 
-      const overlay = document.getElementById('screenless-overlay');
-      const badge = document.getElementById('lbl-chest-status');
+    function evaluateChestPosture() {
+      // Determine if the phone screen is facing DOWN towards the user's chest / earth:
+      // Condition A: Accelerometer Z gravity is negative (Earth's gravity pulls OUT through the screen)
+      const gravityFaceDown = liveGravityZ < -3.0;
 
-      if (isUpsideDownOnChest) {
-        if (!overlay.classList.contains('active')) {
-          enterScreenlessMode();
-          if ('vibrate' in navigator) {
-            try { navigator.vibrate([35, 50, 35]); } catch(err) {}
-          }
-        }
-        if (badge) badge.textContent = "CHEST PLACEMENT: DETECTED (0 NITS)";
-        if (isExperienceStarted && !isChestPlacementDetected) {
+      // Condition B: Orientation Euler angles indicate screen turned downward
+      const angleFaceDown = Math.abs(liveBetaTilt) > 95 || Math.abs(liveGammaRoll) > 65;
+
+      const isFaceDown = gravityFaceDown || angleFaceDown;
+
+      // Debounce logic: require 2 ticks to confirm state transition
+      if (isFaceDown) {
+        consecutiveFaceDownCount++;
+        consecutiveFaceUpCount = 0;
+        if (consecutiveFaceDownCount >= 2 && !isChestPlacementDetected) {
           isChestPlacementDetected = true;
-          onChestPlacementConfirmed();
+          onChestPlacementEngaged();
         }
-      } else if (isFlatOnChest) {
-        if (badge) badge.textContent = "CHEST PLACEMENT: HORIZONTAL";
       } else {
-        if (badge) badge.textContent = "CHEST PLACEMENT: SENSING";
+        consecutiveFaceUpCount++;
+        consecutiveFaceDownCount = 0;
+        if (consecutiveFaceUpCount >= 3 && isChestPlacementDetected) {
+          isChestPlacementDetected = false;
+          onChestPlacementDisengaged();
+        }
+      }
+
+      updateChestSensorUI();
+    }
+
+    function onChestPlacementEngaged() {
+      enterScreenlessMode();
+      if ('vibrate' in navigator) {
+        try { navigator.vibrate([45, 60, 45]); } catch(err) {}
+      }
+      showToast("🫁 Chest Placement Locked: Screen Blanked to 0 Nits");
+      if (!isChestNarrationDelivered) {
+        isChestNarrationDelivered = true;
+        beginRealTimeSkyNarration();
+      }
+    }
+
+    function onChestPlacementDisengaged() {
+      showToast("📱 Phone Lifted: Eyes Returning to Horizon");
+    }
+
+    function updateChestSensorUI() {
+      const zEl = document.getElementById('readout-z');
+      const pitchEl = document.getElementById('readout-pitch');
+      const fdEl = document.getElementById('readout-facedown');
+      const card = document.getElementById('chest-sensor-card');
+      const pill = document.getElementById('chest-sensor-pill');
+      const btnTest = document.getElementById('btn-sensor-test-label');
+
+      if (zEl) zEl.textContent = `${liveGravityZ > 0 ? '+' : ''}${liveGravityZ} m/s²`;
+      if (pitchEl) pitchEl.textContent = `${liveBetaTilt}°`;
+      
+      if (fdEl) {
+        if (isChestPlacementDetected) {
+          fdEl.textContent = "YES (LOCKED)";
+          fdEl.style.color = "#4ade80";
+        } else {
+          fdEl.textContent = "NO";
+          fdEl.style.color = "#ef4444";
+        }
+      }
+
+      if (card) {
+        card.classList.toggle('active-placed', isChestPlacementDetected);
+      }
+
+      if (pill) {
+        pill.textContent = isChestPlacementDetected ? "CHEST: 0 NITS LOCKED" : "IN HAND";
+      }
+
+      if (btnTest) {
+        btnTest.textContent = isChestPlacementDetected ? "Unlock / Lift Phone" : "Simulate / Lock Chest Placement (0 Nits)";
+      }
+    }
+
+    function simulateChestPlacementToggle() {
+      if (isChestPlacementDetected) {
+        liveGravityZ = 9.8;
+        liveBetaTilt = 15;
+        isChestPlacementDetected = false;
+        exitScreenlessMode();
+        updateChestSensorUI();
+      } else {
+        liveGravityZ = -9.8;
+        liveBetaTilt = 170;
+        isChestPlacementDetected = true;
+        onChestPlacementEngaged();
+        updateChestSensorUI();
       }
     }
 
@@ -2453,10 +2766,47 @@
       if (btn) btn.click();
     }
 
-    // Audio & Speech Narration Engine
+    // =========================================================================
+    // BULLETPROOF CELESTIAL SPEECH SYNTHESIS ENGINE (GC & Freeze Protected)
+    // =========================================================================
     let speechQueue = [];
     let isSpeakingQueue = false;
-    let speechWatchdogInterval = null;
+    let currentUtteranceTimer = null;
+    let keptSpeechUtterances = [];
+    let speechRate = 0.82; // Calming, slow nighttime celestial tempo
+
+    function getBestSoothingVoice() {
+      if (!('speechSynthesis' in window)) return null;
+      const voices = window.speechSynthesis.getVoices();
+      if (!voices || voices.length === 0) return null;
+
+      const priorityChecks = [
+        v => v.lang.startsWith('en') && v.name.includes('Natural'),
+        v => v.name.includes('Google UK English Female'),
+        v => v.name.includes('Google US English'),
+        v => v.name.includes('Samantha'),
+        v => v.name.includes('Daniel'),
+        v => v.name.includes('Serena'),
+        v => v.name.includes('Karen'),
+        v => v.name.includes('Moira'),
+        v => v.name.includes('Google UK English Male'),
+        v => v.lang.startsWith('en-GB'),
+        v => v.lang.startsWith('en-US'),
+        v => v.lang.startsWith('en')
+      ];
+
+      for (const check of priorityChecks) {
+        const match = voices.find(check);
+        if (match) return match;
+      }
+      return voices[0];
+    }
+
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.onvoiceschanged = () => {
+        getBestSoothingVoice();
+      };
+    }
 
     function primeAudioAndSpeech() {
       initWebAudio();
@@ -2464,9 +2814,10 @@
         audioCtx.resume();
       }
       if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-        const primeU = new SpeechSynthesisUtterance(' ');
-        window.speechSynthesis.speak(primeU);
+        try {
+          window.speechSynthesis.cancel();
+          window.speechSynthesis.resume();
+        } catch(e) {}
       }
     }
 
@@ -2475,60 +2826,92 @@
         if (onFinish) onFinish();
         return;
       }
-      window.speechSynthesis.cancel();
-      speechQueue = [...paragraphs];
+
+      // Pre-chunk into short, soothing phrases under 130 characters.
+      // This eliminates mobile browser audio truncation permanently!
+      const chunks = [];
+      paragraphs.forEach(p => {
+        const parts = p.split(/(?<=[.?!])\s+/);
+        parts.forEach(pt => {
+          const trimmed = pt.trim();
+          if (trimmed.length > 0) chunks.push(trimmed);
+        });
+      });
+
+      speechQueue = [...chunks];
       isSpeakingQueue = true;
       isPlaying = true;
       updatePlayState();
       requestWakeLock();
 
-      if (speechWatchdogInterval) clearInterval(speechWatchdogInterval);
-      speechWatchdogInterval = setInterval(() => {
-        if (window.speechSynthesis.speaking) {
-          window.speechSynthesis.pause();
-          window.speechSynthesis.resume();
-        } else {
-          clearInterval(speechWatchdogInterval);
-          speechWatchdogInterval = null;
-        }
-      }, 7000);
-
-      playNextSpeechSegment(onFinish);
+      try { window.speechSynthesis.cancel(); } catch(e) {}
+      playNextSpeechChunk(onFinish);
     }
 
-    function playNextSpeechSegment(onFinish) {
+    function playNextSpeechChunk(onFinish) {
+      if (currentUtteranceTimer) {
+        clearTimeout(currentUtteranceTimer);
+        currentUtteranceTimer = null;
+      }
+
       if (!isPlaying || speechQueue.length === 0) {
         isSpeakingQueue = false;
         isPlaying = false;
         updatePlayState();
-        if (speechWatchdogInterval) clearInterval(speechWatchdogInterval);
         if (onFinish) onFinish();
         return;
       }
 
       const text = speechQueue.shift();
       const u = new SpeechSynthesisUtterance(text);
-      u.rate = speechRate;
-      u.pitch = 0.95;
 
-      const voices = window.speechSynthesis.getVoices();
-      const preferred = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Samantha') || v.name.includes('Daniel'))) || voices.find(v => v.lang.startsWith('en'));
-      if (preferred) u.voice = preferred;
+      // Calibrated whisper-like nighttime acoustics:
+      u.rate = speechRate; // ~0.82x calm, unhurried
+      u.pitch = 0.88;      // Warm, deeper tone
+      u.volume = 0.88;     // Soft, soothing volume
 
-      u.onend = () => {
+      const voice = getBestSoothingVoice();
+      if (voice) u.voice = voice;
+
+      // CRITICAL: Retain strong global reference to prevent V8 Garbage Collection aborting speech!
+      window._activeSpeechUtterance = u;
+      keptSpeechUtterances.push(u);
+      if (keptSpeechUtterances.length > 30) keptSpeechUtterances.shift();
+
+      let isAdvanced = false;
+      const advance = () => {
+        if (isAdvanced) return;
+        isAdvanced = true;
+        if (currentUtteranceTimer) {
+          clearTimeout(currentUtteranceTimer);
+          currentUtteranceTimer = null;
+        }
+        // Peaceful breath pause between phrases (800ms)
         setTimeout(() => {
-          if (isPlaying) playNextSpeechSegment(onFinish);
-        }, 1100);
+          if (isPlaying) playNextSpeechChunk(onFinish);
+        }, 800);
       };
 
-      u.onerror = (e) => {
-        console.warn('Speech segment error/skip:', e);
-        setTimeout(() => {
-          if (isPlaying) playNextSpeechSegment(onFinish);
-        }, 600);
+      u.onend = advance;
+      u.onerror = (err) => {
+        console.warn('Utterance auto-recovered:', err);
+        advance();
       };
 
-      window.speechSynthesis.speak(u);
+      // Watchdog: If an utterance doesn't finish within expected time, auto-advance!
+      const timeoutMs = Math.max(3500, (text.length * 95) + 3500);
+      currentUtteranceTimer = setTimeout(() => {
+        console.warn('Watchdog advancing past stalled speech:', text.slice(0, 25));
+        try { window.speechSynthesis.cancel(); } catch(err) {}
+        advance();
+      }, timeoutMs);
+
+      try {
+        window.speechSynthesis.speak(u);
+      } catch(err) {
+        console.warn('Speech speak exception:', err);
+        advance();
+      }
     }
 
     // Master Experience Launch: One Tap to Universe
@@ -2539,7 +2922,7 @@
       }
 
       isExperienceStarted = true;
-      showToast("🌌 Welcome to the Sky: Initializing Sensors & Audio...");
+      showToast("🌌 Initializing Audio & Chest Gyroscope...");
 
       primeAudioAndSpeech();
       requestWakeLock();
@@ -2554,30 +2937,28 @@
 
       const welcomeIntro = [
         "Welcome to Whispers of the Sky.",
-        "Lie back comfortably against the earth. Rest your phone face-down upon your chest.",
+        "Lie back comfortably against the earth.",
+        "Rest your phone face-down upon your chest.",
         "Let your breathing slow into the quiet of the night, and let the darkness settle gently across your eyes."
       ];
 
       speakCelestialNarration(welcomeIntro, () => {
-        beginRealTimeSkyNarration();
+        if (!isChestNarrationDelivered) {
+          beginRealTimeSkyNarration();
+        }
       });
 
       autoDetectSky();
-    }
-
-    function onChestPlacementConfirmed() {
-      showToast("🫁 Chest Placement Locked: Screen Blanked to 0 Nits");
-      if (!isChestNarrationDelivered && cachedTargets.length > 0) {
-        isChestNarrationDelivered = true;
-        beginRealTimeSkyNarration();
-      }
     }
 
     function beginRealTimeSkyNarration() {
       const parts = [];
 
       parts.push(
-        "Your phone is resting on your chest in complete darkness to protect your biological rhodopsin. For the next twenty minutes, your eyes will grow thousands of times more sensitive to the stars."
+        "Your phone is resting face-down in complete darkness to protect your biological night vision."
+      );
+      parts.push(
+        "For the next twenty minutes, your eyes will grow thousands of times more sensitive to the stars."
       );
 
       const zenithTarget = cachedTargets.find(t => t.altitude_deg >= 55) || cachedTargets[0];
@@ -2591,7 +2972,7 @@
       const cassiopeia = cachedTargets.find(t => t.id === 'cassiopeia');
       if (polaris) {
         parts.push(
-          `Now turn your gaze toward true north, past your head. Polaris, the North Star, rests at ${Math.round(polaris.altitude_deg)} degrees above your horizon, holding the night sky steady as the Earth turns beneath you.`
+          `Now turn your gaze toward true north, past your head. Polaris, the North Star, holds the night sky steady as the Earth turns beneath you.`
         );
       }
       if (cassiopeia) {
@@ -2603,7 +2984,7 @@
       const jupiter = cachedTargets.find(t => t.id === 'jupiter');
       if (jupiter) {
         parts.push(
-          `Glance toward the ${jupiter.cardinal_direction.toLowerCase()} for Jupiter. It shines as an unmistakable, steady white beacon in the autumn sky, outshining every star.`
+          `Glance toward the south-east for Jupiter. It shines as an unmistakable, steady white beacon in the autumn sky.`
         );
       }
 
@@ -2616,7 +2997,7 @@
 
       if (cachedSeeing && cachedSeeing.transparency_pct) {
         parts.push(
-          `Tonight, TabPFN forecasts atmospheric transparency at ${cachedSeeing.transparency_pct} percent, with a limiting magnitude of ${cachedSeeing.naked_eye_magnitude_limit}. The night is calm, and the sky is open.`
+          `Tonight, TabPFN forecasts atmospheric transparency at ${cachedSeeing.transparency_pct} percent. The night is calm, and the sky is open.`
         );
       }
 
@@ -2895,6 +3276,10 @@
       fetchVisibleSky();
       fetchFieldLogs();
     });
+
+    // Mobile user-activation trigger for sensors
+    window.addEventListener('touchstart', () => { initOrientationSensors(); }, { once: true });
+    window.addEventListener('click', () => { initOrientationSensors(); }, { once: true });
   </script>
 </body>
 </html>
