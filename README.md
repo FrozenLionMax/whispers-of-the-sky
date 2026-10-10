@@ -92,6 +92,18 @@ export ELEVENLABS_API_KEY="your-key-here"
 
 ---
 
+## ☁️ 1-Click Deployment on Render (Official Hacktoberfest Sponsor)
+
+WOTS is pre-configured with a native [`render.yaml`](render.yaml) Blueprint:
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/FrozenLionMax/whispers-of-the-sky)
+
+1. Click the **Deploy to Render** button above or connect `FrozenLionMax/whispers-of-the-sky` on [dashboard.render.com](https://dashboard.render.com).
+2. Render automatically builds the Python 3.12 environment, runs FastAPI, and provides an instant global HTTPS endpoint.
+3. Zero mandatory API keys required—all weather telemetry, astronomical calculations, and Web Audio speech synthesis run natively.
+
+---
+
 ## 🌙 How to Use in the Field
 
 1. **Step Outside**: Take your blanket or chair outside to your backyard, a local park, or a mountain trail.
