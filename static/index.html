@@ -2126,7 +2126,7 @@
     let currentLat = 37.7749;
     let currentLon = -122.4194;
     let wakeLock = null;
-    let speechRate = 0.88;
+    let speechRate = 0.82;
     const audioEl = document.getElementById('audio-player');
 
     // Rhodopsin Adaptation Timer
@@ -2773,7 +2773,6 @@
     let isSpeakingQueue = false;
     let currentUtteranceTimer = null;
     let keptSpeechUtterances = [];
-    let speechRate = 0.82; // Calming, slow nighttime celestial tempo
 
     function getBestSoothingVoice() {
       if (!('speechSynthesis' in window)) return null;
