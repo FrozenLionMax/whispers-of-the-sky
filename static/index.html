@@ -203,23 +203,45 @@
       color: #881111;
     }
 
-    /* VisionOS Glass Header */
-    .app-header {
+    /* ==================== LUXURY HEAVY VISIONOS TOP TASKBAR ==================== */
+    .app-header-wrap {
       position: sticky;
       top: 0;
-      z-index: 100;
-      background: rgba(4, 6, 10, 0.75);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border-bottom: 1px solid var(--card-border);
-      padding: 14px 20px;
+      z-index: 1000;
+      width: 100%;
+      padding: 10px 14px 6px 14px;
+      pointer-events: none;
+    }
+
+    .app-header {
+      pointer-events: auto;
+      max-width: 680px;
+      margin: 0 auto;
+      background: rgba(8, 14, 26, 0.78);
+      backdrop-filter: blur(32px) saturate(210%);
+      -webkit-backdrop-filter: blur(32px) saturate(210%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 
+        0 16px 40px -8px rgba(0, 0, 0, 0.8),
+        0 0 0 1px rgba(255, 255, 255, 0.04),
+        inset 0 1px 1.5px rgba(255, 255, 255, 0.25),
+        0 0 30px rgba(56, 189, 248, 0.12);
+      border-radius: 999px;
+      padding: 8px 14px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     body.red-mode .app-header {
-      background: rgba(6, 0, 0, 0.88);
+      background: rgba(22, 3, 3, 0.9);
+      border-color: rgba(239, 68, 68, 0.35);
+      box-shadow: 
+        0 16px 40px -8px rgba(0, 0, 0, 0.9),
+        0 0 0 1px rgba(239, 68, 68, 0.15),
+        inset 0 1px 1.5px rgba(255, 120, 120, 0.2),
+        0 0 30px rgba(239, 68, 68, 0.28);
     }
 
     .brand {
@@ -230,15 +252,46 @@
       flex: 1;
     }
 
+    /* Pulsating Beacon Dot */
+    .brand-beacon {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 12px var(--accent);
+      flex-shrink: 0;
+      animation: beaconBreathe 2.4s infinite ease-in-out;
+    }
+
+    @keyframes beaconBreathe {
+      0%, 100% { transform: scale(0.85); opacity: 0.6; }
+      50% { transform: scale(1.35); opacity: 1; }
+    }
+
+    body.red-mode .brand-beacon {
+      background: #ef4444;
+      box-shadow: 0 0 12px #ef4444;
+    }
+
     .brand-text {
       font-family: 'Cinzel', serif;
-      font-size: 1.25rem;
+      font-size: 1.22rem;
       font-weight: 800;
       letter-spacing: 2px;
-      color: var(--text);
-      text-shadow: 0 0 16px var(--accent-glow);
+      color: #ffffff;
+      background: linear-gradient(135deg, #ffffff 40%, #93c5fd 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 20px var(--accent-glow);
       flex-shrink: 0;
       line-height: 1;
+    }
+
+    body.red-mode .brand-text {
+      background: linear-gradient(135deg, #fca5a5 40%, #ef4444 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 20px rgba(239, 68, 68, 0.6);
     }
 
     .brand-divider {
@@ -246,6 +299,7 @@
       opacity: 0.35;
       font-size: 0.85rem;
       font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
       flex-shrink: 0;
     }
 
@@ -253,25 +307,32 @@
       display: inline-flex;
       align-items: center;
       min-width: 0;
-      max-width: 220px;
+      max-width: 200px;
       overflow: hidden;
       white-space: nowrap;
     }
 
     @media (max-width: 480px) {
       .typewriter-wrap {
-        max-width: 135px;
+        max-width: 120px;
       }
       .brand-text {
-        font-size: 1.1rem;
+        font-size: 1.05rem;
         letter-spacing: 1.5px;
+      }
+      .app-header {
+        padding: 6px 10px;
+      }
+      .icon-btn {
+        width: 34px !important;
+        height: 34px !important;
       }
     }
 
     .typewriter-text {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.76rem;
-      font-weight: 500;
+      font-size: 0.74rem;
+      font-weight: 600;
       color: var(--accent);
       letter-spacing: 0.3px;
       text-transform: lowercase;
@@ -306,42 +367,82 @@
 
     .header-actions {
       display: flex;
-      gap: 8px;
+      gap: 6px;
       align-items: center;
     }
 
+    /* Heavy Tactile Action Button */
     .icon-btn {
-      width: 38px;
-      height: 38px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--card-border);
-      color: var(--text);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text-muted);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      font-size: 0.95rem;
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-      backdrop-filter: blur(12px);
+      position: relative;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.12);
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      -webkit-tap-highlight-color: transparent;
+      outline: none;
+    }
+
+    .icon-btn svg {
+      width: 17px;
+      height: 17px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: all 0.25s ease;
     }
 
     .icon-btn:hover {
+      color: #ffffff;
       border-color: var(--accent);
-      background: rgba(255, 255, 255, 0.08);
-      transform: scale(1.05);
+      background: rgba(56, 189, 248, 0.12);
+      transform: translateY(-2px) scale(1.08);
+      box-shadow: 0 8px 20px rgba(56, 189, 248, 0.25);
+    }
+
+    .icon-btn:active {
+      transform: scale(0.85);
+      transition: transform 0.1s ease;
     }
 
     .icon-btn.active {
-      background: var(--accent);
-      color: #000;
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.3), rgba(2, 132, 199, 0.15));
       border-color: var(--accent);
-      box-shadow: 0 0 16px var(--accent-glow);
+      color: var(--accent);
+      box-shadow: 
+        0 0 20px var(--accent-glow),
+        inset 0 1px 1.5px rgba(255, 255, 255, 0.4);
+      transform: translateY(-1px) scale(1.04);
     }
 
     body.red-mode .icon-btn.active {
-      background: #ef4444;
-      color: #000;
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.35), rgba(185, 28, 28, 0.15));
+      border-color: #ef4444;
+      color: #ef4444;
+      box-shadow: 
+        0 0 20px rgba(239, 68, 68, 0.5),
+        inset 0 1px 1.5px rgba(255, 120, 120, 0.35);
+    }
+
+    /* Blanket Mode Special Red Accent Button */
+    .icon-btn.btn-blanket {
+      border-color: rgba(239, 68, 68, 0.45);
+      color: #ef4444;
+      background: rgba(239, 68, 68, 0.08);
+    }
+
+    .icon-btn.btn-blanket:hover {
+      background: rgba(239, 68, 68, 0.2);
+      box-shadow: 0 0 18px rgba(239, 68, 68, 0.4);
     }
 
     /* Main Scrollable View */
@@ -1231,32 +1332,47 @@
     </div>
   </div>
 
-  <!-- VisionOS Glass App Header -->
-  <header class="app-header">
-    <div class="brand">
-      <span class="brand-text">WOTS</span>
-      <span class="brand-divider">/</span>
-      <div class="typewriter-wrap">
-        <span id="typewriter-text" class="typewriter-text"></span>
-        <span class="typewriter-cursor">|</span>
+  <!-- VisionOS Floating Island Top Taskbar -->
+  <div class="app-header-wrap">
+    <header class="app-header">
+      <div class="brand">
+        <span class="brand-beacon"></span>
+        <span class="brand-text">WOTS</span>
+        <span class="brand-divider">/</span>
+        <div class="typewriter-wrap">
+          <span id="typewriter-text" class="typewriter-text"></span>
+          <span class="typewriter-cursor">|</span>
+        </div>
       </div>
-    </div>
 
-    <div class="header-actions">
-      <button class="icon-btn" id="btn-gps" onclick="autoDetectSky()" title="Auto-Detect Live Sky">
-        <span>📍</span>
-      </button>
-      <button class="icon-btn" id="btn-drone" onclick="toggleCosmicDrone()" title="Cosmic Drone (432Hz)">
-        <span>🪐</span>
-      </button>
-      <button class="icon-btn" id="btn-red" onclick="toggleRedMode()" title="650nm Red Mode">
-        <span>🔴</span>
-      </button>
-      <button class="icon-btn" onclick="enterScreenlessMode()" title="Eyes to Sky" style="border-color: #ef4444; color: #ef4444;">
-        <span>🌙</span>
-      </button>
-    </div>
-  </header>
+      <div class="header-actions">
+        <button class="icon-btn" id="btn-gps" onclick="autoDetectSky()" title="Auto-Detect Horizon Sky GPS">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="3.5"/>
+            <path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
+            <path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"/>
+          </svg>
+        </button>
+        <button class="icon-btn" id="btn-drone" onclick="toggleCosmicDrone()" title="Cosmic Drone (432Hz Soundscape)">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="5"/>
+            <ellipse cx="12" cy="12" rx="9.5" ry="3.5" transform="rotate(-25 12 12)"/>
+          </svg>
+        </button>
+        <button class="icon-btn" id="btn-red" onclick="toggleRedMode()" title="650nm Red Mode (Night Vision)">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2.5M12 19.5v2.5M2 12h2.5M19.5 12h2.5M4.93 4.93l1.77 1.77M17.3 17.3l1.77 1.77M4.93 19.07l1.77-1.77M17.3 6.7l1.77-1.77"/>
+          </svg>
+        </button>
+        <button class="icon-btn btn-blanket" onclick="enterScreenlessMode()" title="Eyes to Sky (0-Nit OLED Dark)">
+          <svg viewBox="0 0 24 24">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+  </div>
 
   <!-- Main Scrollable App Container -->
   <main class="app-main">
